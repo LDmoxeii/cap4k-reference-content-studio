@@ -9,7 +9,8 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 
 class PublicationEligibilityDomainService {
     fun evaluate(content: Content, task: MediaProcessingTask): Boolean {
-        return content.reviewStatusValue == ReviewStatus.APPROVED &&
+        return task.contentId == content.id &&
+            content.reviewStatusValue == ReviewStatus.APPROVED &&
             task.processingStatusValue == MediaProcessingStatus.SUCCEEDED
     }
 }

@@ -1,9 +1,11 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task
 
+import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.TestDomainEventSupervisor
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.installTestDomainEventSupervisor
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,6 +49,26 @@ class MediaProcessingTaskBehaviorTest {
         assertEquals(task.id, event.taskId)
         assertEquals(task.contentId, event.contentId)
         assertEquals("external-123", event.externalTaskId)
+    }
+
+    @Test
+    fun `mark processing succeeded is a no-op when task is already succeeded`() {
+        val task = newTask(
+            externalTaskId = "external-123",
+            processingStatus = MediaProcessingStatus.SUCCEEDED.name,
+        )
+
+        task.markSucceeded()
+
+        assertEquals(MediaProcessingStatus.SUCCEEDED.name, task.processingStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `media processing succeeded event is durable`() {
+        val annotation = MediaProcessingSucceededDomainEvent::class.java.getAnnotation(DomainEvent::class.java)
+
+        assertTrue(annotation.persist)
     }
 
     private fun newTask(

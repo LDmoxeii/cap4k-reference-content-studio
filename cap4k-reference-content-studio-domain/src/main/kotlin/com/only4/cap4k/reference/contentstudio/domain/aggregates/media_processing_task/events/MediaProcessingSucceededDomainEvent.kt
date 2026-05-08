@@ -5,7 +5,7 @@ import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
 import java.util.UUID
 
-@DomainEvent(persist = false)
+@DomainEvent(persist = true)
 @Aggregate(
     aggregate = "MediaProcessingTask",
     name = "MediaProcessingSucceededDomainEvent",

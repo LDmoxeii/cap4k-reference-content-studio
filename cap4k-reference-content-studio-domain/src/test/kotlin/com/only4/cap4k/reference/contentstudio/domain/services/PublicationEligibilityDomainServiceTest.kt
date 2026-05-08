@@ -27,6 +27,20 @@ class PublicationEligibilityDomainServiceTest {
         assertFalse(service.evaluate(content = approvedContent, task = submittedTask))
     }
 
+    @Test
+    fun `publish eligibility requires media task to belong to the content`() {
+        val content = newContent(
+            contentId = UUID.randomUUID(),
+            reviewStatus = ReviewStatus.APPROVED.name,
+        )
+        val unrelatedTask = newTask(
+            contentId = UUID.randomUUID(),
+            processingStatus = MediaProcessingStatus.SUCCEEDED.name,
+        )
+
+        assertFalse(service.evaluate(content = content, task = unrelatedTask))
+    }
+
     private fun newContent(
         contentId: UUID,
         reviewStatus: String,

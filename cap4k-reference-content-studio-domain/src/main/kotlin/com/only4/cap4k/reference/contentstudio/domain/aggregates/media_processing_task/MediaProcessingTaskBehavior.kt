@@ -15,6 +15,10 @@ fun MediaProcessingTask.markSubmitted(externalTaskId: String) {
 }
 
 fun MediaProcessingTask.markSucceeded() {
+    if (processingStatusValue == MediaProcessingStatus.SUCCEEDED) {
+        return
+    }
+
     processingStatusValue = MediaProcessingStatus.SUCCEEDED
     events().attach(this) {
         MediaProcessingSucceededDomainEvent(

@@ -40,6 +40,26 @@ class ContentBehaviorTest {
     }
 
     @Test
+    fun `approve is a no-op when content is already approved`() {
+        val originalReviewerId = UUID.randomUUID()
+        val originalApprovedAt = LocalDateTime.of(2026, 5, 9, 10, 0)
+        val content = newContent(reviewStatus = ReviewStatus.APPROVED.name).apply {
+            reviewerId = originalReviewerId
+            reviewedAt = originalApprovedAt
+        }
+
+        content.approve(
+            reviewerId = UUID.randomUUID(),
+            approvedAt = LocalDateTime.of(2026, 5, 9, 11, 0),
+        )
+
+        assertEquals(ReviewStatus.APPROVED.name, content.reviewStatus)
+        assertEquals(originalReviewerId, content.reviewerId)
+        assertEquals(originalApprovedAt, content.reviewedAt)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
     fun `publish marks content published and emits content published event`() {
         val content = newContent(reviewStatus = ReviewStatus.APPROVED.name)
         val publishedAt = LocalDateTime.of(2026, 5, 9, 11, 0)
@@ -55,6 +75,23 @@ class ContentBehaviorTest {
         )
         assertEquals(content.id, event.contentId)
         assertEquals(publishedAt, event.publishedAt)
+    }
+
+    @Test
+    fun `publish is a no-op when content is already published`() {
+        val originalPublishedAt = LocalDateTime.of(2026, 5, 9, 11, 0)
+        val content = newContent(
+            reviewStatus = ReviewStatus.APPROVED.name,
+            contentStatus = ContentStatus.PUBLISHED.name,
+        ).apply {
+            publishedAt = originalPublishedAt
+        }
+
+        content.publish(publishedAt = LocalDateTime.of(2026, 5, 9, 12, 0))
+
+        assertEquals(ContentStatus.PUBLISHED.name, content.contentStatus)
+        assertEquals(originalPublishedAt, content.publishedAt)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
     }
 
     private fun newContent(

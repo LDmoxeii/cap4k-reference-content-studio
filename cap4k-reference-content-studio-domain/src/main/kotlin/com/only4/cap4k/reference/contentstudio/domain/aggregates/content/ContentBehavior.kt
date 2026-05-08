@@ -19,6 +19,10 @@ var Content.contentStatusValue: ContentStatus
     }
 
 fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
+    if (reviewStatusValue == ReviewStatus.APPROVED) {
+        return
+    }
+
     reviewStatusValue = ReviewStatus.APPROVED
     this.reviewerId = reviewerId
     reviewedAt = approvedAt
@@ -33,6 +37,10 @@ fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
 }
 
 fun Content.publish(publishedAt: LocalDateTime) {
+    if (contentStatusValue == ContentStatus.PUBLISHED) {
+        return
+    }
+
     contentStatusValue = ContentStatus.PUBLISHED
     this.publishedAt = publishedAt
     events().attach(this) {
