@@ -7,3 +7,75 @@ runscript from 'classpath:db/schema/content-studio-schema.sql';
 -- __archived_event
 -- __event_http_subscriber
 -- __locker
+
+create table if not exists __event (
+    id bigint auto_increment primary key,
+    event_uuid varchar(64) not null default '',
+    svc_name varchar(255) not null default '',
+    event_type varchar(255) not null default '',
+    data clob,
+    data_type varchar(255) not null default '',
+    exception clob,
+    expire_at timestamp not null default current_timestamp,
+    create_at timestamp not null default current_timestamp,
+    event_state int not null default 0,
+    last_try_time timestamp not null default current_timestamp,
+    next_try_time timestamp not null default current_timestamp,
+    tried_times int not null default 0,
+    try_times int not null default 0,
+    version int not null default 0,
+    db_created_at timestamp not null default current_timestamp,
+    db_updated_at timestamp not null default current_timestamp
+);
+
+create index if not exists idx___event_event_uuid on __event(event_uuid);
+create index if not exists idx___event_event_type_svc_name on __event(event_type, svc_name);
+create index if not exists idx___event_next_try_time on __event(next_try_time);
+
+create table if not exists __archived_event (
+    id bigint primary key,
+    event_uuid varchar(64) not null default '',
+    svc_name varchar(255) not null default '',
+    event_type varchar(255) not null default '',
+    data clob,
+    data_type varchar(255) not null default '',
+    exception clob,
+    expire_at timestamp not null default current_timestamp,
+    create_at timestamp not null default current_timestamp,
+    event_state int not null default 0,
+    last_try_time timestamp not null default current_timestamp,
+    next_try_time timestamp not null default current_timestamp,
+    tried_times int not null default 0,
+    try_times int not null default 0,
+    version int not null default 0,
+    db_created_at timestamp not null default current_timestamp,
+    db_updated_at timestamp not null default current_timestamp
+);
+
+create index if not exists idx___archived_event_event_uuid on __archived_event(event_uuid);
+create index if not exists idx___archived_event_event_type_svc_name on __archived_event(event_type, svc_name);
+
+create table if not exists __event_http_subscriber (
+    id bigint auto_increment primary key,
+    event varchar(255) not null default '',
+    subscriber varchar(255) not null default '',
+    callback_url varchar(1024) not null default '',
+    version int not null default 0,
+    db_created_at timestamp not null default current_timestamp,
+    db_updated_at timestamp not null default current_timestamp,
+    db_deleted tinyint not null default 0
+);
+
+create index if not exists idx___event_http_subscriber_event on __event_http_subscriber(event);
+
+create table if not exists __locker (
+    id bigint auto_increment primary key,
+    name varchar(100) not null default '',
+    pwd varchar(100) not null default '',
+    lock_at timestamp not null default timestamp '1970-01-01 00:00:00',
+    unlock_at timestamp not null default timestamp '1970-01-01 00:00:00',
+    version bigint not null default 0,
+    db_created_at timestamp not null default current_timestamp,
+    db_updated_at timestamp not null default current_timestamp,
+    constraint uq___locker_name unique (name)
+);

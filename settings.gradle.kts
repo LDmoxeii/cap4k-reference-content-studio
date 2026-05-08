@@ -1,3 +1,11 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
 rootProject.name = "cap4k-reference-content-studio"
 
 include("cap4k-reference-content-studio-domain")
