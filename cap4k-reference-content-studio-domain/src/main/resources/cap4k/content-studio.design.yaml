@@ -1,0 +1,32 @@
+project:
+  group: com.only4.cap4k.reference.contentstudio
+  artifact: cap4k-reference-content-studio
+
+types:
+  imports: []
+
+generators:
+  designCommand:
+    enabled: true
+  designQuery:
+    enabled: true
+  designQueryHandler:
+    enabled: true
+  designClient:
+    enabled: true
+  designClientHandler:
+    enabled: true
+  designDomainEvent:
+    enabled: true
+  designDomainEventHandler:
+    enabled: true
+  aggregate:
+    enabled: true
+    artifacts:
+      factory: true
+      specification: true
+      unique: false
+
+layout:
+  aggregate:
+    packageName: com.only4.cap4k.reference.contentstudio.domain.aggregates

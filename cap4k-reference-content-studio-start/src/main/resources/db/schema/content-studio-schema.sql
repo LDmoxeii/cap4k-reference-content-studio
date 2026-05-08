@@ -1,0 +1,19 @@
+create table content (
+    id uuid primary key,
+    title varchar(200) not null,
+    body clob not null,
+    media_source_key varchar(200) not null,
+    review_status varchar(40) not null,
+    content_status varchar(40) not null,
+    db_created_at timestamp not null,
+    db_updated_at timestamp not null
+);
+
+create table media_processing_task (
+    id uuid primary key,
+    content_id uuid not null,
+    external_task_id varchar(120),
+    processing_status varchar(40) not null,
+    db_created_at timestamp not null,
+    db_updated_at timestamp not null
+);
