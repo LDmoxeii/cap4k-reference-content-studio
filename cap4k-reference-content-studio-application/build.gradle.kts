@@ -9,8 +9,15 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation(kotlin("reflect"))
     implementation("org.springframework:spring-context")
+    implementation("org.springframework:spring-tx")
+    testImplementation("org.junit.jupiter:junit-jupiter:${libs.versions.junit.get()}")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 kotlin {
     jvmToolchain(21)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
