@@ -33,6 +33,49 @@ class MediaProcessingTaskBehaviorTest {
     }
 
     @Test
+    fun `mark submitted rejects blank external task id`() {
+        val task = newTask()
+
+        assertThrows(IllegalStateException::class.java) {
+            task.markSubmitted(externalTaskId = "   ")
+        }
+
+        assertEquals(null, task.externalTaskId)
+        assertEquals(MediaProcessingStatus.PENDING.name, task.processingStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `mark submitted is a no-op for duplicate submission with same external task id`() {
+        val task = newTask(
+            externalTaskId = "external-123",
+            processingStatus = MediaProcessingStatus.SUBMITTED.name,
+        )
+
+        task.markSubmitted(externalTaskId = "external-123")
+
+        assertEquals("external-123", task.externalTaskId)
+        assertEquals(MediaProcessingStatus.SUBMITTED.name, task.processingStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `mark submitted rejects duplicate submission with different external task id`() {
+        val task = newTask(
+            externalTaskId = "external-123",
+            processingStatus = MediaProcessingStatus.SUBMITTED.name,
+        )
+
+        assertThrows(IllegalStateException::class.java) {
+            task.markSubmitted(externalTaskId = "external-456")
+        }
+
+        assertEquals("external-123", task.externalTaskId)
+        assertEquals(MediaProcessingStatus.SUBMITTED.name, task.processingStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
     fun `mark processing succeeded emits media processing succeeded event`() {
         val task = newTask(
             externalTaskId = "external-123",
