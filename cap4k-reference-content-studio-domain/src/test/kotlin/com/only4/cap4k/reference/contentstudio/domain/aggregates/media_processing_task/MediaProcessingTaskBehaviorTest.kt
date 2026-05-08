@@ -5,8 +5,9 @@ import com.only4.cap4k.reference.contentstudio.domain.TestDomainEventSupervisor
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.installTestDomainEventSupervisor
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertInstanceOf
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -61,6 +62,50 @@ class MediaProcessingTaskBehaviorTest {
         task.markSucceeded()
 
         assertEquals(MediaProcessingStatus.SUCCEEDED.name, task.processingStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `mark submitted rejects regressing a succeeded task`() {
+        val task = newTask(
+            externalTaskId = "external-123",
+            processingStatus = MediaProcessingStatus.SUCCEEDED.name,
+        )
+
+        assertThrows(IllegalStateException::class.java) {
+            task.markSubmitted(externalTaskId = "external-456")
+        }
+
+        assertEquals("external-123", task.externalTaskId)
+        assertEquals(MediaProcessingStatus.SUCCEEDED.name, task.processingStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `mark processing succeeded rejects pending task`() {
+        val task = newTask()
+
+        assertThrows(IllegalStateException::class.java) {
+            task.markSucceeded()
+        }
+
+        assertEquals(MediaProcessingStatus.PENDING.name, task.processingStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `mark processing succeeded rejects blank external task id`() {
+        val task = newTask(
+            externalTaskId = "   ",
+            processingStatus = MediaProcessingStatus.SUBMITTED.name,
+        )
+
+        assertThrows(IllegalStateException::class.java) {
+            task.markSucceeded()
+        }
+
+        assertEquals("   ", task.externalTaskId)
+        assertEquals(MediaProcessingStatus.SUBMITTED.name, task.processingStatus)
         assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
     }
 

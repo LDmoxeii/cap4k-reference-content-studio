@@ -10,6 +10,10 @@ var MediaProcessingTask.processingStatusValue: MediaProcessingStatus
     }
 
 fun MediaProcessingTask.markSubmitted(externalTaskId: String) {
+    check(processingStatusValue != MediaProcessingStatus.SUCCEEDED) {
+        "Cannot submit a media processing task that has already succeeded."
+    }
+
     this.externalTaskId = externalTaskId
     processingStatusValue = MediaProcessingStatus.SUBMITTED
 }
@@ -17,6 +21,14 @@ fun MediaProcessingTask.markSubmitted(externalTaskId: String) {
 fun MediaProcessingTask.markSucceeded() {
     if (processingStatusValue == MediaProcessingStatus.SUCCEEDED) {
         return
+    }
+
+    check(processingStatusValue == MediaProcessingStatus.SUBMITTED) {
+        "Cannot mark a media processing task as succeeded before it has been submitted."
+    }
+
+    check(!externalTaskId.isNullOrBlank()) {
+        "Cannot mark a media processing task as succeeded without an external task id."
     }
 
     processingStatusValue = MediaProcessingStatus.SUCCEEDED
