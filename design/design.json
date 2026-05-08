@@ -8,8 +8,7 @@
     "requestFields": [
       { "name": "title", "type": "String" },
       { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" },
-      { "name": "authorId", "type": "java.util.UUID" }
+      { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": [
       { "name": "contentId", "type": "java.util.UUID" }
@@ -22,8 +21,7 @@
     "desc": "submit content draft for review",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "submittedBy", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "java.util.UUID" }
     ],
     "responseFields": []
   },
