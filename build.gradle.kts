@@ -19,8 +19,6 @@ val contentStudioSchemaPath =
     layout.projectDirectory.file(
         "cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql"
     ).asFile.absolutePath.replace("\\", "/")
-val contentStudioDbPath =
-    layout.buildDirectory.file("h2/content-studio").get().asFile.absolutePath.replace("\\", "/")
 
 cap4k {
     project {
@@ -37,7 +35,7 @@ cap4k {
         db {
             enabled.set(true)
             url.set(
-                "jdbc:h2:file:$contentStudioDbPath;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;INIT=RUNSCRIPT FROM '$contentStudioSchemaPath'"
+                "jdbc:h2:mem:content-studio-generator;MODE=MySQL;DATABASE_TO_UPPER=false;INIT=RUNSCRIPT FROM '$contentStudioSchemaPath'"
             )
             username.set("sa")
             password.set("secret")

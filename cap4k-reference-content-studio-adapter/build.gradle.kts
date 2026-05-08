@@ -12,11 +12,14 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:${libs.versions.spring.boot.get()}"))
     implementation(project(":cap4k-reference-content-studio-domain"))
     implementation(project(":cap4k-reference-content-studio-application"))
-    implementation(libs.spring.boot.starter.web)
-    implementation(libs.spring.boot.starter.data.jpa)
-    implementation(libs.h2)
+    implementation("com.only4:ddd-core:0.5.0-SNAPSHOT")
+    implementation("com.only4:ddd-domain-repo-jpa:0.5.0-SNAPSHOT")
+    implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
+    implementation("org.springframework:spring-context")
+    implementation("org.springframework.data:spring-data-jpa")
 }
 
 kotlin {
