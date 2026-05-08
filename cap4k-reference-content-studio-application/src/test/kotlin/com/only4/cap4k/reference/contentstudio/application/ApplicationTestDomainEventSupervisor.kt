@@ -10,6 +10,10 @@ internal class TestDomainEventSupervisor : DomainEventSupervisor {
     val attachedEvents: List<Any>
         get() = events.toList()
 
+    fun clear() {
+        events.clear()
+    }
+
     override fun <DOMAIN_EVENT : Any, ENTITY : Any> attach(
         domainEventPayload: DOMAIN_EVENT,
         entity: ENTITY,

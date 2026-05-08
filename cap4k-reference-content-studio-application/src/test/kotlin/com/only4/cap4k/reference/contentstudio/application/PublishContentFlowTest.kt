@@ -17,6 +17,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.UUID
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -94,6 +95,65 @@ class PublishContentFlowTest {
         assertEquals(listOf(content.id), mediaProcessingTaskRepository.saveCalls)
         assertEquals(ContentStatus.PUBLISHED, contentRepository.require(content.id).contentStatusValue)
         assertTrue(attachedEvents.attachedEvents.any { it is ContentPublishedDomainEvent })
+    }
+
+    @Test
+    fun `temporary callback seam rejects mismatched external task id and does not publish`() {
+        val attachedEvents = installTestDomainEventSupervisor()
+        val content =
+            contentFixture(
+                reviewStatus = ReviewStatus.APPROVED,
+                contentStatus = ContentStatus.DRAFT,
+                reviewerId = UUID.randomUUID(),
+                reviewedAt = LocalDateTime.of(2026, 5, 9, 11, 0),
+            )
+        val task =
+            mediaProcessingTaskFixture(
+                contentId = content.id,
+                status = MediaProcessingStatus.SUBMITTED,
+                externalTaskId = "ext-expected",
+            )
+        val contentRepository = InMemoryContentRepository(listOf(content))
+        val mediaProcessingTaskRepository = InMemoryMediaProcessingTaskRepository(listOf(task))
+        val publishHandler =
+            PublishContentCmd.Handler(
+                contentRepository = contentRepository,
+                mediaProcessingTaskRepository = mediaProcessingTaskRepository,
+                publicationEligibilityDomainService = PublicationEligibilityDomainService(),
+            )
+        val markHandler = MarkMediaProcessingSucceededCmd.Handler(mediaProcessingTaskRepository)
+        val requestSupervisor =
+            RecordingRequestSupervisor().apply {
+                register(MarkMediaProcessingSucceededCmd.Request::class.java, markHandler::exec)
+                register(PublishContentCmd.Request::class.java, publishHandler::exec)
+            }
+        val transitionSurface = MediaProcessingSucceededTransitionSurface(requestSupervisor)
+
+        val error =
+            assertThrows(IllegalStateException::class.java) {
+                transitionSurface.on(
+                    MediaProcessingSucceededTransitionSurface.Event(
+                        contentId = content.id,
+                        externalTaskId = "ext-wrong",
+                    )
+                )
+            }
+
+        assertTrue(error.message!!.contains("External task id mismatch"))
+        assertEquals(
+            listOf(
+                MarkMediaProcessingSucceededCmd.Request(
+                    contentId = content.id,
+                    externalTaskId = "ext-wrong",
+                )
+            ),
+            requestSupervisor.sentRequests,
+        )
+        assertTrue(attachedEvents.attachedEvents.isEmpty())
+        assertTrue(contentRepository.saveCalls.isEmpty())
+        assertTrue(mediaProcessingTaskRepository.saveCalls.isEmpty())
+        assertEquals(ContentStatus.DRAFT, contentRepository.require(content.id).contentStatusValue)
+        assertEquals(MediaProcessingStatus.SUBMITTED, mediaProcessingTaskRepository.require(content.id).processingStatusValue)
     }
 
     private fun assertSingleMediaProcessingSucceededEvent(

@@ -1,21 +1,44 @@
 package com.only4.cap4k.reference.contentstudio.application.commands.content.workflow
 
-import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
+import com.only4.cap4k.reference.contentstudio.application.ports.ContentRepository
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.recordDraftCreated
+import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
 
 object CreateContentDraftCmd {
 
     @Service
-    class Handler : Command<Request, Response> {
+    class Handler(
+        private val contentRepository: ContentRepository,
+    ) : Command<Request, Response> {
 
         override fun exec(request: Request): Response {
-            Mediator.uow.save()
+            val now = LocalDateTime.now()
+            val content =
+                Content(
+                    id = UUID.randomUUID(),
+                    title = request.title,
+                    body = request.body,
+                    mediaSourceKey = request.mediaSourceKey,
+                    reviewStatus = ReviewStatus.PENDING.name,
+                    contentStatus = ContentStatus.DRAFT.name,
+                    reviewerId = null,
+                    reviewedAt = null,
+                    publishedAt = null,
+                    dbCreatedAt = now,
+                    dbUpdatedAt = now,
+                )
+            content.recordDraftCreated()
+            contentRepository.save(content)
 
             return Response(
-                contentId = TODO("set contentId")
+                contentId = content.id
             )
         }
     }
