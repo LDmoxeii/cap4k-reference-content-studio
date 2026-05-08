@@ -8,6 +8,7 @@ import com.only4.cap4k.reference.contentstudio.adapter.application.queries.GetCo
 import com.only4.cap4k.reference.contentstudio.adapter.application.queries.GetCurrentProcessingStatusQryHandler
 import com.only4.cap4k.reference.contentstudio.adapter.persistence.ContentPersistenceAdapter
 import com.only4.cap4k.reference.contentstudio.adapter.persistence.MediaProcessingTaskPersistenceAdapter
+import com.only4.cap4k.reference.contentstudio.application.ports.MediaProcessingTaskRepository as ApplicationMediaProcessingTaskRepository
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetContentDetailQry
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetMediaProcessingStatusQry
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -46,6 +48,10 @@ class QueryHandlerTest {
 
     @Autowired
     private lateinit var mediaProcessingTaskJpaRepository: JpaMediaProcessingTaskRepository
+
+    @Autowired
+    @Qualifier("mediaProcessingTaskPersistenceAdapter")
+    private lateinit var mediaProcessingTaskPersistenceAdapter: ApplicationMediaProcessingTaskRepository
 
     @Test
     fun `content detail query returns title body review status and content status`() {
@@ -121,6 +127,44 @@ class QueryHandlerTest {
         assertNotNull(response.task)
         assertEquals("ext-query-42", response.task?.externalTaskId)
         assertEquals("SUBMITTED", response.task?.processingStatus)
+    }
+
+    @Test
+    fun `media processing task persistence adapter finds task by external task id`() {
+        val contentId = UUID.randomUUID()
+        contentJpaRepository.save(
+            Content(
+                id = contentId,
+                title = "Persistence lookup content",
+                body = "Adapter persistence proof",
+                mediaSourceKey = "media/persistence.mp4",
+                reviewStatus = "APPROVED",
+                contentStatus = "READY",
+                reviewerId = null,
+                reviewedAt = null,
+                publishedAt = null,
+                dbCreatedAt = LocalDateTime.of(2026, 5, 9, 9, 0),
+                dbUpdatedAt = LocalDateTime.of(2026, 5, 9, 9, 0),
+            )
+        )
+        val taskId = UUID.randomUUID()
+        mediaProcessingTaskJpaRepository.save(
+            MediaProcessingTask(
+                id = taskId,
+                contentId = contentId,
+                externalTaskId = "ext-persistence-77",
+                processingStatus = "SUBMITTED",
+                dbCreatedAt = LocalDateTime.of(2026, 5, 9, 9, 5),
+                dbUpdatedAt = LocalDateTime.of(2026, 5, 9, 9, 6),
+            )
+        )
+
+        val task = mediaProcessingTaskPersistenceAdapter.findByExternalTaskId("ext-persistence-77")
+
+        assertNotNull(task)
+        assertEquals(taskId, task?.id)
+        assertEquals(contentId, task?.contentId)
+        assertEquals("ext-persistence-77", task?.externalTaskId)
     }
 
     @Configuration
