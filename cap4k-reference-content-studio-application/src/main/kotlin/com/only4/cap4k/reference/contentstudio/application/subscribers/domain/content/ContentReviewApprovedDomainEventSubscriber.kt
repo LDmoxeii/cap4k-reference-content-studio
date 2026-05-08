@@ -3,6 +3,7 @@ package com.only4.cap4k.reference.contentstudio.application.subscribers.domain.c
 import com.only4.cap4k.ddd.core.application.RequestSupervisor
 import com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ContentReviewApprovedDomainEventSubscriber(
-    private val requestSupervisor: RequestSupervisor = RequestSupervisor.instance,
+    @Qualifier("defaultRequestSupervisor")
+    private val requestSupervisor: RequestSupervisor,
 ) {
 
     @EventListener(ContentReviewApprovedDomainEvent::class)

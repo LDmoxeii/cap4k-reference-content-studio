@@ -2,6 +2,7 @@ package com.only4.cap4k.reference.contentstudio.application.transition
 
 import com.only4.cap4k.ddd.core.application.RequestSupervisor
 import com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 
 /**
@@ -9,7 +10,8 @@ import org.springframework.stereotype.Service
  */
 @Service
 class MediaProcessingSucceededTransitionSurface(
-    private val requestSupervisor: RequestSupervisor = RequestSupervisor.instance,
+    @Qualifier("defaultRequestSupervisor")
+    private val requestSupervisor: RequestSupervisor,
 ) {
     fun on(event: Event) {
         requestSupervisor.send(

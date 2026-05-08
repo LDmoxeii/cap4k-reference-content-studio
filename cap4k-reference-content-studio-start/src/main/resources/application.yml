@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: cap4k-reference-content-studio
+  autoconfigure:
+    exclude:
+      - com.only4.cap4k.ddd.application.saga.SagaAutoConfiguration
+  datasource:
+    url: jdbc:h2:mem:content-studio;MODE=MySQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
+  sql:
+    init:
+      mode: always
+      schema-locations:
+        - classpath:db/init/content-studio-runtime-init-h2.sql
+
+server:
+  port: 8080
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
+cap4k:
+  application:
+    name: cap4k-reference-content-studio
+  ddd:
+    domain:
+      event:
+        event-scan-package: com.only4.cap4k.reference.contentstudio
+        schedule:
+          add-partition-enable: false
+    application:
+      request:
+        schedule:
+          add-partition-enable: false
+    distributed:
+      id-generator:
+        snowflake:
+          enable: false
