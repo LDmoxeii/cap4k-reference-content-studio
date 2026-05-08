@@ -4,6 +4,7 @@ import com.only4.cap4k.reference.contentstudio.application.ports.MediaProcessing
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
 import jakarta.persistence.EntityManager
 import java.util.UUID
+import org.springframework.dao.IncorrectResultSizeDataAccessException
 import org.springframework.stereotype.Repository
 import com.only4.cap4k.reference.contentstudio.adapter.domain.repositories.MediaProcessingTaskRepository as JpaMediaProcessingTaskRepository
 
@@ -36,8 +37,20 @@ class MediaProcessingTaskPersistenceAdapter(
             MediaProcessingTask::class.java,
         )
             .setParameter("externalTaskId", externalTaskId)
+            .setMaxResults(2)
             .resultList
-            .firstOrNull()
+            .let { matches ->
+                when (matches.size) {
+                    0 -> null
+                    1 -> matches.single()
+                    else ->
+                        throw IncorrectResultSizeDataAccessException(
+                            "Duplicate media processing tasks found for external task id $externalTaskId.",
+                            1,
+                            matches.size,
+                        )
+                }
+            }
 
     override fun save(task: MediaProcessingTask): MediaProcessingTask =
         jpaMediaProcessingTaskRepository.save(task)

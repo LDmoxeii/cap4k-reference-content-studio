@@ -17,7 +17,10 @@ import java.time.LocalDateTime
 import java.util.UUID
 import javax.sql.DataSource
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.springframework.dao.IncorrectResultSizeDataAccessException
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -165,6 +168,71 @@ class QueryHandlerTest {
         assertEquals(taskId, task?.id)
         assertEquals(contentId, task?.contentId)
         assertEquals("ext-persistence-77", task?.externalTaskId)
+    }
+
+    @Test
+    fun `media processing task persistence adapter fails when external task id is duplicated`() {
+        val firstContentId = UUID.randomUUID()
+        val secondContentId = UUID.randomUUID()
+        contentJpaRepository.save(
+            Content(
+                id = firstContentId,
+                title = "Duplicate persistence lookup content A",
+                body = "Adapter persistence duplicate proof",
+                mediaSourceKey = "media/persistence-a.mp4",
+                reviewStatus = "APPROVED",
+                contentStatus = "READY",
+                reviewerId = null,
+                reviewedAt = null,
+                publishedAt = null,
+                dbCreatedAt = LocalDateTime.of(2026, 5, 9, 9, 0),
+                dbUpdatedAt = LocalDateTime.of(2026, 5, 9, 9, 0),
+            )
+        )
+        contentJpaRepository.save(
+            Content(
+                id = secondContentId,
+                title = "Duplicate persistence lookup content B",
+                body = "Adapter persistence duplicate proof",
+                mediaSourceKey = "media/persistence-b.mp4",
+                reviewStatus = "APPROVED",
+                contentStatus = "READY",
+                reviewerId = null,
+                reviewedAt = null,
+                publishedAt = null,
+                dbCreatedAt = LocalDateTime.of(2026, 5, 9, 9, 1),
+                dbUpdatedAt = LocalDateTime.of(2026, 5, 9, 9, 1),
+            )
+        )
+        mediaProcessingTaskJpaRepository.save(
+            MediaProcessingTask(
+                id = UUID.randomUUID(),
+                contentId = firstContentId,
+                externalTaskId = "ext-duplicate-88",
+                processingStatus = "SUBMITTED",
+                dbCreatedAt = LocalDateTime.of(2026, 5, 9, 9, 5),
+                dbUpdatedAt = LocalDateTime.of(2026, 5, 9, 9, 6),
+            )
+        )
+        mediaProcessingTaskJpaRepository.save(
+            MediaProcessingTask(
+                id = UUID.randomUUID(),
+                contentId = secondContentId,
+                externalTaskId = "ext-duplicate-88",
+                processingStatus = "SUBMITTED",
+                dbCreatedAt = LocalDateTime.of(2026, 5, 9, 9, 7),
+                dbUpdatedAt = LocalDateTime.of(2026, 5, 9, 9, 8),
+            )
+        )
+
+        val error =
+            assertThrows(IncorrectResultSizeDataAccessException::class.java) {
+                mediaProcessingTaskPersistenceAdapter.findByExternalTaskId("ext-duplicate-88")
+            }
+
+        assertTrue(error.message!!.contains("Duplicate"))
+        assertTrue(error.message!!.contains("ext-duplicate-88"))
+        assertEquals(2, error.actualSize)
     }
 
     @Configuration
