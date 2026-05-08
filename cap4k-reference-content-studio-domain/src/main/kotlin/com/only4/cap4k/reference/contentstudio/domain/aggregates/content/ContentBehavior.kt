@@ -1,0 +1,45 @@
+package com.only4.cap4k.reference.contentstudio.domain.aggregates.content
+
+import com.only4.cap4k.ddd.core.domain.event.DomainEventSupervisorSupport.events
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
+import java.time.LocalDateTime
+import java.util.UUID
+
+var Content.reviewStatusValue: ReviewStatus
+    get() = ReviewStatus.from(reviewStatus)
+    internal set(value) {
+        reviewStatus = value.name
+    }
+
+var Content.contentStatusValue: ContentStatus
+    get() = ContentStatus.from(contentStatus)
+    internal set(value) {
+        contentStatus = value.name
+    }
+
+fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
+    reviewStatusValue = ReviewStatus.APPROVED
+    this.reviewerId = reviewerId
+    reviewedAt = approvedAt
+    events().attach(this) {
+        ContentReviewApprovedDomainEvent(
+            entity = this,
+            contentId = id,
+            reviewerId = reviewerId,
+            reviewedAt = approvedAt,
+        )
+    }
+}
+
+fun Content.publish(publishedAt: LocalDateTime) {
+    contentStatusValue = ContentStatus.PUBLISHED
+    this.publishedAt = publishedAt
+    events().attach(this) {
+        ContentPublishedDomainEvent(
+            entity = this,
+            contentId = id,
+            publishedAt = publishedAt,
+        )
+    }
+}
