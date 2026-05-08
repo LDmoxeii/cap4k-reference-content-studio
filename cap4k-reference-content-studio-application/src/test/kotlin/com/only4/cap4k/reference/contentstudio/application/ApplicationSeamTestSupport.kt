@@ -40,6 +40,9 @@ internal class InMemoryMediaProcessingTaskRepository(
 
     override fun findByContentId(contentId: UUID): MediaProcessingTask? = tasks[contentId]
 
+    override fun findByExternalTaskId(externalTaskId: String): MediaProcessingTask? =
+        tasks.values.firstOrNull { it.externalTaskId == externalTaskId }
+
     override fun save(task: MediaProcessingTask): MediaProcessingTask {
         tasks[task.contentId] = task
         saveCalls += task.contentId

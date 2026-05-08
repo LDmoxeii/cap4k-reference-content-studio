@@ -20,7 +20,6 @@ class MediaProcessingCallbackIntegrationEventSubscriber(
 
         transitionSurface.on(
             MediaProcessingSucceededTransitionSurface.Event(
-                contentId = event.contentId,
                 externalTaskId = event.externalTaskId,
             )
         )

@@ -1,7 +1,6 @@
 package com.only4.cap4k.reference.contentstudio.adapter.integration
 
 import com.only4.cap4k.ddd.core.application.event.annotation.IntegrationEvent
-import java.util.UUID
 
 /**
  * Handwritten integration-event contract kept local until design-driven event families land for #34.
@@ -11,7 +10,6 @@ import java.util.UUID
     subscriber = MediaProcessingCallbackIntegrationEvent.SUBSCRIBER_NAME,
 )
 data class MediaProcessingCallbackIntegrationEvent(
-    val contentId: UUID,
     val externalTaskId: String,
     val status: String,
 ) {

@@ -108,7 +108,6 @@ class DefaultPathApplicationFlowTest {
 
         transitionSurface.on(
             MediaProcessingSucceededTransitionSurface.Event(
-                contentId = contentId,
                 externalTaskId = "ext-full-1",
             )
         )
@@ -117,7 +116,6 @@ class DefaultPathApplicationFlowTest {
             listOf(
                 StartMediaProcessingCmd.Request(contentId = contentId),
                 MarkMediaProcessingSucceededCmd.Request(
-                    contentId = contentId,
                     externalTaskId = "ext-full-1",
                 ),
             ),
@@ -137,7 +135,6 @@ class DefaultPathApplicationFlowTest {
             listOf(
                 StartMediaProcessingCmd.Request(contentId = contentId),
                 MarkMediaProcessingSucceededCmd.Request(
-                    contentId = contentId,
                     externalTaskId = "ext-full-1",
                 ),
                 PublishContentCmd.Request(

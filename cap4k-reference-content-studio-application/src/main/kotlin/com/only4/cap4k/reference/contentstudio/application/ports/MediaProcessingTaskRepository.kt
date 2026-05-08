@@ -6,5 +6,7 @@ import java.util.UUID
 interface MediaProcessingTaskRepository {
     fun findByContentId(contentId: UUID): MediaProcessingTask?
 
+    fun findByExternalTaskId(externalTaskId: String): MediaProcessingTask?
+
     fun save(task: MediaProcessingTask): MediaProcessingTask
 }

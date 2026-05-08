@@ -60,7 +60,6 @@ class PublishContentFlowTest {
 
         transitionSurface.on(
             MediaProcessingSucceededTransitionSurface.Event(
-                contentId = content.id,
                 externalTaskId = "ext-publish-1",
             )
         )
@@ -68,7 +67,6 @@ class PublishContentFlowTest {
         assertEquals(
             listOf(
                 MarkMediaProcessingSucceededCmd.Request(
-                    contentId = content.id,
                     externalTaskId = "ext-publish-1",
                 )
             ),
@@ -98,7 +96,7 @@ class PublishContentFlowTest {
     }
 
     @Test
-    fun `temporary callback seam rejects mismatched external task id and does not publish`() {
+    fun `temporary callback seam rejects unknown external task id and does not publish`() {
         val attachedEvents = installTestDomainEventSupervisor()
         val content =
             contentFixture(
@@ -133,17 +131,15 @@ class PublishContentFlowTest {
             assertThrows(IllegalStateException::class.java) {
                 transitionSurface.on(
                     MediaProcessingSucceededTransitionSurface.Event(
-                        contentId = content.id,
                         externalTaskId = "ext-wrong",
                     )
                 )
             }
 
-        assertTrue(error.message!!.contains("External task id mismatch"))
+        assertTrue(error.message!!.contains("was not found"))
         assertEquals(
             listOf(
                 MarkMediaProcessingSucceededCmd.Request(
-                    contentId = content.id,
                     externalTaskId = "ext-wrong",
                 )
             ),

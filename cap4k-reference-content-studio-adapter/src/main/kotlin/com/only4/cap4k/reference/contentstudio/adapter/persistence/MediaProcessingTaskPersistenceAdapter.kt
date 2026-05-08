@@ -26,6 +26,19 @@ class MediaProcessingTaskPersistenceAdapter(
             .resultList
             .firstOrNull()
 
+    override fun findByExternalTaskId(externalTaskId: String): MediaProcessingTask? =
+        entityManager.createQuery(
+            """
+            select task
+            from MediaProcessingTask task
+            where task.externalTaskId = :externalTaskId
+            """.trimIndent(),
+            MediaProcessingTask::class.java,
+        )
+            .setParameter("externalTaskId", externalTaskId)
+            .resultList
+            .firstOrNull()
+
     override fun save(task: MediaProcessingTask): MediaProcessingTask =
         jpaMediaProcessingTaskRepository.save(task)
 }

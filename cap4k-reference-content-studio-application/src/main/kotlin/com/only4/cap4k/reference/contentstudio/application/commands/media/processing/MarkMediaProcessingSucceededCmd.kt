@@ -4,7 +4,6 @@ import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.reference.contentstudio.application.ports.MediaProcessingTaskRepository
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSucceeded
-import java.util.UUID
 import org.springframework.stereotype.Service
 
 object MarkMediaProcessingSucceededCmd {
@@ -15,11 +14,11 @@ object MarkMediaProcessingSucceededCmd {
     ) : Command<Request, Response> {
 
         override fun exec(request: Request): Response {
-            val task = checkNotNull(mediaProcessingTaskRepository.findByContentId(request.contentId)) {
-                "Media processing task for content ${request.contentId} was not found."
+            check(request.externalTaskId.isNotBlank()) {
+                "External task id must not be blank."
             }
-            check(request.externalTaskId == null || task.externalTaskId == request.externalTaskId) {
-                "External task id mismatch for content ${request.contentId}."
+            val task = checkNotNull(mediaProcessingTaskRepository.findByExternalTaskId(request.externalTaskId)) {
+                "Media processing task for external task id ${request.externalTaskId} was not found."
             }
             task.markSucceeded()
             mediaProcessingTaskRepository.save(task)
@@ -29,8 +28,7 @@ object MarkMediaProcessingSucceededCmd {
     }
 
     data class Request(
-        val contentId: UUID,
-        val externalTaskId: String?
+        val externalTaskId: String
     ) : RequestParam<Response>
 
     data object Response
