@@ -62,8 +62,9 @@ The main operator surface in version one is the committed `.http` files under
 `http/`. Use those to drive the workflow against a running local app.
 
 Swagger UI may be available through Springdoc defaults, but it is not the main
-way this reference project is meant to be operated. Use the `.http` files first;
-use OpenAPI as a contract/reference surface.
+way this reference project is meant to be operated. Use the `.http` files and
+the actual HTTP responses first. OpenAPI is kept as a limited contract
+snapshot, not as the authoritative operator guide for the whole happy path.
 
 ## `.http` Execution Order
 
@@ -95,8 +96,11 @@ There are two OpenAPI surfaces:
 - runtime docs from the running app: `http://localhost:8080/v3/api-docs`
 - committed static snapshot: `openapi/content-studio-openapi.json`
 
-Use the runtime endpoint to inspect the live app and the committed JSON file to
-track the checked-in contract snapshot.
+Use the runtime endpoint and committed JSON file to inspect the currently
+generated documented HTTP contract. In version one, these OpenAPI surfaces do
+not fully describe the callback consume path or the full query response payload
+shape used by the happy-path workflow, so treat the `.http` files and live
+responses as the operator truth.
 
 ## What `src-generated` Means
 
