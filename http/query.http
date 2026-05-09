@@ -1,5 +1,7 @@
 @baseUrl = http://localhost:8080
-@contentId = 00000000-0000-0000-0000-000000000001
+@contentId =
+
+### Paste the created contentId into @contentId before querying content or task state.
 
 ### Fetch content details.
 GET {{baseUrl}}/contents/{{contentId}}

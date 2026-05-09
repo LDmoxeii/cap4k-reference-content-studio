@@ -1,7 +1,10 @@
 @baseUrl = http://localhost:8080
 @event = cap4k.reference.contentstudio.media-processing.succeeded
 @uuid = 22222222-2222-2222-2222-222222222222
-@externalTaskId = external-task-001
+@contentId =
+@externalTaskId =
+
+### Copy contentId from content.http, then fetch query.http and paste task.externalTaskId here.
 
 ### Send the real integration-event callback through the HTTP consume path.
 POST {{baseUrl}}/cap4k/integration-event/http/consume?event={{event}}&uuid={{uuid}}
