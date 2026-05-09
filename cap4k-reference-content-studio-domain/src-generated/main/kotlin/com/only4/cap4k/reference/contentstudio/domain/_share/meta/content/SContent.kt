@@ -184,11 +184,11 @@ class SContent(
         Field(root.get("mediaSourceKey"), criteriaBuilder)
     }
 
-    val reviewStatus: Field<String> by lazy {
+    val reviewStatus: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus> by lazy {
         Field(root.get("reviewStatus"), criteriaBuilder)
     }
 
-    val contentStatus: Field<String> by lazy {
+    val contentStatus: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus> by lazy {
         Field(root.get("contentStatus"), criteriaBuilder)
     }
 

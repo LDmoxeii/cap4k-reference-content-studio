@@ -5,19 +5,21 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentSubmittedForReviewDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.time.LocalDateTime
 import java.util.UUID
 
 var Content.reviewStatusValue: ReviewStatus
-    get() = ReviewStatus.from(reviewStatus)
+    get() = reviewStatus
     internal set(value) {
-        reviewStatus = value.name
+        reviewStatus = value
     }
 
 var Content.contentStatusValue: ContentStatus
-    get() = ContentStatus.from(contentStatus)
+    get() = contentStatus
     internal set(value) {
-        contentStatus = value.name
+        contentStatus = value
     }
 
 fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {

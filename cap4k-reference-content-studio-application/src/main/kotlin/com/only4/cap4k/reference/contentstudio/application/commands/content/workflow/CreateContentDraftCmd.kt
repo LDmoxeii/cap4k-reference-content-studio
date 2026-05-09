@@ -3,10 +3,10 @@ package com.only4.cap4k.reference.contentstudio.application.commands.content.wor
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.ddd.core.Mediator
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentStatus
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ReviewStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.recordDraftCreated
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory.ContentFactory
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
@@ -25,8 +25,8 @@ object CreateContentDraftCmd {
                     title = request.title,
                     body = request.body,
                     mediaSourceKey = request.mediaSourceKey,
-                    reviewStatus = ReviewStatus.PENDING.name,
-                    contentStatus = ContentStatus.DRAFT.name,
+                    reviewStatus = ReviewStatus.PENDING,
+                    contentStatus = ContentStatus.DRAFT,
                     reviewerId = null,
                     reviewedAt = null,
                     publishedAt = null,

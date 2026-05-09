@@ -2,6 +2,7 @@ package com.only4.cap4k.reference.contentstudio.adapter
 
 import com.only4.cap4k.reference.contentstudio.adapter.application.queries.content.read.GetContentDetailQryHandler
 import com.only4.cap4k.reference.contentstudio.adapter.application.queries.content.read.GetMediaProcessingStatusQryHandler
+import com.only4.cap4k.reference.contentstudio.adapter.application.queries.media.processing.ListSubmittedMediaProcessingTasksForPollingQryHandler
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,6 +18,10 @@ class QueryHandlerTacticalContractTest {
         assertEquals(
             emptyList<Class<*>>(),
             GetMediaProcessingStatusQryHandler::class.java.constructors.single().parameterTypes.toList(),
+        )
+        assertEquals(
+            emptyList<Class<*>>(),
+            ListSubmittedMediaProcessingTasksForPollingQryHandler::class.java.constructors.single().parameterTypes.toList(),
         )
     }
 
@@ -35,6 +40,13 @@ class QueryHandlerTacticalContractTest {
             )
         assertTrue(mediaHandlerSource.contains("Mediator.repositories.findFirst("))
         assertTrue(mediaHandlerSource.contains("persist = false"))
+
+        val pollingHandlerSource =
+            sourceText(
+                "cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/application/queries/media/processing/ListSubmittedMediaProcessingTasksForPollingQryHandler.kt",
+            )
+        assertTrue(pollingHandlerSource.contains("Mediator.repositories.find("))
+        assertTrue(pollingHandlerSource.contains("persist = false"))
     }
 
     @Test

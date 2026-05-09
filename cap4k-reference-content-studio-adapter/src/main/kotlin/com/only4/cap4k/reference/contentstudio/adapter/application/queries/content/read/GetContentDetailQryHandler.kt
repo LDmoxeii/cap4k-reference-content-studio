@@ -29,8 +29,8 @@ class GetContentDetailQryHandler : Query<GetContentDetailQry.Request, GetContent
             title = content.title,
             body = content.body,
             mediaSourceKey = content.mediaSourceKey,
-            reviewStatus = content.reviewStatus,
-            contentStatus = content.contentStatus,
+            reviewStatus = content.reviewStatus.name,
+            contentStatus = content.contentStatus.name,
             reviewerId = content.reviewerId,
             reviewedAt = content.reviewedAt,
             publishedAt = content.publishedAt

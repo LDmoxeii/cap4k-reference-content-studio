@@ -170,7 +170,7 @@ class SMediaProcessingTask(
         Field(root.get("externalTaskId"), criteriaBuilder)
     }
 
-    val processingStatus: Field<String> by lazy {
+    val processingStatus: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus> by lazy {
         Field(root.get("processingStatus"), criteriaBuilder)
     }
 

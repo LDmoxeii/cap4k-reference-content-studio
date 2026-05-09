@@ -1,6 +1,6 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.factory
 
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import java.time.LocalDateTime
 import java.util.UUID
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -18,7 +18,7 @@ class MediaProcessingTaskFactoryTest {
                 id = UUID.randomUUID(),
                 contentId = UUID.randomUUID(),
                 externalTaskId = "external-123",
-                processingStatus = MediaProcessingStatus.SUBMITTED.name,
+                processingStatus = MediaProcessingStatus.SUBMITTED,
                 dbCreatedAt = now,
                 dbUpdatedAt = now.plusMinutes(5),
             )

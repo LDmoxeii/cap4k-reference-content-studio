@@ -1,7 +1,7 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory
 
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentStatus
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.time.LocalDateTime
 import java.util.UUID
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,8 +21,8 @@ class ContentFactoryTest {
                 title = "Draft title",
                 body = "Draft body",
                 mediaSourceKey = "media/source-key",
-                reviewStatus = ReviewStatus.PENDING.name,
-                contentStatus = ContentStatus.DRAFT.name,
+                reviewStatus = ReviewStatus.PENDING,
+                contentStatus = ContentStatus.DRAFT,
                 reviewerId = reviewerId,
                 reviewedAt = now,
                 publishedAt = now.plusHours(1),

@@ -3,6 +3,7 @@ package com.only4.cap4k.reference.contentstudio.start
 import com.only4.cap4k.ddd.core.domain.service.annotation.DomainService
 import com.only4.cap4k.reference.contentstudio.adapter.application.queries.content.read.GetContentDetailQryHandler
 import com.only4.cap4k.reference.contentstudio.adapter.application.queries.content.read.GetMediaProcessingStatusQryHandler
+import com.only4.cap4k.reference.contentstudio.adapter.application.queries.media.processing.ListSubmittedMediaProcessingTasksForPollingQryHandler
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ApproveContentReviewCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd
@@ -72,6 +73,29 @@ class TacticalArchitectureContractTest {
         }
     }
 
+    @Test
+    fun `polling fallback job reads submitted tasks through query contract instead of direct repository access`() {
+        val source =
+            Files.readString(
+                projectRoot().resolve(
+                    "cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/jobs/MediaProcessingPollingFallbackJob.kt",
+                ),
+            )
+        assertFalse(source.contains("Mediator.repositories."), "polling fallback job should not read repositories directly")
+        assertTrue(source.contains("Mediator.qry.send("), "polling fallback job should fetch submitted tasks through query contract")
+    }
+
+    @Test
+    fun `aggregate lifecycle enums move from handwritten source to generated snapshots`() {
+        val root = projectRoot()
+        handwrittenEnumFiles().forEach { relativePath ->
+            assertFalse(Files.exists(root.resolve(relativePath)), "$relativePath should no longer stay handwritten")
+        }
+        generatedEnumSnapshotFiles().forEach { relativePath ->
+            assertTrue(Files.exists(root.resolve(relativePath)), "$relativePath should exist as generated enum snapshot")
+        }
+    }
+
     private fun commandHandlers(): List<Class<*>> =
         listOf(
             CreateContentDraftCmd.Handler::class.java,
@@ -86,6 +110,7 @@ class TacticalArchitectureContractTest {
         listOf(
             GetContentDetailQryHandler::class.java,
             GetMediaProcessingStatusQryHandler::class.java,
+            ListSubmittedMediaProcessingTasksForPollingQryHandler::class.java,
         )
 
     private fun activeSubscribers(): List<Class<*>> =
@@ -106,6 +131,20 @@ class TacticalArchitectureContractTest {
             "com.only4.cap4k.reference.contentstudio.application.transition.MediaProcessingSucceededTransitionSurface",
             "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.specification.ContentSpecification",
             "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.specification.MediaProcessingTaskSpecification",
+        )
+
+    private fun handwrittenEnumFiles(): List<String> =
+        listOf(
+            "cap4k-reference-content-studio-domain/src/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/content/ReviewStatus.kt",
+            "cap4k-reference-content-studio-domain/src/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/content/ContentStatus.kt",
+            "cap4k-reference-content-studio-domain/src/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/media_processing_task/MediaProcessingStatus.kt",
+        )
+
+    private fun generatedEnumSnapshotFiles(): List<String> =
+        listOf(
+            "cap4k-reference-content-studio-domain/src-generated/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/content/enums/ReviewStatus.kt",
+            "cap4k-reference-content-studio-domain/src-generated/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/content/enums/ContentStatus.kt",
+            "cap4k-reference-content-studio-domain/src-generated/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/media_processing_task/enums/MediaProcessingStatus.kt",
         )
 
     private fun assertClassMissing(className: String) {

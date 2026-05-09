@@ -112,6 +112,19 @@
     ]
   },
   {
+    "tag": "query",
+    "package": "media.processing",
+    "name": "ListSubmittedMediaProcessingTasksForPolling",
+    "desc": "list submitted media processing tasks for polling fallback",
+    "aggregates": ["MediaProcessingTask"],
+    "requestFields": [],
+    "responseFields": [
+      { "name": "items", "type": "List<TaskItem>" },
+      { "name": "items[].contentId", "type": "java.util.UUID" },
+      { "name": "items[].externalTaskId", "type": "String" }
+    ]
+  },
+  {
     "tag": "api_payload",
     "package": "content.workflow",
     "name": "CreateContentDraftPayload",

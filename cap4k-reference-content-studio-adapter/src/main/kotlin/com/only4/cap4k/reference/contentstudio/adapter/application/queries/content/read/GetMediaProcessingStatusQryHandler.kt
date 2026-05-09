@@ -29,7 +29,7 @@ class GetMediaProcessingStatusQryHandler : Query<GetMediaProcessingStatusQry.Req
                     GetMediaProcessingStatusQry.Response.TaskSnapshot(
                         taskId = it.id,
                         externalTaskId = it.externalTaskId,
-                        processingStatus = it.processingStatus,
+                        processingStatus = it.processingStatus.name,
                     )
                 }
         )

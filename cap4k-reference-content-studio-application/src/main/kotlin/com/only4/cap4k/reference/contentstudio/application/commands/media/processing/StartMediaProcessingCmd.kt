@@ -6,9 +6,9 @@ import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.media.processing.TriggerMediaProcessingCli
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.factory.MediaProcessingTaskFactory
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSubmitted
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
@@ -32,7 +32,7 @@ object StartMediaProcessingCmd {
                         id = UUID.randomUUID(),
                         contentId = request.contentId,
                         externalTaskId = null,
-                        processingStatus = MediaProcessingStatus.PENDING.name,
+                        processingStatus = MediaProcessingStatus.PENDING,
                         dbCreatedAt = LocalDateTime.now(),
                         dbUpdatedAt = LocalDateTime.now(),
                     )

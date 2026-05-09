@@ -2,6 +2,7 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.content
 
 import com.only4.cap4k.ddd.core.domain.id.ApplicationSideId
 import jakarta.persistence.Column
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
@@ -14,8 +15,8 @@ class Content(
     title: String,
     body: String,
     mediaSourceKey: String,
-    reviewStatus: String,
-    contentStatus: String,
+    reviewStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus,
+    contentStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus,
     reviewerId: UUID? = null,
     reviewedAt: java.time.LocalDateTime? = null,
     publishedAt: java.time.LocalDateTime? = null,
@@ -42,11 +43,13 @@ class Content(
         internal set
 
     @Column(name = "review_status")
-    var reviewStatus: String = reviewStatus
+    @Convert(converter = com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus.Converter::class)
+    var reviewStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus = reviewStatus
         internal set
 
     @Column(name = "content_status")
-    var contentStatus: String = contentStatus
+    @Convert(converter = com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus.Converter::class)
+    var contentStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus = contentStatus
         internal set
 
     @Column(name = "reviewer_id")

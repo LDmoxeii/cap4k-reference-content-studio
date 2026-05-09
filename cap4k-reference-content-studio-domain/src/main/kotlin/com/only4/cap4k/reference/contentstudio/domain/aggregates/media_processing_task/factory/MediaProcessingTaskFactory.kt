@@ -4,6 +4,7 @@ import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import java.util.UUID
 import org.springframework.stereotype.Service
 
@@ -41,7 +42,7 @@ class MediaProcessingTaskFactory : AggregateFactory<MediaProcessingTaskFactory.P
 
         val externalTaskId: String?,
 
-        val processingStatus: String,
+        val processingStatus: MediaProcessingStatus,
 
         val dbCreatedAt: java.time.LocalDateTime,
 

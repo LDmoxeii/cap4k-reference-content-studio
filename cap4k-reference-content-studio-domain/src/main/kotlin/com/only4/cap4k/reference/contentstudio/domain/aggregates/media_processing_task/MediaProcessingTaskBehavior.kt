@@ -1,12 +1,13 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task
 
 import com.only4.cap4k.ddd.core.domain.event.DomainEventSupervisorSupport.events
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
 
 var MediaProcessingTask.processingStatusValue: MediaProcessingStatus
-    get() = MediaProcessingStatus.from(processingStatus)
+    get() = processingStatus
     internal set(value) {
-        processingStatus = value.name
+        processingStatus = value
     }
 
 fun MediaProcessingTask.markSubmitted(externalTaskId: String) {

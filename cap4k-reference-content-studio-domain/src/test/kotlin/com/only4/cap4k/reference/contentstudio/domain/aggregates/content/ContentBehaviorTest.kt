@@ -3,6 +3,8 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.content
 import com.only4.cap4k.reference.contentstudio.domain.installTestDomainEventSupervisor
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +28,7 @@ class ContentBehaviorTest {
 
         content.approve(reviewerId = reviewerId, approvedAt = approvedAt)
 
-        assertEquals(ReviewStatus.APPROVED.name, content.reviewStatus)
+        assertEquals(ReviewStatus.APPROVED, content.reviewStatus)
         assertEquals(reviewerId, content.reviewerId)
         assertEquals(approvedAt, content.reviewedAt)
 
@@ -43,7 +45,7 @@ class ContentBehaviorTest {
     fun `approve is a no-op when content is already approved`() {
         val originalReviewerId = UUID.randomUUID()
         val originalApprovedAt = LocalDateTime.of(2026, 5, 9, 10, 0)
-        val content = newContent(reviewStatus = ReviewStatus.APPROVED.name).apply {
+        val content = newContent(reviewStatus = ReviewStatus.APPROVED).apply {
             reviewerId = originalReviewerId
             reviewedAt = originalApprovedAt
         }
@@ -53,7 +55,7 @@ class ContentBehaviorTest {
             approvedAt = LocalDateTime.of(2026, 5, 9, 11, 0),
         )
 
-        assertEquals(ReviewStatus.APPROVED.name, content.reviewStatus)
+        assertEquals(ReviewStatus.APPROVED, content.reviewStatus)
         assertEquals(originalReviewerId, content.reviewerId)
         assertEquals(originalApprovedAt, content.reviewedAt)
         assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
@@ -61,12 +63,12 @@ class ContentBehaviorTest {
 
     @Test
     fun `publish marks content published and emits content published event`() {
-        val content = newContent(reviewStatus = ReviewStatus.APPROVED.name)
+        val content = newContent(reviewStatus = ReviewStatus.APPROVED)
         val publishedAt = LocalDateTime.of(2026, 5, 9, 11, 0)
 
         content.publish(publishedAt = publishedAt)
 
-        assertEquals(ContentStatus.PUBLISHED.name, content.contentStatus)
+        assertEquals(ContentStatus.PUBLISHED, content.contentStatus)
         assertEquals(publishedAt, content.publishedAt)
 
         val event = assertInstanceOf(
@@ -81,22 +83,22 @@ class ContentBehaviorTest {
     fun `publish is a no-op when content is already published`() {
         val originalPublishedAt = LocalDateTime.of(2026, 5, 9, 11, 0)
         val content = newContent(
-            reviewStatus = ReviewStatus.APPROVED.name,
-            contentStatus = ContentStatus.PUBLISHED.name,
+            reviewStatus = ReviewStatus.APPROVED,
+            contentStatus = ContentStatus.PUBLISHED,
         ).apply {
             publishedAt = originalPublishedAt
         }
 
         content.publish(publishedAt = LocalDateTime.of(2026, 5, 9, 12, 0))
 
-        assertEquals(ContentStatus.PUBLISHED.name, content.contentStatus)
+        assertEquals(ContentStatus.PUBLISHED, content.contentStatus)
         assertEquals(originalPublishedAt, content.publishedAt)
         assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
     }
 
     private fun newContent(
-        reviewStatus: String = ReviewStatus.PENDING.name,
-        contentStatus: String = ContentStatus.DRAFT.name,
+        reviewStatus: ReviewStatus = ReviewStatus.PENDING,
+        contentStatus: ContentStatus = ContentStatus.DRAFT,
     ): Content {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
         return Content(

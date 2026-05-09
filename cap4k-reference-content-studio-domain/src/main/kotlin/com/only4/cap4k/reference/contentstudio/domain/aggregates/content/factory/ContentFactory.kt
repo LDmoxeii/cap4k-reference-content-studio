@@ -4,6 +4,8 @@ import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.util.UUID
 import org.springframework.stereotype.Service
 
@@ -48,9 +50,9 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
 
         val mediaSourceKey: String,
 
-        val reviewStatus: String,
+        val reviewStatus: ReviewStatus,
 
-        val contentStatus: String,
+        val contentStatus: ContentStatus,
 
         val reviewerId: UUID?,
 

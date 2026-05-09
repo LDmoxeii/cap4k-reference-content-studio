@@ -1,10 +1,10 @@
 package com.only4.cap4k.reference.contentstudio.domain.services
 
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentStatus
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ReviewStatus
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -17,10 +17,10 @@ class PublicationEligibilityDomainServiceTest {
     @Test
     fun `publish eligibility requires approved review and succeeded media processing`() {
         val contentId = UUID.randomUUID()
-        val approvedContent = newContent(contentId = contentId, reviewStatus = ReviewStatus.APPROVED.name)
-        val pendingReviewContent = newContent(contentId = contentId, reviewStatus = ReviewStatus.PENDING.name)
-        val succeededTask = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUCCEEDED.name)
-        val submittedTask = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUBMITTED.name)
+        val approvedContent = newContent(contentId = contentId, reviewStatus = ReviewStatus.APPROVED)
+        val pendingReviewContent = newContent(contentId = contentId, reviewStatus = ReviewStatus.PENDING)
+        val succeededTask = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUCCEEDED)
+        val submittedTask = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUBMITTED)
 
         assertTrue(service.evaluate(content = approvedContent, task = succeededTask))
         assertFalse(service.evaluate(content = pendingReviewContent, task = succeededTask))
@@ -31,11 +31,11 @@ class PublicationEligibilityDomainServiceTest {
     fun `publish eligibility requires media task to belong to the content`() {
         val content = newContent(
             contentId = UUID.randomUUID(),
-            reviewStatus = ReviewStatus.APPROVED.name,
+            reviewStatus = ReviewStatus.APPROVED,
         )
         val unrelatedTask = newTask(
             contentId = UUID.randomUUID(),
-            processingStatus = MediaProcessingStatus.SUCCEEDED.name,
+            processingStatus = MediaProcessingStatus.SUCCEEDED,
         )
 
         assertFalse(service.evaluate(content = content, task = unrelatedTask))
@@ -43,8 +43,8 @@ class PublicationEligibilityDomainServiceTest {
 
     private fun newContent(
         contentId: UUID,
-        reviewStatus: String,
-        contentStatus: String = ContentStatus.DRAFT.name,
+        reviewStatus: ReviewStatus,
+        contentStatus: ContentStatus = ContentStatus.DRAFT,
     ): Content {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
         return Content(
@@ -62,7 +62,7 @@ class PublicationEligibilityDomainServiceTest {
         )
     }
 
-    private fun newTask(contentId: UUID, processingStatus: String): MediaProcessingTask {
+    private fun newTask(contentId: UUID, processingStatus: MediaProcessingStatus): MediaProcessingTask {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
         return MediaProcessingTask(
             id = UUID.randomUUID(),

@@ -2,6 +2,7 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processi
 
 import com.only4.cap4k.ddd.core.domain.id.ApplicationSideId
 import jakarta.persistence.Column
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
@@ -13,7 +14,7 @@ class MediaProcessingTask(
     id: UUID = UUID(0L, 0L),
     contentId: UUID,
     externalTaskId: String? = null,
-    processingStatus: String,
+    processingStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus,
     dbCreatedAt: java.time.LocalDateTime,
     dbUpdatedAt: java.time.LocalDateTime
 ) {
@@ -33,7 +34,8 @@ class MediaProcessingTask(
         internal set
 
     @Column(name = "processing_status")
-    var processingStatus: String = processingStatus
+    @Convert(converter = com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus.Converter::class)
+    var processingStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus = processingStatus
         internal set
 
     @Column(name = "db_created_at")
