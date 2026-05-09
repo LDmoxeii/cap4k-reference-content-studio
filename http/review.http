@@ -1,6 +1,8 @@
 @baseUrl = http://localhost:8080
-@contentId = 00000000-0000-0000-0000-000000000001
+@contentId =
 @reviewerId = 11111111-1111-1111-1111-111111111111
+
+### Paste the created contentId into @contentId before submitting or approving review.
 
 ### Submit the content for review.
 POST {{baseUrl}}/contents/{{contentId}}/submit-review
