@@ -1,29 +1,128 @@
 # cap4k-reference-content-studio
 
-`cap4k-reference-content-studio` is the official runnable reference project for `cap4k`.
+`cap4k-reference-content-studio` is the runnable reference project for `cap4k`.
+It demonstrates a small end-to-end content workflow on top of the generated
+domain/application/adapter split:
+
+- create a content draft
+- submit and approve review
+- trigger media-processing completion through the HTTP integration callback
+- observe the content become published
+
+You should be able to clone this repository and run the local workflow without
+reading the full `cap4k` repository first.
+
+## What Is In This Repo
+
+The repository is organized as four Gradle modules:
+
+- `cap4k-reference-content-studio-domain`: domain model plus committed generated domain snapshots
+- `cap4k-reference-content-studio-application`: application commands and queries
+- `cap4k-reference-content-studio-adapter`: HTTP controllers, query adapters, persistence adapters
+- `cap4k-reference-content-studio-start`: the Spring Boot runtime you actually start locally
+
+For local operation, treat this as a small reference application with a single
+Spring Boot process and an in-memory H2 database.
 
 ## Prerequisites
 
-1. Publish local `cap4k` artifacts to `mavenLocal()`.
-2. Use JDK 21.
+1. Use JDK 21.
+2. Publish the required `cap4k` snapshot artifacts to `mavenLocal()` before
+   you build or start this repo.
 
-## Current Repo State
+From your local `cap4k` checkout, run the publish step first:
 
-- This repository currently contains the root Gradle skeleton for the reference project.
-- The four-module layout is defined in `settings.gradle.kts` and will be filled in by later tasks.
+```bash
+./gradlew publishToMavenLocal
+```
 
-## Shortest Runnable Path
+This repo depends on `0.5.0-SNAPSHOT` artifacts from `mavenLocal()`. If you
+skip that step, Gradle resolution will fail even if this repository itself is
+checked out correctly.
 
-Later tasks will add the runnable start module and the first end-to-end application flow. When those pieces land:
+## Shortest Startup Path
 
-1. Start the application from `cap4k-reference-content-studio-start`.
-2. Use the `.http` files under `http/` to walk the main happy path.
+From the repository root:
 
-## Planned Contract Surfaces
+```bash
+./gradlew :cap4k-reference-content-studio-start:bootRun
+```
 
-Later tasks will add the main interaction and snapshot surfaces for this repo:
+On Windows:
 
-- `.http` files as the primary manual interaction surface
-- runtime OpenAPI exposed by the running application
-- `openapi/content-studio-openapi.json` as the committed static contract snapshot
-- `src-generated/main/kotlin` roots as committed snapshot evidence, not compile-time source roots
+```powershell
+.\gradlew.bat :cap4k-reference-content-studio-start:bootRun
+```
+
+The app starts on `http://localhost:8080`.
+
+## Primary Operating Surface
+
+The main operator surface in version one is the committed `.http` files under
+`http/`. Use those to drive the workflow against a running local app.
+
+Swagger UI may be available through Springdoc defaults, but it is not the main
+way this reference project is meant to be operated. Use the `.http` files first;
+use OpenAPI as a contract/reference surface.
+
+## `.http` Execution Order
+
+Run the files in this order:
+
+1. `http/content.http`
+   Create the draft and copy `response.contentId`.
+2. `http/review.http`
+   Paste `contentId`, then run both requests in order: submit for review, then
+   approve the review.
+3. `http/query.http`
+   Paste `contentId`, then call `GET /media-processing/{contentId}` until a
+   `task` object is present. Copy `task.externalTaskId`.
+4. `http/media-processing.http`
+   Paste `contentId` and `externalTaskId`, then send the callback event that
+   marks media processing as succeeded.
+5. `http/query.http` again
+   Re-run both queries until the content shows `contentStatus = PUBLISHED` and
+   the task shows `processingStatus = SUCCEEDED`.
+
+That sequence matches the local happy-path smoke coverage in this repository:
+review approval creates the media-processing task, and the publish transition
+happens only after the callback completes.
+
+## OpenAPI Location
+
+There are two OpenAPI surfaces:
+
+- runtime docs from the running app: `http://localhost:8080/v3/api-docs`
+- committed static snapshot: `openapi/content-studio-openapi.json`
+
+Use the runtime endpoint to inspect the live app and the committed JSON file to
+track the checked-in contract snapshot.
+
+## What `src-generated` Means
+
+`src-generated/main/kotlin` directories are committed generated snapshots. They
+exist as reference evidence for what `cap4k` generated for this example.
+
+They are not the primary handwritten source roots, and they are not where you
+should start when trying to understand the runtime flow. The handwritten code
+lives under the normal `src/main/kotlin` directories. When generator output is
+refreshed, `syncGeneratedSnapshots` copies fresh artifacts into `src-generated`
+for review and snapshot tracking.
+
+## Version One Scope
+
+Version one is intentionally narrow. It covers the local reference workflow only:
+
+- one local Spring Boot process
+- one in-memory H2 runtime
+- manual operation through `.http` files
+- callback simulation through the HTTP integration endpoint
+- committed generation and OpenAPI snapshots for inspection
+
+Version one does not try to cover:
+
+- a frontend or operator console
+- authentication or authorization
+- a real external media-processing system
+- production deployment, observability, or scaling guidance
+- a broader editorial workflow beyond this single happy path
