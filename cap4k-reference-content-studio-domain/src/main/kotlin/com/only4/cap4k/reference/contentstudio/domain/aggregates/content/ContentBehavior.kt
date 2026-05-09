@@ -10,24 +10,12 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.R
 import java.time.LocalDateTime
 import java.util.UUID
 
-var Content.reviewStatusValue: ReviewStatus
-    get() = reviewStatus
-    internal set(value) {
-        reviewStatus = value
-    }
-
-var Content.contentStatusValue: ContentStatus
-    get() = contentStatus
-    internal set(value) {
-        contentStatus = value
-    }
-
 fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
-    if (reviewStatusValue == ReviewStatus.APPROVED) {
+    if (reviewStatus == ReviewStatus.APPROVED) {
         return
     }
 
-    reviewStatusValue = ReviewStatus.APPROVED
+    reviewStatus = ReviewStatus.APPROVED
     this.reviewerId = reviewerId
     reviewedAt = approvedAt
     events().attach(this) {
@@ -51,11 +39,11 @@ fun Content.recordDraftCreated() {
 }
 
 fun Content.submitForReview() {
-    check(contentStatusValue != ContentStatus.PUBLISHED) {
+    check(contentStatus != ContentStatus.PUBLISHED) {
         "Cannot submit published content for review."
     }
 
-    reviewStatusValue = ReviewStatus.PENDING
+    reviewStatus = ReviewStatus.PENDING
     reviewerId = null
     reviewedAt = null
     events().attach(this) {
@@ -67,11 +55,11 @@ fun Content.submitForReview() {
 }
 
 fun Content.publish(publishedAt: LocalDateTime) {
-    if (contentStatusValue == ContentStatus.PUBLISHED) {
+    if (contentStatus == ContentStatus.PUBLISHED) {
         return
     }
 
-    contentStatusValue = ContentStatus.PUBLISHED
+    contentStatus = ContentStatus.PUBLISHED
     this.publishedAt = publishedAt
     events().attach(this) {
         ContentPublishedDomainEvent(
