@@ -11,17 +11,19 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 object StartMediaProcessingCmd {
 
     @Service
-    class Handler(
+    @Transactional
+    open class Handler(
         private val contentRepository: ContentRepository,
         private val mediaProcessingTaskRepository: MediaProcessingTaskRepository,
         private val mediaProcessingCli: MediaProcessingCli,
     ) : Command<Request, Response> {
 
-        override fun exec(request: Request): Response {
+        open override fun exec(request: Request): Response {
             val content = checkNotNull(contentRepository.findById(request.contentId)) {
                 "Content ${request.contentId} was not found."
             }

@@ -9,17 +9,19 @@ import com.only4.cap4k.reference.contentstudio.domain.services.PublicationEligib
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 object PublishContentCmd {
 
     @Service
-    class Handler(
+    @Transactional
+    open class Handler(
         private val contentRepository: ContentRepository,
         private val mediaProcessingTaskRepository: MediaProcessingTaskRepository,
         private val publicationEligibilityDomainService: PublicationEligibilityDomainService,
     ) : Command<Request, Response> {
 
-        override fun exec(request: Request): Response {
+        open override fun exec(request: Request): Response {
             val content = checkNotNull(contentRepository.findById(request.contentId)) {
                 "Content ${request.contentId} was not found."
             }
