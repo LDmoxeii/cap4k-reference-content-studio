@@ -4,6 +4,7 @@ import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
+import java.util.UUID
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,9 +16,15 @@ import org.springframework.stereotype.Service
 )
 class MediaProcessingTaskFactory : AggregateFactory<MediaProcessingTaskFactory.Payload, MediaProcessingTask> {
 
-    override fun create(payload: Payload): MediaProcessingTask {
-        TODO("Implement aggregate construction")
-    }
+    override fun create(entityPayload: Payload): MediaProcessingTask =
+        MediaProcessingTask(
+            id = entityPayload.id,
+            contentId = entityPayload.contentId,
+            externalTaskId = entityPayload.externalTaskId,
+            processingStatus = entityPayload.processingStatus,
+            dbCreatedAt = entityPayload.dbCreatedAt,
+            dbUpdatedAt = entityPayload.dbUpdatedAt,
+        )
 
     @Aggregate(
         aggregate = "MediaProcessingTask",

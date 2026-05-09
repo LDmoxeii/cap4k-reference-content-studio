@@ -1,8 +1,9 @@
 package com.only4.cap4k.reference.contentstudio.application.jobs
 
-import com.only4.cap4k.reference.contentstudio.application.ports.MediaProcessingCli
-import com.only4.cap4k.reference.contentstudio.application.ports.MediaProcessingTaskRepository
-import com.only4.cap4k.reference.contentstudio.application.transition.MediaProcessingSucceededTransitionSurface
+import com.only4.cap4k.ddd.core.Mediator
+import com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd
+import com.only4.cap4k.reference.contentstudio.application.distributed.clients.media.processing.GetMediaProcessingStatusCli
+import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
 import org.springframework.stereotype.Service
 
 /**
@@ -10,18 +11,19 @@ import org.springframework.stereotype.Service
  * back into the same internal transition surface when callback is unavailable.
  */
 @Service
-class MediaProcessingPollingFallbackJob(
-    private val mediaProcessingTaskRepository: MediaProcessingTaskRepository,
-    private val mediaProcessingCli: MediaProcessingCli,
-    private val transitionSurface: MediaProcessingSucceededTransitionSurface,
-) {
+class MediaProcessingPollingFallbackJob {
     fun pollSubmittedTasks() {
-        mediaProcessingTaskRepository.findSubmittedTasks().forEach { task ->
+        Mediator.repositories.find(
+            SMediaProcessingTask.predicate { schema ->
+                schema.processingStatus.eq("SUBMITTED")
+            },
+            persist = false,
+        ).forEach { task ->
             val externalTaskId = task.externalTaskId ?: return@forEach
-            val status = mediaProcessingCli.getStatus(externalTaskId)
-            if (status.status == MediaProcessingCli.ExternalTaskStatus.SUCCEEDED) {
-                transitionSurface.on(
-                    MediaProcessingSucceededTransitionSurface.Event(
+            val status = Mediator.requests.send(GetMediaProcessingStatusCli.Request(externalTaskId))
+            if (status.status == "SUCCEEDED") {
+                Mediator.cmd.send(
+                    MarkMediaProcessingSucceededCmd.Request(
                         externalTaskId = externalTaskId,
                     )
                 )

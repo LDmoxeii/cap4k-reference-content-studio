@@ -191,6 +191,19 @@
     ]
   },
   {
+    "tag": "client",
+    "package": "media.processing",
+    "name": "GetMediaProcessingStatus",
+    "desc": "get media processing status from fake external cli",
+    "aggregates": ["MediaProcessingTask"],
+    "requestFields": [
+      { "name": "externalTaskId", "type": "String" }
+    ],
+    "responseFields": [
+      { "name": "status", "type": "String" }
+    ]
+  },
+  {
     "tag": "domain_event",
     "package": "content",
     "name": "ContentDraftCreated",

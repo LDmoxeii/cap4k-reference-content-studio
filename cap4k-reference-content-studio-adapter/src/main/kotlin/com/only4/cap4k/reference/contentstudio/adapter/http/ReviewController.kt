@@ -1,5 +1,7 @@
 package com.only4.cap4k.reference.contentstudio.adapter.http
 
+import com.only4.cap4k.ddd.core.Mediator
+import com.only4.cap4k.reference.contentstudio.adapter.portal.api.payload.content.workflow.ApproveContentReviewPayload
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ApproveContentReviewCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.SubmitContentForReviewCmd
 import java.time.LocalDateTime
@@ -12,29 +14,24 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/contents/{contentId}")
-class ReviewController(
-    private val submitContentForReviewHandler: SubmitContentForReviewCmd.Handler,
-    private val approveContentReviewHandler: ApproveContentReviewCmd.Handler,
-) {
+class ReviewController {
 
     @PostMapping("/submit-review")
-    fun submitReview(@PathVariable contentId: UUID): SubmitContentForReviewCmd.Response =
-        submitContentForReviewHandler.exec(SubmitContentForReviewCmd.Request(contentId = contentId))
+    fun submitReview(@PathVariable contentId: UUID) {
+        Mediator.cmd.send(SubmitContentForReviewCmd.Request(contentId = contentId))
+    }
 
     @PostMapping("/approve")
     fun approve(
         @PathVariable contentId: UUID,
-        @RequestBody request: ApproveContentReviewRequest,
-    ): ApproveContentReviewCmd.Response =
-        approveContentReviewHandler.exec(
+        @RequestBody request: ApproveContentReviewPayload.Request,
+    ) {
+        Mediator.cmd.send(
             ApproveContentReviewCmd.Request(
                 contentId = contentId,
                 reviewerId = request.reviewerId,
                 reviewedAt = LocalDateTime.now(),
             )
         )
-
-    data class ApproveContentReviewRequest(
-        val reviewerId: UUID,
-    )
+    }
 }

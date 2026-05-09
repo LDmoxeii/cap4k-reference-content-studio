@@ -2,28 +2,25 @@ package com.only4.cap4k.reference.contentstudio.application.commands.content.wor
 
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
-import com.only4.cap4k.reference.contentstudio.application.ports.ContentRepository
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
+import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ReviewStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.recordDraftCreated
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory.ContentFactory
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 object CreateContentDraftCmd {
 
     @Service
-    @Transactional
-    open class Handler(
-        private val contentRepository: ContentRepository,
-    ) : Command<Request, Response> {
+    open class Handler : Command<Request, Response> {
 
         open override fun exec(request: Request): Response {
             val now = LocalDateTime.now()
             val content =
-                Content(
+                Mediator.factories.create(
+                    ContentFactory.Payload(
                     id = UUID.randomUUID(),
                     title = request.title,
                     body = request.body,
@@ -35,9 +32,10 @@ object CreateContentDraftCmd {
                     publishedAt = null,
                     dbCreatedAt = now,
                     dbUpdatedAt = now,
+                    )
                 )
             content.recordDraftCreated()
-            contentRepository.save(content)
+            Mediator.uow.save()
 
             return Response(
                 contentId = content.id

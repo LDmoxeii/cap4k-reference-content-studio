@@ -2,26 +2,23 @@ package com.only4.cap4k.reference.contentstudio.application.commands.content.wor
 
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
-import com.only4.cap4k.reference.contentstudio.application.ports.ContentRepository
+import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.submitForReview
+import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import java.util.UUID
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 object SubmitContentForReviewCmd {
 
     @Service
-    @Transactional
-    open class Handler(
-        private val contentRepository: ContentRepository,
-    ) : Command<Request, Response> {
+    open class Handler : Command<Request, Response> {
 
         open override fun exec(request: Request): Response {
-            val content = checkNotNull(contentRepository.findById(request.contentId)) {
+            val content = checkNotNull(Mediator.repositories.findOne(SContent.predicateById(request.contentId))) {
                 "Content ${request.contentId} was not found."
             }
             content.submitForReview()
-            contentRepository.save(content)
+            Mediator.uow.save()
 
             return Response
         }

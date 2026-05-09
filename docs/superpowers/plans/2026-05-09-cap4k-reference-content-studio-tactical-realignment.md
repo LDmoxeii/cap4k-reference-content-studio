@@ -4,7 +4,7 @@
 
 **Goal:** Realign `cap4k-reference-content-studio` so the delivered `v1` repository dogfoods the intended `cap4k` tactical execution path, repository/factory families, payload boundaries, and generated-skeleton contract.
 
-**Architecture:** Keep the business scenario and module topology intact, but refactor the tactical path. `Mediator` becomes the explicit entry and orchestration gateway; built-in repository and aggregate-factory families become the real default path; generated handlers remain `SKIP`-style skeletons; HTTP contracts move to payload surfaces; specification is removed from the active `v1` evidence line.
+**Architecture:** Keep the business scenario and module topology intact, but refactor the tactical path. `Mediator` becomes the explicit entry and orchestration gateway; built-in repository and aggregate-factory families become the real default path; generated handlers and generated aggregate factories remain `SKIP`-style skeletons; HTTP contracts move to payload surfaces; specification is removed from the active `v1` evidence line.
 
 **Tech Stack:** Kotlin, Spring Boot, Spring Data JPA, H2, `ddd-core`, `ddd-domain-repo-jpa`, `cap4k` pipeline generation, `.http` operator surfaces, JUnit 5.
 
@@ -68,7 +68,7 @@
 
 - [ ] **Step 1: Replace direct handler injection in controllers**
 
-  Refactor controllers so they no longer inject concrete handlers. Controllers should use `Mediator.cmd` / `Mediator.qry` and translate HTTP payloads to internal application requests.
+  Refactor controllers so they no longer inject concrete handlers or mediator instances. Controllers should use static `Mediator.cmd` / `Mediator.qry` and translate HTTP payloads to internal application requests.
 
 - [ ] **Step 2: Remove inline handwritten request classes that should now be payload surfaces**
 
@@ -105,17 +105,17 @@
 - Modify: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/commands/content/workflow/PublishContentCmd.kt`
 - Modify: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/commands/media/processing/StartMediaProcessingCmd.kt`
 - Modify: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/commands/media/processing/MarkMediaProcessingSucceededCmd.kt`
-- Modify: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/application/queries/GetContentDetailQryHandler.kt`
-- Modify: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/application/queries/GetCurrentProcessingStatusQryHandler.kt`
+- Modify: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/application/queries/content/read/GetContentDetailQryHandler.kt`
+- Modify: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/application/queries/content/read/GetMediaProcessingStatusQryHandler.kt`
 - Delete/Retire: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/ports/ContentRepository.kt`
 - Delete/Retire: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/ports/MediaProcessingTaskRepository.kt`
 - Delete/Retire: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/persistence/ContentPersistenceAdapter.kt`
 - Delete/Retire: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/persistence/MediaProcessingTaskPersistenceAdapter.kt`
-- Test: `cap4k-reference-content-studio-adapter/src/test/kotlin/com/only4/cap4k/reference/contentstudio/adapter/QueryHandlerTest.kt`
+- Test: `cap4k-reference-content-studio-adapter/src/test/kotlin/com/only4/cap4k/reference/contentstudio/adapter/QueryHandlerTacticalContractTest.kt`
 
 - [ ] **Step 1: Remove application repository ports from command/query handlers**
 
-  Refactor handlers so repository access goes through `Mediator.repo` instead of handwritten application repository interfaces.
+  Refactor handlers so repository access goes through static `Mediator.repositories` instead of handwritten application repository interfaces.
 
 - [ ] **Step 2: Replace project-local persistence adapters in tests and runtime wiring**
 
@@ -132,7 +132,7 @@
 - [ ] **Step 5: Run focused repository/query tests**
 
   ```bash
-  ./gradlew.bat :cap4k-reference-content-studio-adapter:test --tests "*QueryHandlerTest" --no-daemon
+  ./gradlew.bat :cap4k-reference-content-studio-adapter:test --tests "*QueryHandlerTacticalContractTest" --no-daemon
   ```
 
 - [ ] **Step 6: Commit**
@@ -153,11 +153,11 @@
 
 - [ ] **Step 1: Identify the generated aggregate-factory surface for Content and MediaProcessingTask**
 
-  Use the freshly generated outputs as the source of truth. If the expected factory artifacts are absent, stop and capture that as a concrete framework-usage mismatch before coding around it.
+  Use the freshly generated outputs as the source of truth. The factory family is expected to behave as a `SKIP` skeleton in this repository: generated once, then handwritten-completed without later overwrite. If the expected factory artifacts are absent, stop and capture that as a concrete framework-usage mismatch before coding around it.
 
 - [ ] **Step 2: Refactor command handlers to create aggregate roots through `Mediator.fac`**
 
-  `CreateContentDraftCmd.Handler` and `StartMediaProcessingCmd.Handler` should no longer construct aggregate roots directly if factory generation is available.
+  `CreateContentDraftCmd.Handler` and `StartMediaProcessingCmd.Handler` should no longer construct aggregate roots directly if factory generation is available. Use static `Mediator.factories.create(...)`, and keep the factory files as `SKIP` skeletons.
 
 - [ ] **Step 3: Keep business behavior in aggregate methods, not in the factory**
 
@@ -180,7 +180,7 @@
 
 **Files:**
 - Modify: the six write command handler files listed in Task 3
-- Modify: `cap4k-reference-content-studio-start/src/test/kotlin/com/only4/cap4k/reference/contentstudio/start/WriteCommandTransactionBoundaryTest.kt`
+- Modify: `cap4k-reference-content-studio-start/src/test/kotlin/com/only4/cap4k/reference/contentstudio/start/TacticalArchitectureContractTest.kt`
 - Modify if needed: `cap4k-reference-content-studio-start/src/test/kotlin/com/only4/cap4k/reference/contentstudio/start/ContentStudioApplicationSmokeTest.kt`
 
 - [ ] **Step 1: Rework write-command handlers to use `Mediator.uow` instead of explicit transaction patching as the primary tactical signal**
@@ -189,12 +189,12 @@
 
 - [ ] **Step 2: Update transaction-boundary regression to assert the corrected tactical path**
 
-  This test should stop encoding the old workaround shape as the contract.
+  Tactical contract tests should stop encoding the old workaround shape as the contract and instead assert `Mediator.uow.save()` usage plus the absence of handwritten transaction patches.
 
 - [ ] **Step 3: Run focused transaction test**
 
   ```bash
-  ./gradlew.bat :cap4k-reference-content-studio-start:test --tests "*WriteCommandTransactionBoundaryTest" --no-daemon
+  ./gradlew.bat :cap4k-reference-content-studio-start:test --tests "*TacticalArchitectureContractTest" --no-daemon
   ```
 
 - [ ] **Step 4: Commit**
@@ -212,27 +212,26 @@
 - Modify: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/subscribers/domain/content/ContentReviewApprovedDomainEventSubscriber.kt`
 - Modify: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/subscribers/domain/media_processing_task/MediaProcessingSucceededDomainEventSubscriber.kt`
 - Modify: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/integration/MediaProcessingCallbackIntegrationEventSubscriber.kt`
-- Modify: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/transition/MediaProcessingSucceededTransitionSurface.kt`
-- Test: `cap4k-reference-content-studio-adapter/src/test/kotlin/com/only4/cap4k/reference/contentstudio/adapter/MediaProcessingCallbackIntegrationEventSubscriberTest.kt`
+- Test: `cap4k-reference-content-studio-adapter/src/test/kotlin/com/only4/cap4k/reference/contentstudio/adapter/MediaProcessingCallbackIntegrationEventSubscriberContractTest.kt`
 - Test: `cap4k-reference-content-studio-domain/src/test/kotlin/com/only4/cap4k/reference/contentstudio/domain/services/PublicationEligibilityDomainServiceTest.kt`
 
-- [ ] **Step 1: Annotate the handwritten domain service with `@DomainService` and remove start-module `@Bean` registration**
+- [ ] **Step 1: Annotate the handwritten domain service with `@DomainService` and `@Service`, then remove start-module `@Bean` registration**
 
   Keep the service handwritten, but stop using the current boot-wiring shape as the reference default.
 
-- [ ] **Step 2: Rename subscriber and transition methods to semantic names**
+- [ ] **Step 2: Rename handwritten subscriber progression methods to semantic names where the family shape allows it**
 
-  Replace generic `on(...)` naming where these files are meant to serve as reference material.
+  Replace generic handwritten progression names where these files are meant to serve as reference material. Do not fight fun-interface method names that are part of framework contracts.
 
-- [ ] **Step 3: Route orchestration progression through `Mediator.cmd` instead of direct `RequestSupervisor` injection**
+- [ ] **Step 3: Route orchestration progression through static `Mediator.cmd` instead of direct `RequestSupervisor` injection**
 
-  This includes domain subscriber and handwritten transition-surface progression.
+  This includes domain subscriber progression and the handwritten callback bridge.
 
 - [ ] **Step 4: Run focused tests**
 
   ```bash
   ./gradlew.bat :cap4k-reference-content-studio-domain:test --tests "*PublicationEligibilityDomainServiceTest" --no-daemon
-  ./gradlew.bat :cap4k-reference-content-studio-adapter:test --tests "*MediaProcessingCallbackIntegrationEventSubscriberTest" --no-daemon
+  ./gradlew.bat :cap4k-reference-content-studio-adapter:test --tests "*MediaProcessingCallbackIntegrationEventSubscriberContractTest" --no-daemon
   ```
 
 - [ ] **Step 5: Commit**

@@ -54,7 +54,7 @@ The corrected repository must still be runnable, but it must also prove the inte
 
 ### Mediator As The Unified Tactical Entry
 
-The reference project should explicitly dogfood `Mediator` as the public tactical entry.
+The reference project should explicitly dogfood static `Mediator` access as the public tactical entry.
 
 The project should no longer mix:
 
@@ -64,8 +64,8 @@ The project should no longer mix:
 
 Instead, the tactical contract should be:
 
-- HTTP controllers use `Mediator.cmd` or `Mediator.qry`
-- domain and integration subscriber orchestration uses `Mediator.cmd`
+- HTTP controllers use static `Mediator.cmd` or `Mediator.qry`
+- domain and integration subscriber orchestration uses static `Mediator.cmd`
 - command/query handlers use `Mediator` internally for allowed tactical capabilities
 
 This does not mean every layer can call every mediator surface freely.
@@ -130,6 +130,7 @@ The following generated families should be treated as `SKIP`-style skeletons in 
 - `CliHandler`
 - `DomainEventSubscriber`
 - `IntegrationEventSubscriber`
+- `AggregateFactory`
 
 That means:
 
@@ -214,13 +215,12 @@ This gives the reference project a stronger tactical expression without pretendi
 
 Subscriber and listener naming should become semantic enough to serve as reference material.
 
-The current generic `on(...)` naming is too weak for a project that is meant to teach tactical shape.
+The current generic handwritten progression naming is too weak for a project that is meant to teach tactical shape.
 
-The corrected repository should use method names that expose intent clearly, especially for:
+The corrected repository should use method names that expose intent clearly where the family shape allows it, especially for:
 
 - domain subscriber progression
-- integration callback progression
-- transition surfaces that still exist as handwritten bridges
+- integration callback progression around handwritten bridge logic
 
 ## Verification Expectations
 

@@ -2,34 +2,33 @@ package com.only4.cap4k.reference.contentstudio.application.commands.media.proce
 
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
-import com.only4.cap4k.reference.contentstudio.application.ports.ContentRepository
-import com.only4.cap4k.reference.contentstudio.application.ports.MediaProcessingCli
-import com.only4.cap4k.reference.contentstudio.application.ports.MediaProcessingTaskRepository
+import com.only4.cap4k.ddd.core.Mediator
+import com.only4.cap4k.reference.contentstudio.application.distributed.clients.media.processing.TriggerMediaProcessingCli
+import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
+import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingStatus
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.factory.MediaProcessingTaskFactory
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSubmitted
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 object StartMediaProcessingCmd {
 
     @Service
-    @Transactional
-    open class Handler(
-        private val contentRepository: ContentRepository,
-        private val mediaProcessingTaskRepository: MediaProcessingTaskRepository,
-        private val mediaProcessingCli: MediaProcessingCli,
-    ) : Command<Request, Response> {
+    open class Handler : Command<Request, Response> {
 
         open override fun exec(request: Request): Response {
-            val content = checkNotNull(contentRepository.findById(request.contentId)) {
+            val content = checkNotNull(Mediator.repositories.findOne(SContent.predicateById(request.contentId))) {
                 "Content ${request.contentId} was not found."
             }
             val task =
-                mediaProcessingTaskRepository.findByContentId(request.contentId)
-                    ?: MediaProcessingTask(
+                Mediator.repositories.findFirst(
+                    SMediaProcessingTask.predicate { schema ->
+                        schema.contentId.eq(request.contentId)
+                    }
+                ) ?: Mediator.factories.create(
+                    MediaProcessingTaskFactory.Payload(
                         id = UUID.randomUUID(),
                         contentId = request.contentId,
                         externalTaskId = null,
@@ -37,7 +36,14 @@ object StartMediaProcessingCmd {
                         dbCreatedAt = LocalDateTime.now(),
                         dbUpdatedAt = LocalDateTime.now(),
                     )
-            val response = mediaProcessingCli.start(content.id, content.mediaSourceKey)
+                )
+            val response =
+                Mediator.requests.send(
+                    TriggerMediaProcessingCli.Request(
+                        contentId = content.id,
+                        mediaSourceKey = content.mediaSourceKey,
+                    )
+                )
             check(response.accepted) {
                 "Media processing was not accepted for content ${request.contentId}."
             }
@@ -45,7 +51,7 @@ object StartMediaProcessingCmd {
                 "Media processing must return an external task id for content ${request.contentId}."
             }
             task.markSubmitted(externalTaskId)
-            mediaProcessingTaskRepository.save(task)
+            Mediator.uow.save()
 
             return Response
         }

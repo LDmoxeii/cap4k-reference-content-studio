@@ -1,7 +1,9 @@
 package com.only4.cap4k.reference.contentstudio.adapter.application.queries.content.read
 
+import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.query.Query
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetContentDetailQry
+import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import org.springframework.stereotype.Service
 
 /**
@@ -13,16 +15,25 @@ import org.springframework.stereotype.Service
 class GetContentDetailQryHandler : Query<GetContentDetailQry.Request, GetContentDetailQry.Response> {
 
     override fun exec(request: GetContentDetailQry.Request): GetContentDetailQry.Response {
+        val content =
+            checkNotNull(
+                Mediator.repositories.findOne(
+                    SContent.predicateById(request.contentId),
+                    persist = false,
+                )
+            ) {
+                "Content ${request.contentId} was not found."
+            }
         return GetContentDetailQry.Response(
-            contentId = TODO("set contentId"),
-            title = TODO("set title"),
-            body = TODO("set body"),
-            mediaSourceKey = TODO("set mediaSourceKey"),
-            reviewStatus = TODO("set reviewStatus"),
-            contentStatus = TODO("set contentStatus"),
-            reviewerId = TODO("set reviewerId"),
-            reviewedAt = TODO("set reviewedAt"),
-            publishedAt = TODO("set publishedAt")
+            contentId = content.id,
+            title = content.title,
+            body = content.body,
+            mediaSourceKey = content.mediaSourceKey,
+            reviewStatus = content.reviewStatus,
+            contentStatus = content.contentStatus,
+            reviewerId = content.reviewerId,
+            reviewedAt = content.reviewedAt,
+            publishedAt = content.publishedAt
         )
     }
 }

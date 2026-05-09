@@ -4,6 +4,7 @@ import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
+import java.util.UUID
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,9 +16,20 @@ import org.springframework.stereotype.Service
 )
 class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
 
-    override fun create(payload: Payload): Content {
-        TODO("Implement aggregate construction")
-    }
+    override fun create(entityPayload: Payload): Content =
+        Content(
+            id = entityPayload.id,
+            title = entityPayload.title,
+            body = entityPayload.body,
+            mediaSourceKey = entityPayload.mediaSourceKey,
+            reviewStatus = entityPayload.reviewStatus,
+            contentStatus = entityPayload.contentStatus,
+            reviewerId = entityPayload.reviewerId,
+            reviewedAt = entityPayload.reviewedAt,
+            publishedAt = entityPayload.publishedAt,
+            dbCreatedAt = entityPayload.dbCreatedAt,
+            dbUpdatedAt = entityPayload.dbUpdatedAt,
+        )
 
     @Aggregate(
         aggregate = "Content",
