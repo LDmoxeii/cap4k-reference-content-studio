@@ -2,7 +2,7 @@ package com.only4.cap4k.reference.contentstudio.start
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.only4.cap4k.reference.contentstudio.adapter.integration.MediaProcessingCallbackIntegrationEvent
+import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEvent
 import java.time.Duration
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat

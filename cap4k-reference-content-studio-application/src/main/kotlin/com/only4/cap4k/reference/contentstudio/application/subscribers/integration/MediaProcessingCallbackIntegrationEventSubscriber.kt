@@ -1,4 +1,4 @@
-package com.only4.cap4k.reference.contentstudio.adapter.integration
+package com.only4.cap4k.reference.contentstudio.application.subscribers.integration
 
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.domain.event.EventSubscriber

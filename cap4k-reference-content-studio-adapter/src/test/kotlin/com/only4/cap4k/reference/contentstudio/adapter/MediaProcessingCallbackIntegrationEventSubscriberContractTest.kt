@@ -1,6 +1,6 @@
 package com.only4.cap4k.reference.contentstudio.adapter
 
-import com.only4.cap4k.reference.contentstudio.adapter.integration.MediaProcessingCallbackIntegrationEventSubscriber
+import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,7 +22,7 @@ class MediaProcessingCallbackIntegrationEventSubscriberContractTest {
     fun `callback subscriber routes through mediator command path without transition residue`() {
         val source =
             sourceText(
-                "cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/integration/MediaProcessingCallbackIntegrationEventSubscriber.kt",
+                "cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/subscribers/integration/MediaProcessingCallbackIntegrationEventSubscriber.kt",
             )
 
         assertTrue(source.contains("Mediator.cmd.send("))

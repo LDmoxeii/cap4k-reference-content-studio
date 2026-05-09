@@ -1,6 +1,6 @@
 package com.only4.cap4k.reference.contentstudio.adapter
 
-import com.only4.cap4k.reference.contentstudio.adapter.integration.MediaProcessingCallbackIntegrationEvent
+import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEvent
 import java.lang.reflect.Modifier
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
