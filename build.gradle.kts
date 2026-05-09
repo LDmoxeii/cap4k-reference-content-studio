@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.Sync
+
 plugins {
     id("com.only4.cap4k.plugin.pipeline") version "0.5.0-SNAPSHOT"
     base
@@ -81,4 +83,19 @@ cap4k {
 tasks.register("syncGeneratedSnapshots") {
     group = "verification"
     description = "Sync generated artifact snapshots into src-generated roots."
+    dependsOn(
+        subprojects.map { project ->
+            project.tasks.named("syncGeneratedSnapshots")
+        }
+    )
+}
+
+subprojects {
+    tasks.register<Sync>("syncGeneratedSnapshots") {
+        group = "verification"
+        description = "Sync generated artifact snapshots into src-generated/main/kotlin."
+        from(layout.buildDirectory.dir("generated/cap4k/main/kotlin"))
+        into(layout.projectDirectory.dir("src-generated/main/kotlin"))
+        includeEmptyDirs = false
+    }
 }
