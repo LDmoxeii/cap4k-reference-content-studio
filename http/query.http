@@ -1,0 +1,10 @@
+@baseUrl = http://localhost:8080
+@contentId = 00000000-0000-0000-0000-000000000001
+
+### Fetch content details.
+GET {{baseUrl}}/contents/{{contentId}}
+Accept: application/json
+
+### Fetch the current media-processing status.
+GET {{baseUrl}}/media-processing/{{contentId}}
+Accept: application/json

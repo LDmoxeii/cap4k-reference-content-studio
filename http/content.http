@@ -1,0 +1,15 @@
+@baseUrl = http://localhost:8080
+@title = Sample content title
+@body = Sample content body
+@mediaSourceKey = sample-media-source-key
+
+### Create a content draft.
+POST {{baseUrl}}/contents
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "{{title}}",
+  "body": "{{body}}",
+  "mediaSourceKey": "{{mediaSourceKey}}"
+}
