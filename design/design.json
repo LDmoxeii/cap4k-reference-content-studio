@@ -112,6 +112,70 @@
     ]
   },
   {
+    "tag": "api_payload",
+    "package": "content.workflow",
+    "name": "CreateContentDraftPayload",
+    "desc": "create content draft http payload",
+    "aggregates": [],
+    "requestFields": [
+      { "name": "title", "type": "String" },
+      { "name": "body", "type": "String" },
+      { "name": "mediaSourceKey", "type": "String" }
+    ],
+    "responseFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
+    ]
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.workflow",
+    "name": "ApproveContentReviewPayload",
+    "desc": "approve content review http payload",
+    "aggregates": [],
+    "requestFields": [
+      { "name": "reviewerId", "type": "java.util.UUID" }
+    ],
+    "responseFields": []
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.read",
+    "name": "GetContentDetailPayload",
+    "desc": "get content detail http payload",
+    "aggregates": [],
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "title", "type": "String" },
+      { "name": "body", "type": "String" },
+      { "name": "mediaSourceKey", "type": "String" },
+      { "name": "reviewStatus", "type": "String" },
+      { "name": "contentStatus", "type": "String" },
+      { "name": "reviewerId", "type": "java.util.UUID", "nullable": true },
+      { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
+    ]
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.read",
+    "name": "GetMediaProcessingStatusPayload",
+    "desc": "get media processing status http payload",
+    "aggregates": [],
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "task", "type": "Task", "nullable": true },
+      { "name": "task.taskId", "type": "java.util.UUID" },
+      { "name": "task.externalTaskId", "type": "String", "nullable": true },
+      { "name": "task.processingStatus", "type": "String" }
+    ]
+  },
+  {
     "tag": "client",
     "package": "media.processing",
     "name": "TriggerMediaProcessing",

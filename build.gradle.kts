@@ -53,6 +53,9 @@ cap4k {
         designQuery {
             enabled.set(true)
         }
+        designApiPayload {
+            enabled.set(true)
+        }
         designQueryHandler {
             enabled.set(true)
         }
@@ -72,7 +75,7 @@ cap4k {
             enabled.set(true)
             artifacts {
                 factory.set(true)
-                specification.set(true)
+                specification.set(false)
                 unique.set(false)
                 enumTranslation.set(false)
             }
