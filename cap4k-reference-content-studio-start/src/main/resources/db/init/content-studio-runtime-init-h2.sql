@@ -1,7 +1,7 @@
 -- business schema bootstrap
 runscript from 'classpath:db/schema/content-studio-schema.sql';
 
--- frame slice required by cap4k-ddd-starter + ddd-integration-event-http-jpa
+-- frame slice required by cap4k-ddd-starter request/event runtimes
 -- add H2-compatible definitions for:
 -- __event
 -- __archived_event
