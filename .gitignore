@@ -3,5 +3,6 @@ build/
 out/
 *.iml
 .idea/
+.kotlin/
 !**/src-generated/
 !**/src-generated/**

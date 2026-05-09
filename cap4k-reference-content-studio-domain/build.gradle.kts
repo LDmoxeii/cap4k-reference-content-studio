@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.jpa)
+    id("buildsrc.convention.kotlin-jvm")
 }
 
 dependencies {
@@ -13,10 +12,6 @@ dependencies {
     implementation("org.hibernate.orm:hibernate-core")
     testImplementation("org.junit.jupiter:junit-jupiter:${libs.versions.junit.get()}")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-kotlin {
-    jvmToolchain(21)
 }
 
 tasks.test {

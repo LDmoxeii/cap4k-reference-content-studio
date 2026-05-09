@@ -1,0 +1,38 @@
+{
+  "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.QueryController::getMediaProcessing",
+  "entryType": "controllermethod",
+  "nodeCount": 3,
+  "edgeCount": 2,
+  "nodes": [
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.adapter.application.queries.content.read.GetMediaProcessingStatusQryHandler",
+      "name": "GetMediaProcessingStatusQryHandler",
+      "fullName": "com.only4.cap4k.reference.contentstudio.adapter.application.queries.content.read.GetMediaProcessingStatusQryHandler",
+      "type": "queryhandler"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.adapter.http.QueryController::getMediaProcessing",
+      "name": "QueryController::getMediaProcessing",
+      "fullName": "com.only4.cap4k.reference.contentstudio.adapter.http.QueryController::getMediaProcessing",
+      "type": "controllermethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetMediaProcessingStatusQry.Request",
+      "name": "GetMediaProcessingStatusQry.Request",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetMediaProcessingStatusQry.Request",
+      "type": "query"
+    }
+  ],
+  "edges": [
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.adapter.http.QueryController::getMediaProcessing",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetMediaProcessingStatusQry.Request",
+      "type": "ControllerMethodToQuery"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetMediaProcessingStatusQry.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.adapter.application.queries.content.read.GetMediaProcessingStatusQryHandler",
+      "type": "QueryToQueryHandler"
+    }
+  ]
+}

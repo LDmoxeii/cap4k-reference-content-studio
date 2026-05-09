@@ -1,0 +1,25 @@
+flowchart TD
+  N1[ReviewController::approve]
+  N2[ApproveContentReviewCmd.Handler]
+  N3[ApproveContentReviewCmd.Request]
+  N4[StartMediaProcessingCmd.Handler]
+  N5[StartMediaProcessingCmd.Request]
+  N6[ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved]
+  N7[Content::&lt;get-id&gt;]
+  N8[Content::&lt;get-mediaSourceKey&gt;]
+  N9[Content::approve]
+  N10[ContentReviewApprovedDomainEvent]
+  N11[MediaProcessingTask::markSubmitted]
+  N12[MediaProcessingTask::onCreate]
+  N1 -->|ControllerMethodToCommand| N3
+  N2 -->|CommandHandlerToEntityMethod| N9
+  N3 -->|CommandToCommandHandler| N2
+  N4 -->|CommandHandlerToEntityMethod| N7
+  N4 -->|CommandHandlerToEntityMethod| N8
+  N4 -->|CommandHandlerToEntityMethod| N11
+  N4 -->|CommandHandlerToEntityMethod| N12
+  N5 -->|CommandToCommandHandler| N4
+  N6 -->|DomainEventHandlerToCommand| N5
+  N9 -->|EntityMethodToDomainEvent| N10
+  N10 -->|DomainEventToHandler| N6
+

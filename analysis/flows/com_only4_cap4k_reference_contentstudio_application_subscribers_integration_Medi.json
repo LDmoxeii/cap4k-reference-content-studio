@@ -1,0 +1,15 @@
+{
+  "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEvent",
+  "entryType": "integrationevent",
+  "nodeCount": 1,
+  "edgeCount": 0,
+  "nodes": [
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEvent",
+      "name": "MediaProcessingCallbackIntegrationEvent",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEvent",
+      "type": "integrationevent"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,7 @@
+flowchart TD
+  N1[GetContentDetailQryHandler]
+  N2[QueryController::getContent]
+  N3[GetContentDetailQry.Request]
+  N2 -->|ControllerMethodToQuery| N3
+  N3 -->|QueryToQueryHandler| N1
+

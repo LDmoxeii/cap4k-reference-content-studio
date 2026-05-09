@@ -25,7 +25,7 @@ domain / application / adapter 分层之上：
 
 ## 前置条件
 
-1. 使用 JDK 21。
+1. 使用 JDK 17。
 2. 在构建或启动这个仓库之前，先把所需的 `cap4k` 快照工件发布到 `mavenLocal()`。
 
 从你的本地 `cap4k` 目录先执行发布步骤：
@@ -89,6 +89,39 @@ Swagger / OpenAPI 仍然存在，但它们更像契约快照，而不是整条 h
 你可以用运行时端点和静态 JSON 文件查看当前生成出来的 HTTP contract。
 但在 v1 里，这两个 OpenAPI 面并不能完整描述回调消费路径和整个 happy-path
 流程用到的全部响应形状，所以应该把 `.http` 文件和真实响应当作主要操作真相源。
+
+## 分析报告
+
+这个仓库同时启用了基于 IR 的分析生成，用来观察手写代码和生成代码拼接后的运行流转结构。
+
+常用命令：
+
+```bash
+./gradlew cap4kAnalysisPlan
+./gradlew cap4kAnalysisGenerate
+```
+
+Windows 上：
+
+```powershell
+.\gradlew.bat cap4kAnalysisPlan
+.\gradlew.bat cap4kAnalysisGenerate
+```
+
+运行后应能看到：
+
+- 各模块自己的 IR 快照目录：
+  - `cap4k-reference-content-studio-domain/build/cap4k-code-analysis`
+  - `cap4k-reference-content-studio-application/build/cap4k-code-analysis`
+  - `cap4k-reference-content-studio-adapter/build/cap4k-code-analysis`
+- 根分析计划文件：
+  - `build/cap4k/analysis-plan.json`
+- 已提交进仓的 flow 分析产物：
+  - `analysis/flows/*.json`
+  - `analysis/flows/*.mmd`
+
+这些产物不是主 happy-path 操作面的一部分，而是作为参考证据面，用来检查
+controller、subscriber、job 以及 application 流程的结构。
 
 ## `src-generated` 的含义
 

@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.spring)
+    id("buildsrc.convention.kotlin-jvm")
 }
 
 dependencies {
@@ -20,10 +19,6 @@ dependencies {
     runtimeOnly(libs.h2)
     testImplementation(libs.spring.boot.starter.test)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-kotlin {
-    jvmToolchain(21)
 }
 
 tasks.test {

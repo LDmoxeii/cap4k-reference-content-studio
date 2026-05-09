@@ -1,0 +1,23 @@
+flowchart TD
+  N1[PublishContentCmd.Handler]
+  N2[PublishContentCmd.Request]
+  N3[MarkMediaProcessingSucceededCmd.Handler]
+  N4[MarkMediaProcessingSucceededCmd.Request]
+  N5[ContentPublishedDomainEventSubscriber::on]
+  N6[MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded]
+  N7[MediaProcessingCallbackIntegrationEventSubscriber::onEvent]
+  N8[Content::publish]
+  N9[ContentPublishedDomainEvent]
+  N10[MediaProcessingTask::markSucceeded]
+  N11[MediaProcessingSucceededDomainEvent]
+  N1 -->|CommandHandlerToEntityMethod| N8
+  N2 -->|CommandToCommandHandler| N1
+  N3 -->|CommandHandlerToEntityMethod| N10
+  N4 -->|CommandToCommandHandler| N3
+  N6 -->|DomainEventHandlerToCommand| N2
+  N7 -->|CommandSenderMethodToCommand| N4
+  N8 -->|EntityMethodToDomainEvent| N9
+  N9 -->|DomainEventToHandler| N5
+  N10 -->|EntityMethodToDomainEvent| N11
+  N11 -->|DomainEventToHandler| N6
+

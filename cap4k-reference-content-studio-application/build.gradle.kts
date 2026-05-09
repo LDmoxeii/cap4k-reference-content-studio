@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    id("buildsrc.convention.kotlin-jvm")
 }
 
 dependencies {
@@ -15,10 +15,6 @@ dependencies {
     implementation("org.springframework:spring-tx")
     testImplementation("org.junit.jupiter:junit-jupiter:${libs.versions.junit.get()}")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-kotlin {
-    jvmToolchain(21)
 }
 
 tasks.test {

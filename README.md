@@ -26,7 +26,7 @@ Spring Boot process and an in-memory H2 database.
 
 ## Prerequisites
 
-1. Use JDK 21.
+1. Use JDK 17.
 2. Publish the required `cap4k` snapshot artifacts to `mavenLocal()` before
    you build or start this repo.
 
@@ -101,6 +101,41 @@ generated documented HTTP contract. In version one, these OpenAPI surfaces do
 not fully describe the callback consume path or the full query response payload
 shape used by the happy-path workflow, so treat the `.http` files and live
 responses as the operator truth.
+
+## Analysis Reports
+
+This repository also enables IR-based analysis generation for the handwritten
+and generated runtime flow.
+
+Useful commands:
+
+```bash
+./gradlew cap4kAnalysisPlan
+./gradlew cap4kAnalysisGenerate
+```
+
+On Windows:
+
+```powershell
+.\gradlew.bat cap4kAnalysisPlan
+.\gradlew.bat cap4kAnalysisGenerate
+```
+
+What you should expect:
+
+- module-local IR snapshots under:
+  - `cap4k-reference-content-studio-domain/build/cap4k-code-analysis`
+  - `cap4k-reference-content-studio-application/build/cap4k-code-analysis`
+  - `cap4k-reference-content-studio-adapter/build/cap4k-code-analysis`
+- root analysis plan:
+  - `build/cap4k/analysis-plan.json`
+- committed flow analysis outputs:
+  - `analysis/flows/*.json`
+  - `analysis/flows/*.mmd`
+
+These artifacts are not part of the main happy-path operator workflow. They are
+kept as a reference surface for inspecting controller, subscriber, job, and
+application flow structure.
 
 ## What `src-generated` Means
 

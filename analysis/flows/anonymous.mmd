@@ -1,0 +1,53 @@
+flowchart TD
+  N1[&lt;anonymous&gt;]
+  N2[GetMediaProcessingStatusCliHandler]
+  N3[PublishContentCmd.Handler]
+  N4[PublishContentCmd.Request]
+  N5[MarkMediaProcessingSucceededCmd.Handler]
+  N6[MarkMediaProcessingSucceededCmd.Request]
+  N7[StartMediaProcessingCmd.Handler]
+  N8[StartMediaProcessingCmd.Request]
+  N9[GetMediaProcessingStatusCli.Request]
+  N10[ContentDraftCreatedDomainEventSubscriber::on]
+  N11[ContentPublishedDomainEventSubscriber::on]
+  N12[ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved]
+  N13[ContentSubmittedForReviewDomainEventSubscriber::on]
+  N14[MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded]
+  N15[Content::&lt;get-id&gt;]
+  N16[Content::&lt;get-mediaSourceKey&gt;]
+  N17[Content::publish]
+  N18[ContentDraftCreatedDomainEvent]
+  N19[ContentPublishedDomainEvent]
+  N20[ContentReviewApprovedDomainEvent]
+  N21[ContentSubmittedForReviewDomainEvent]
+  N22[MediaProcessingTask::markSubmitted]
+  N23[MediaProcessingTask::markSucceeded]
+  N24[MediaProcessingTask::onCreate]
+  N25[MediaProcessingSucceededDomainEvent]
+  N1 -->|CommandSenderMethodToCommand| N6
+  N1 -->|CliSenderMethodToCli| N9
+  N1 -->|EntityMethodToDomainEvent| N18
+  N1 -->|EntityMethodToDomainEvent| N19
+  N1 -->|EntityMethodToDomainEvent| N20
+  N1 -->|EntityMethodToDomainEvent| N21
+  N1 -->|EntityMethodToDomainEvent| N25
+  N3 -->|CommandHandlerToEntityMethod| N17
+  N4 -->|CommandToCommandHandler| N3
+  N5 -->|CommandHandlerToEntityMethod| N23
+  N6 -->|CommandToCommandHandler| N5
+  N7 -->|CommandHandlerToEntityMethod| N15
+  N7 -->|CommandHandlerToEntityMethod| N16
+  N7 -->|CommandHandlerToEntityMethod| N22
+  N7 -->|CommandHandlerToEntityMethod| N24
+  N8 -->|CommandToCommandHandler| N7
+  N9 -->|CliToCliHandler| N2
+  N12 -->|DomainEventHandlerToCommand| N8
+  N14 -->|DomainEventHandlerToCommand| N4
+  N17 -->|EntityMethodToDomainEvent| N19
+  N18 -->|DomainEventToHandler| N10
+  N19 -->|DomainEventToHandler| N11
+  N20 -->|DomainEventToHandler| N12
+  N21 -->|DomainEventToHandler| N13
+  N23 -->|EntityMethodToDomainEvent| N25
+  N25 -->|DomainEventToHandler| N14
+

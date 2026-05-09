@@ -1,0 +1,31 @@
+flowchart TD
+  N1[GetMediaProcessingStatusCliHandler]
+  N2[ListSubmittedMediaProcessingTasksForPollingQryHandler]
+  N3[PublishContentCmd.Handler]
+  N4[PublishContentCmd.Request]
+  N5[MarkMediaProcessingSucceededCmd.Handler]
+  N6[MarkMediaProcessingSucceededCmd.Request]
+  N7[GetMediaProcessingStatusCli.Request]
+  N8[MediaProcessingPollingFallbackJob::pollSubmittedTasks]
+  N9[ListSubmittedMediaProcessingTasksForPollingQry.Request]
+  N10[ContentPublishedDomainEventSubscriber::on]
+  N11[MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded]
+  N12[Content::publish]
+  N13[ContentPublishedDomainEvent]
+  N14[MediaProcessingTask::markSucceeded]
+  N15[MediaProcessingSucceededDomainEvent]
+  N3 -->|CommandHandlerToEntityMethod| N12
+  N4 -->|CommandToCommandHandler| N3
+  N5 -->|CommandHandlerToEntityMethod| N14
+  N6 -->|CommandToCommandHandler| N5
+  N7 -->|CliToCliHandler| N1
+  N8 -->|CommandSenderMethodToCommand| N6
+  N8 -->|CliSenderMethodToCli| N7
+  N8 -->|QuerySenderMethodToQuery| N9
+  N9 -->|QueryToQueryHandler| N2
+  N11 -->|DomainEventHandlerToCommand| N4
+  N12 -->|EntityMethodToDomainEvent| N13
+  N13 -->|DomainEventToHandler| N10
+  N14 -->|EntityMethodToDomainEvent| N15
+  N15 -->|DomainEventToHandler| N11
+

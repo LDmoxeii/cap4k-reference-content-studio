@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.1.21"
+kotlin = "2.2.20"
 spring-boot = "3.5.6"
 spring-dependency-management = "1.1.7"
 springdoc = "2.8.13"
@@ -7,6 +7,9 @@ junit = "5.13.1"
 cap4k-ddd = "0.5.0-SNAPSHOT"
 
 [libraries]
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-allopen-plugin = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin" }
+kotlin-noarg-plugin = { module = "org.jetbrains.kotlin:kotlin-noarg", version.ref = "kotlin" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
@@ -15,6 +18,8 @@ springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc
 cap4k-ddd-starter = { module = "com.only4:cap4k-ddd-starter", version.ref = "cap4k-ddd" }
 ddd-integration-event-http = { module = "com.only4:ddd-integration-event-http", version.ref = "cap4k-ddd" }
 ddd-integration-event-http-jpa = { module = "com.only4:ddd-integration-event-http-jpa", version.ref = "cap4k-ddd" }
+cap4k-plugin-code-analysis-compiler = { module = "com.only4:cap4k-plugin-code-analysis-compiler", version.ref = "cap4k-ddd" }
+cap4k-plugin-code-analysis-core = { module = "com.only4:cap4k-plugin-code-analysis-core", version.ref = "cap4k-ddd" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

@@ -1,0 +1,93 @@
+{
+  "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
+  "entryType": "controllermethod",
+  "nodeCount": 8,
+  "edgeCount": 7,
+  "nodes": [
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
+      "name": "ContentController::create",
+      "fullName": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
+      "type": "controllermethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Handler",
+      "name": "CreateContentDraftCmd.Handler",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Handler",
+      "type": "commandhandler"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
+      "name": "CreateContentDraftCmd.Request",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
+      "type": "command"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::on",
+      "name": "ContentDraftCreatedDomainEventSubscriber::on",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::on",
+      "type": "domaineventhandler"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-id>",
+      "name": "Content::<get-id>",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-id>",
+      "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::onCreate",
+      "name": "Content::onCreate",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::onCreate",
+      "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::recordDraftCreated",
+      "name": "Content::recordDraftCreated",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::recordDraftCreated",
+      "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent",
+      "name": "ContentDraftCreatedDomainEvent",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent",
+      "type": "domainevent"
+    }
+  ],
+  "edges": [
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
+      "type": "ControllerMethodToCommand"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Handler",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-id>",
+      "type": "CommandHandlerToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Handler",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::onCreate",
+      "type": "CommandHandlerToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Handler",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::recordDraftCreated",
+      "type": "CommandHandlerToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Handler",
+      "type": "CommandToCommandHandler"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::recordDraftCreated",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent",
+      "type": "EntityMethodToDomainEvent"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::on",
+      "type": "DomainEventToHandler"
+    }
+  ]
+}

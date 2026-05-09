@@ -1,0 +1,7 @@
+flowchart TD
+  N1[TriggerMediaProcessingCliHandler]
+  N2[StartMediaProcessingCmd.Handler::exec]
+  N3[TriggerMediaProcessingCli.Request]
+  N2 -->|CliSenderMethodToCli| N3
+  N3 -->|CliToCliHandler| N1
+
