@@ -21,7 +21,6 @@ val contentStudioSchemaPath =
     layout.projectDirectory.file(
         "cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql"
     ).asFile.absolutePath.replace("\\", "/")
-val generatedKotlinSourcesDir = layout.buildDirectory.dir("generated/cap4k/main/kotlin")
 
 cap4k {
     project {
@@ -93,6 +92,8 @@ tasks.register("syncGeneratedSnapshots") {
 }
 
 subprojects {
+    val generatedKotlinSourcesDir = layout.buildDirectory.dir("generated/cap4k/main/kotlin")
+
     tasks.register<Sync>("syncGeneratedSnapshots") {
         group = "verification"
         description = "Sync generated artifact snapshots into src-generated/main/kotlin."
