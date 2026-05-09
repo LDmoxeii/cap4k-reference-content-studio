@@ -43,6 +43,11 @@ internal class InMemoryMediaProcessingTaskRepository(
     override fun findByExternalTaskId(externalTaskId: String): MediaProcessingTask? =
         tasks.values.firstOrNull { it.externalTaskId == externalTaskId }
 
+    override fun findSubmittedTasks(): List<MediaProcessingTask> =
+        tasks.values.filter {
+            it.processingStatus == MediaProcessingStatus.SUBMITTED.name && !it.externalTaskId.isNullOrBlank()
+        }
+
     override fun save(task: MediaProcessingTask): MediaProcessingTask {
         tasks[task.contentId] = task
         saveCalls += task.contentId
@@ -55,6 +60,7 @@ internal class InMemoryMediaProcessingTaskRepository(
 internal class FakeMediaProcessingCli(
     private val accepted: Boolean = true,
     private val externalTaskId: String = "ext-123",
+    private val polledStatuses: Map<String, MediaProcessingCli.StatusResponse> = emptyMap(),
 ) : MediaProcessingCli {
     data class Call(
         val contentId: UUID,
@@ -62,6 +68,7 @@ internal class FakeMediaProcessingCli(
     )
 
     val calls = mutableListOf<Call>()
+    val statusCalls = mutableListOf<String>()
 
     override fun start(contentId: UUID, mediaSourceKey: String): MediaProcessingCli.Response {
         calls += Call(contentId, mediaSourceKey)
@@ -69,6 +76,12 @@ internal class FakeMediaProcessingCli(
             accepted = accepted,
             externalTaskId = externalTaskId,
         )
+    }
+
+    override fun getStatus(externalTaskId: String): MediaProcessingCli.StatusResponse {
+        statusCalls += externalTaskId
+        return polledStatuses[externalTaskId]
+            ?: MediaProcessingCli.StatusResponse(MediaProcessingCli.ExternalTaskStatus.SUBMITTED)
     }
 }
 

@@ -8,5 +8,7 @@ interface MediaProcessingTaskRepository {
 
     fun findByExternalTaskId(externalTaskId: String): MediaProcessingTask?
 
+    fun findSubmittedTasks(): List<MediaProcessingTask>
+
     fun save(task: MediaProcessingTask): MediaProcessingTask
 }

@@ -1,6 +1,8 @@
 package com.only4.cap4k.reference.contentstudio.adapter.persistence
 
+import com.only4.cap4k.ddd.core.domain.event.DomainEventSupervisor
 import com.only4.cap4k.reference.contentstudio.application.ports.MediaProcessingTaskRepository
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
 import jakarta.persistence.EntityManager
 import java.util.UUID
@@ -52,6 +54,21 @@ class MediaProcessingTaskPersistenceAdapter(
                 }
             }
 
+    override fun findSubmittedTasks(): List<MediaProcessingTask> =
+        entityManager.createQuery(
+            """
+            select task
+            from MediaProcessingTask task
+            where task.processingStatus = :processingStatus
+              and task.externalTaskId is not null
+            """.trimIndent(),
+            MediaProcessingTask::class.java,
+        )
+            .setParameter("processingStatus", MediaProcessingStatus.SUBMITTED.name)
+            .resultList
+
     override fun save(task: MediaProcessingTask): MediaProcessingTask =
-        jpaMediaProcessingTaskRepository.save(task)
+        jpaMediaProcessingTaskRepository.save(task).also {
+            DomainEventSupervisor.manager.release(setOf(task))
+        }
 }

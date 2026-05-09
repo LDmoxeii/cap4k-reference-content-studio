@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":cap4k-reference-content-studio-adapter"))
     implementation(libs.cap4k.ddd.starter)
     implementation(kotlin("reflect"))
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation(libs.spring.boot.starter.web)
     implementation(libs.spring.boot.starter.data.jpa)
     implementation(libs.springdoc.webmvc.ui)
