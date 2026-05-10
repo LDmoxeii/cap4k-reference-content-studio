@@ -3,7 +3,6 @@ package com.only4.cap4k.reference.contentstudio.application.commands.content.wor
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.ddd.core.Mediator
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.recordDraftCreated
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory.ContentFactory
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
@@ -34,7 +33,6 @@ object CreateContentDraftCmd {
                     dbUpdatedAt = now,
                     )
                 )
-            content.recordDraftCreated()
             Mediator.uow.save()
 
             return Response(

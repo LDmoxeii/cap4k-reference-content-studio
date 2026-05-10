@@ -1,6 +1,7 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.content
 
 import com.only4.cap4k.reference.contentstudio.domain.installTestDomainEventSupervisor
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
@@ -18,6 +19,20 @@ class ContentBehaviorTest {
     @BeforeEach
     fun setUp() {
         domainEvents = installTestDomainEventSupervisor()
+    }
+
+    @Test
+    fun `onCreate emits content draft created event`() {
+        val content = newContent()
+
+        content.onCreate()
+
+        val event = assertInstanceOf(
+            ContentDraftCreatedDomainEvent::class.java,
+            domainEvents.attachedEvents.single(),
+        )
+        assertEquals(content.id, event.contentId)
+        assertEquals(content.mediaSourceKey, event.mediaSourceKey)
     }
 
     @Test

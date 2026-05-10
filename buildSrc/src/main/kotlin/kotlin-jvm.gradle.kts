@@ -26,7 +26,7 @@ val cap4kPluginArgs = providers.provider {
         .map { "-Xplugin=${it.absolutePath}" }
 }
 
-tasks.withType<KotlinCompile>().configureEach {
+tasks.named<KotlinCompile>("compileKotlin") {
     compilerOptions.freeCompilerArgs.addAll(cap4kPluginArgs)
     outputs.dir(layout.buildDirectory.dir("cap4k-code-analysis"))
 }

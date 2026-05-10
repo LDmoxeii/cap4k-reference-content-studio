@@ -28,7 +28,7 @@ fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
     }
 }
 
-fun Content.recordDraftCreated() {
+fun Content.onCreate() {
     events().attach(this) {
         ContentDraftCreatedDomainEvent(
             entity = this,

@@ -1,7 +1,19 @@
+pluginManagement {
+    repositories {
+        maven {
+            url = uri("https://maven.aliyun.com/repository/public")
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
-        mavenLocal()
+        maven {
+            url = uri("https://maven.aliyun.com/repository/public")
+        }
         mavenCentral()
         gradlePluginPortal()
     }

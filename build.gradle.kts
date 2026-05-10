@@ -9,7 +9,20 @@ plugins {
 
 allprojects {
     repositories {
-        mavenLocal()
+        maven {
+            name = "AliYunCap4k"
+            url = uri("https://packages.aliyun.com/67053c6149e9309ce56b9e9e/maven/cap4k")
+            credentials {
+                username = providers.gradleProperty("aliyun.maven.username").orNull ?: "defaultUsername"
+                password = providers.gradleProperty("aliyun.maven.password").orNull ?: "defaultPassword"
+            }
+            content {
+                includeGroup("com.only4")
+            }
+        }
+        maven {
+            url = uri("https://maven.aliyun.com/repository/public")
+        }
         mavenCentral()
     }
 }
@@ -25,6 +38,11 @@ cap4k {
         domainModulePath.set("cap4k-reference-content-studio-domain")
         applicationModulePath.set("cap4k-reference-content-studio-application")
         adapterModulePath.set("cap4k-reference-content-studio-adapter")
+    }
+    templates {
+        templateConflictPolicies.put("flow/entry.json.peb", "OVERWRITE")
+        templateConflictPolicies.put("flow/entry.mmd.peb", "OVERWRITE")
+        templateConflictPolicies.put("flow/index.json.peb", "OVERWRITE")
     }
     sources {
         designJson {

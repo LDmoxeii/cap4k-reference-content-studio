@@ -20,8 +20,8 @@
     "integrationevent": 1,
     "querysendermethod": 1
   },
-  "nodeCount": 105,
-  "edgeCount": 52,
+  "nodeCount": 98,
+  "edgeCount": 51,
   "flowCount": 10,
   "flows": [
     {
@@ -35,8 +35,8 @@
     {
       "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
       "entryType": "controllermethod",
-      "nodeCount": 8,
-      "edgeCount": 7,
+      "nodeCount": 7,
+      "edgeCount": 6,
       "json": "com_only4_cap4k_reference_contentstudio_adapter_http_ContentController_create.json",
       "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ContentController_create.mmd"
     },

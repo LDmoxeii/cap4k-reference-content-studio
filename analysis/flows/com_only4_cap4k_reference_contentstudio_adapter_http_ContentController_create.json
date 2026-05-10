@@ -1,8 +1,8 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
   "entryType": "controllermethod",
-  "nodeCount": 8,
-  "edgeCount": 7,
+  "nodeCount": 7,
+  "edgeCount": 6,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
@@ -41,12 +41,6 @@
       "type": "entitymethod"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::recordDraftCreated",
-      "name": "Content::recordDraftCreated",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::recordDraftCreated",
-      "type": "entitymethod"
-    },
-    {
       "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent",
       "name": "ContentDraftCreatedDomainEvent",
       "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent",
@@ -70,17 +64,12 @@
       "type": "CommandHandlerToEntityMethod"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Handler",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::recordDraftCreated",
-      "type": "CommandHandlerToEntityMethod"
-    },
-    {
       "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Handler",
       "type": "CommandToCommandHandler"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::recordDraftCreated",
+      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::onCreate",
       "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent",
       "type": "EntityMethodToDomainEvent"
     },

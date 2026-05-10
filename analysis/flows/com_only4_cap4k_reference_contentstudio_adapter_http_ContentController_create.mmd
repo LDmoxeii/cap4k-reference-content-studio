@@ -5,13 +5,11 @@ flowchart TD
   N4[ContentDraftCreatedDomainEventSubscriber::on]
   N5[Content::&lt;get-id&gt;]
   N6[Content::onCreate]
-  N7[Content::recordDraftCreated]
-  N8[ContentDraftCreatedDomainEvent]
+  N7[ContentDraftCreatedDomainEvent]
   N1 -->|ControllerMethodToCommand| N3
   N2 -->|CommandHandlerToEntityMethod| N5
   N2 -->|CommandHandlerToEntityMethod| N6
-  N2 -->|CommandHandlerToEntityMethod| N7
   N3 -->|CommandToCommandHandler| N2
-  N7 -->|EntityMethodToDomainEvent| N8
-  N8 -->|DomainEventToHandler| N4
+  N6 -->|EntityMethodToDomainEvent| N7
+  N7 -->|DomainEventToHandler| N4
 
