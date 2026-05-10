@@ -12,6 +12,12 @@ domain / application / adapter 分层之上：
 你应该能够先克隆这个仓库，再直接跑起本地流程，而不必先读完整个
 `cap4k` 仓库。
 
+## 如何阅读这个仓库
+
+- 如果你想先理解业务规则，先看 domain 行为测试和 factory 测试。
+- 如果你想先理解整条可运行主链路，先看 smoke tests。
+- 第一次阅读时先忽略 `src-generated`；等手写流程看明白后，再回头看生成快照。
+
 ## 仓库内容
 
 这个仓库分成 4 个 Gradle 模块：
@@ -53,6 +59,15 @@ Windows 上：
 
 应用默认运行在 `http://localhost:8080`。
 
+## 主要 Gradle 入口
+
+- 运行应用：
+  - `./gradlew :cap4k-reference-content-studio-start:bootRun`
+- 重新生成产物：
+  - `./gradlew cap4kPlan cap4kGenerate syncGeneratedSnapshots`
+- 生成分析报告：
+  - `./gradlew cap4kAnalysisPlan cap4kAnalysisGenerate`
+
 ## 主要操作面
 
 v1 的主要手工操作面是仓库里的 `.http` 文件，而不是把 Swagger UI 当成主入口。
@@ -89,6 +104,18 @@ Swagger / OpenAPI 仍然存在，但它们更像契约快照，而不是整条 h
 你可以用运行时端点和静态 JSON 文件查看当前生成出来的 HTTP contract。
 但在 v1 里，这两个 OpenAPI 面并不能完整描述回调消费路径和整个 happy-path
 流程用到的全部响应形状，所以应该把 `.http` 文件和真实响应当作主要操作真相源。
+
+## 测试面
+
+如果你打算通过测试理解项目，建议按这个顺序看：
+
+- domain / factory 测试：
+  - 关注规则、状态推进、聚合创建
+- smoke tests：
+  - 关注运行时启动
+  - 关注完整 HTTP happy path
+
+仓库里剩下的测试，只服务于可运行参考流程或一个很薄的 callback 契约，不是主要学习入口。
 
 ## 分析报告
 

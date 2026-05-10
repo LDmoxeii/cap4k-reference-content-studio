@@ -12,6 +12,12 @@ domain/application/adapter split:
 You should be able to clone this repository and run the local workflow without
 reading the full `cap4k` repository first.
 
+## How To Read This Repo
+
+- Start with the domain behavior and factory tests if you want to understand the business rules.
+- Use the smoke tests if you want to understand the runnable end-to-end path.
+- Ignore generated snapshots on first read; return to `src-generated` after the handwritten flow is clear.
+
 ## What Is In This Repo
 
 The repository is organized as four Gradle modules:
@@ -55,6 +61,15 @@ On Windows:
 ```
 
 The app starts on `http://localhost:8080`.
+
+## Main Gradle Entry Points
+
+- Run the app:
+  - `./gradlew :cap4k-reference-content-studio-start:bootRun`
+- Regenerate artifacts:
+  - `./gradlew cap4kPlan cap4kGenerate syncGeneratedSnapshots`
+- Generate analysis reports:
+  - `./gradlew cap4kAnalysisPlan cap4kAnalysisGenerate`
 
 ## Primary Operating Surface
 
@@ -101,6 +116,18 @@ generated documented HTTP contract. In version one, these OpenAPI surfaces do
 not fully describe the callback consume path or the full query response payload
 shape used by the happy-path workflow, so treat the `.http` files and live
 responses as the operator truth.
+
+## Test Surface
+
+If you want to learn the project through tests, use this order:
+
+- domain and factory tests:
+  - rules, state transitions, aggregate creation
+- smoke tests:
+  - runtime boot
+  - full HTTP happy path
+
+The remaining committed tests are there to support the runnable reference workflow or a thin callback contract. They are not meant to replace the domain-first reading path.
 
 ## Analysis Reports
 
