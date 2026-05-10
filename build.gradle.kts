@@ -51,22 +51,11 @@ cap4k {
             )
         }
     }
-    layout {
-        flow {
-            outputRoot.set("analysis/flows")
-        }
-    }
     generators {
         designCommand {
             enabled.set(true)
         }
-        designQuery {
-            enabled.set(true)
-        }
         designApiPayload {
-            enabled.set(true)
-        }
-        designQueryHandler {
             enabled.set(true)
         }
         designClient {
@@ -81,6 +70,12 @@ cap4k {
         designDomainEventHandler {
             enabled.set(true)
         }
+        designQuery {
+            enabled.set(true)
+        }
+        designQueryHandler {
+            enabled.set(true)
+        }
         aggregate {
             enabled.set(true)
             artifacts {
@@ -92,6 +87,11 @@ cap4k {
         }
         flow {
             enabled.set(true)
+        }
+    }
+    layout {
+        flow {
+            outputRoot.set("analysis/flows")
         }
     }
 }
@@ -109,7 +109,6 @@ tasks.register("syncGeneratedSnapshots") {
 
 subprojects {
     val generatedKotlinSourcesDir = layout.buildDirectory.dir("generated/cap4k/main/kotlin")
-
     tasks.register<Sync>("syncGeneratedSnapshots") {
         group = "verification"
         description = "Sync generated artifact snapshots into src-generated/main/kotlin."
