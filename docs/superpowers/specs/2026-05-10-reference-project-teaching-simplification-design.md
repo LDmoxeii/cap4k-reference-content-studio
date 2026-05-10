@@ -55,7 +55,7 @@ The following tests remain part of the reference project because they directly t
   - `ContentStudioApplicationSmokeTest`
   - `ContentStudioHappyPathHttpSmokeTest`
 
-`MediaProcessingCallbackContractTest` may remain only if it proves the callback contract itself rather than tactical cleanup residue.
+`MediaProcessingCallbackContractTest` remains because it proves the callback integration-event payload contract itself rather than cleanup residue.
 
 #### Remove
 
@@ -65,7 +65,7 @@ The following tests should be removed because they are correction-history or tac
 - `TacticalArchitectureContractTest`
 - `HttpControllerTacticalContractTest`
 
-The following tests should also be removed if, after inspection, they only prove tactical cleanup rather than a stable project contract:
+The following tests should also be removed because they only prove tactical cleanup rather than a stable project contract:
 
 - `QueryHandlerTacticalContractTest`
 - `MediaProcessingCallbackIntegrationEventSubscriberContractTest`
@@ -128,7 +128,7 @@ They should stop implying that users need to understand tactical cleanup tests i
 ## Acceptance Criteria
 
 - the repository no longer contains correction-history tests such as `BehaviorAliasResidueTest`
-- the repository no longer contains tactical-audit tests such as `TacticalArchitectureContractTest` and `HttpControllerTacticalContractTest`
+- the repository no longer contains tactical-audit tests such as `TacticalArchitectureContractTest`, `HttpControllerTacticalContractTest`, `QueryHandlerTacticalContractTest`, and `MediaProcessingCallbackIntegrationEventSubscriberContractTest`
 - any remaining adapter/start tests clearly serve runtime or contract verification rather than cleanup archaeology
 - root Gradle configuration reads in a simpler, user-oriented order without changing the verified build mechanism
 - README files clearly separate run, generate, and analysis entry points
