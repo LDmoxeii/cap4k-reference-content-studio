@@ -5,6 +5,7 @@ import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory.ContentFactory
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.time.LocalDateTime
 import java.util.UUID
@@ -26,6 +27,9 @@ object CreateContentDraftCmd {
                     mediaSourceKey = request.mediaSourceKey,
                     reviewStatus = ReviewStatus.PENDING,
                     contentStatus = ContentStatus.DRAFT,
+                    releasePolicy = ReleasePolicy.IMMEDIATE,
+                    releaseWindowOpensAt = null,
+                    releaseWindowClosesAt = null,
                     reviewerId = null,
                     reviewedAt = null,
                     publishedAt = null,

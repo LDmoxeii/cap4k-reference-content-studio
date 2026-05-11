@@ -3,6 +3,7 @@ package com.only4.cap4k.reference.contentstudio.domain.services
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -54,6 +55,9 @@ class PublicationEligibilityDomainServiceTest {
             mediaSourceKey = "media/source-key",
             reviewStatus = reviewStatus,
             contentStatus = contentStatus,
+            releasePolicy = ReleasePolicy.IMMEDIATE,
+            releaseWindowOpensAt = null,
+            releaseWindowClosesAt = null,
             reviewerId = null,
             reviewedAt = null,
             publishedAt = null,

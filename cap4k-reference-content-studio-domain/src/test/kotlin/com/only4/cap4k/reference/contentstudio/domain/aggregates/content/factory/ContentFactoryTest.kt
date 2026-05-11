@@ -1,6 +1,7 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory
 
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.time.LocalDateTime
 import java.util.UUID
@@ -38,6 +39,9 @@ class ContentFactoryTest {
         assertEquals(payload.mediaSourceKey, content.mediaSourceKey)
         assertEquals(payload.reviewStatus, content.reviewStatus)
         assertEquals(payload.contentStatus, content.contentStatus)
+        assertEquals(ReleasePolicy.IMMEDIATE, content.releasePolicy)
+        assertEquals(null, content.releaseWindowOpensAt)
+        assertEquals(null, content.releaseWindowClosesAt)
         assertEquals(payload.reviewerId, content.reviewerId)
         assertEquals(payload.reviewedAt, content.reviewedAt)
         assertEquals(payload.publishedAt, content.publishedAt)

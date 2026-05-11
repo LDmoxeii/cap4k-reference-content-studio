@@ -5,6 +5,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
@@ -123,6 +124,9 @@ class ContentBehaviorTest {
             mediaSourceKey = "media/source-key",
             reviewStatus = reviewStatus,
             contentStatus = contentStatus,
+            releasePolicy = ReleasePolicy.IMMEDIATE,
+            releaseWindowOpensAt = null,
+            releaseWindowClosesAt = null,
             reviewerId = null,
             reviewedAt = null,
             publishedAt = null,
