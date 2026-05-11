@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:8080
+@contentId =
+@externalTaskId =
+
+### Create gated content draft.
+POST {{baseUrl}}/advanced/contents/gated
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Gated sample content",
+  "body": "Sample gated content body",
+  "mediaSourceKey": "sample-gated-media-source-key",
+  "releaseWindowOpensAt": "2026-05-11T00:00:00",
+  "releaseWindowClosesAt": "2026-05-12T00:00:00"
+}
+
+### Then run review.http submit and approve with the created contentId.
+### Then run query.http to copy task.externalTaskId.
+### Then run media-processing.http with the copied externalTaskId.
+
+### Pass copyright review.
+POST {{baseUrl}}/advanced/contents/{{contentId}}/release-readiness/copyright-pass
+Accept: application/json
+
+### Confirm manual release.
+POST {{baseUrl}}/advanced/contents/{{contentId}}/release-readiness/manual-confirm
+Accept: application/json
+
+### Complete release readiness and publish.
+POST {{baseUrl}}/advanced/contents/{{contentId}}/release-readiness/complete
+Accept: application/json
