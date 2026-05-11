@@ -3,6 +3,9 @@ package com.only4.cap4k.reference.contentstudio.application.commands.release.rea
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
+import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd
+import com.only4.cap4k.reference.contentstudio.domain._share.meta.publication_release_readiness.SPublicationReleaseReadiness
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.complete
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
@@ -13,7 +16,25 @@ object CompletePublicationReleaseReadinessCmd {
     class Handler : Command<Request, Response> {
 
         override fun exec(request: Request): Response {
+            val readiness =
+                checkNotNull(
+                    Mediator.repositories.findFirst(
+                        SPublicationReleaseReadiness.predicate { schema ->
+                            schema.contentId.eq(request.contentId)
+                        }
+                    )
+                ) {
+                    "Publication release readiness for content ${request.contentId} was not found."
+                }
+            readiness.complete(request.completedAt)
             Mediator.uow.save()
+            Mediator.cmd.send(
+                PublishContentCmd.Request(
+                    contentId = request.contentId,
+                    publishedAt = request.completedAt,
+                    releaseReadinessSatisfied = true,
+                )
+            )
 
             return Response
         }
