@@ -27,7 +27,6 @@ object CompletePublicationReleaseReadinessCmd {
                     "Publication release readiness for content ${request.contentId} was not found."
                 }
             readiness.complete(request.completedAt)
-            Mediator.uow.save()
             Mediator.cmd.send(
                 PublishContentCmd.Request(
                     contentId = request.contentId,
