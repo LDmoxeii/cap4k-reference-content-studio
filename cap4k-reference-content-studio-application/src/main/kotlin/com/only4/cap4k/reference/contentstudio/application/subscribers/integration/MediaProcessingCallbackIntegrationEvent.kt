@@ -1,6 +1,7 @@
 package com.only4.cap4k.reference.contentstudio.application.subscribers.integration
 
 import com.only4.cap4k.ddd.core.application.event.annotation.IntegrationEvent
+import java.time.LocalDateTime
 
 /**
  * Local integration-event contract kept under application subscribers until #34 lands.
@@ -13,6 +14,9 @@ import com.only4.cap4k.ddd.core.application.event.annotation.IntegrationEvent
 data class MediaProcessingCallbackIntegrationEvent(
     val externalTaskId: String,
     val status: String,
+    val assetSha256: String,
+    val assetLocation: String,
+    val completedAt: LocalDateTime,
 ) {
     companion object {
         const val EVENT_NAME = "cap4k.reference.contentstudio.media-processing.succeeded"

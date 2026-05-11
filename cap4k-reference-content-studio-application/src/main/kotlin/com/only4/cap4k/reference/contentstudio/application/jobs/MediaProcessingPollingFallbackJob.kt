@@ -20,6 +20,15 @@ class MediaProcessingPollingFallbackJob {
                 Mediator.cmd.send(
                     MarkMediaProcessingSucceededCmd.Request(
                         externalTaskId = externalTaskId,
+                        assetSha256 = requireNotNull(status.assetSha256) {
+                            "Succeeded media processing status must include asset SHA-256."
+                        },
+                        assetLocation = requireNotNull(status.assetLocation) {
+                            "Succeeded media processing status must include asset location."
+                        },
+                        completedAt = requireNotNull(status.completedAt) {
+                            "Succeeded media processing status must include completion time."
+                        },
                     )
                 )
             }

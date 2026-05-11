@@ -20,6 +20,9 @@ class MediaProcessingCallbackIntegrationEventSubscriber : EventSubscriber<MediaP
         Mediator.cmd.send(
             MarkMediaProcessingSucceededCmd.Request(
                 externalTaskId = event.externalTaskId,
+                assetSha256 = event.assetSha256,
+                assetLocation = event.assetLocation,
+                completedAt = event.completedAt,
             )
         )
     }

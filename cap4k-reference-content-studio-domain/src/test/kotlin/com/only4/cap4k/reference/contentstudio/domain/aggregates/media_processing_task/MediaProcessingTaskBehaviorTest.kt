@@ -4,6 +4,8 @@ import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.TestDomainEventSupervisor
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultStatus
 import com.only4.cap4k.reference.contentstudio.domain.installTestDomainEventSupervisor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
@@ -82,8 +84,9 @@ class MediaProcessingTaskBehaviorTest {
             externalTaskId = "external-123",
             processingStatus = MediaProcessingStatus.SUBMITTED,
         )
+        val snapshot = newResultSnapshot(task)
 
-        task.markSucceeded()
+        task.markSucceeded(snapshot)
 
         assertEquals(MediaProcessingStatus.SUCCEEDED, task.processingStatus)
 
@@ -102,8 +105,9 @@ class MediaProcessingTaskBehaviorTest {
             externalTaskId = "external-123",
             processingStatus = MediaProcessingStatus.SUCCEEDED,
         )
+        val snapshot = newResultSnapshot(task)
 
-        task.markSucceeded()
+        task.markSucceeded(snapshot)
 
         assertEquals(MediaProcessingStatus.SUCCEEDED, task.processingStatus)
         assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
@@ -128,9 +132,10 @@ class MediaProcessingTaskBehaviorTest {
     @Test
     fun `mark processing succeeded rejects pending task`() {
         val task = newTask()
+        val snapshot = newResultSnapshot(task, externalTaskId = "external-123")
 
         assertThrows(IllegalStateException::class.java) {
-            task.markSucceeded()
+            task.markSucceeded(snapshot)
         }
 
         assertEquals(MediaProcessingStatus.PENDING, task.processingStatus)
@@ -143,9 +148,10 @@ class MediaProcessingTaskBehaviorTest {
             externalTaskId = "   ",
             processingStatus = MediaProcessingStatus.SUBMITTED,
         )
+        val snapshot = newResultSnapshot(task, externalTaskId = "external-123")
 
         assertThrows(IllegalStateException::class.java) {
-            task.markSucceeded()
+            task.markSucceeded(snapshot)
         }
 
         assertEquals("   ", task.externalTaskId)
@@ -172,6 +178,22 @@ class MediaProcessingTaskBehaviorTest {
             processingStatus = processingStatus,
             dbCreatedAt = now,
             dbUpdatedAt = now,
+        )
+    }
+
+    private fun newResultSnapshot(
+        task: MediaProcessingTask,
+        externalTaskId: String = task.externalTaskId ?: "external-123",
+    ): MediaProcessingResultSnapshot {
+        val now = LocalDateTime.of(2026, 5, 11, 10, 15, 30)
+        return MediaProcessingResultSnapshot.create(
+            mediaProcessingTaskId = task.id,
+            externalTaskId = externalTaskId,
+            resultStatus = MediaProcessingResultStatus.SUCCEEDED,
+            assetSha256 = "a".repeat(64),
+            assetLocation = "s3://content-studio/assets/$externalTaskId.mp4",
+            completedAt = now,
+            now = now,
         )
     }
 }

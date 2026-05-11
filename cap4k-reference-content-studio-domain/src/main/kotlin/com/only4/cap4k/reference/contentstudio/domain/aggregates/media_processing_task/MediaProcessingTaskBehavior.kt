@@ -3,6 +3,7 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processi
 import com.only4.cap4k.ddd.core.domain.event.DomainEventSupervisorSupport.events
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
 
 fun MediaProcessingTask.markSubmitted(externalTaskId: String) {
     check(externalTaskId.isNotBlank()) {
@@ -27,7 +28,7 @@ fun MediaProcessingTask.markSubmitted(externalTaskId: String) {
     }
 }
 
-fun MediaProcessingTask.markSucceeded() {
+fun MediaProcessingTask.markSucceeded(resultSnapshot: MediaProcessingResultSnapshot) {
     if (processingStatus == MediaProcessingStatus.SUCCEEDED) {
         return
     }
@@ -38,6 +39,14 @@ fun MediaProcessingTask.markSucceeded() {
 
     check(!externalTaskId.isNullOrBlank()) {
         "Cannot mark a media processing task as succeeded without an external task id."
+    }
+
+    check(resultSnapshot.mediaProcessingTaskId == id) {
+        "Media processing result snapshot does not belong to this task."
+    }
+
+    check(resultSnapshot.externalTaskId == externalTaskId) {
+        "Media processing result snapshot external task id does not match this task."
     }
 
     processingStatus = MediaProcessingStatus.SUCCEEDED

@@ -5,7 +5,10 @@ import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSucceeded
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultStatus
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 object MarkMediaProcessingSucceededCmd {
 
@@ -23,10 +26,20 @@ object MarkMediaProcessingSucceededCmd {
                             schema.externalTaskId.eq(request.externalTaskId)
                         }
                     )
-                ) {
+            ) {
                 "Media processing task for external task id ${request.externalTaskId} was not found."
             }
-            task.markSucceeded()
+            val resultSnapshot = MediaProcessingResultSnapshot.create(
+                mediaProcessingTaskId = task.id,
+                externalTaskId = request.externalTaskId,
+                resultStatus = MediaProcessingResultStatus.SUCCEEDED,
+                assetSha256 = request.assetSha256,
+                assetLocation = request.assetLocation,
+                completedAt = request.completedAt,
+                now = LocalDateTime.now(),
+            )
+            task.markSucceeded(resultSnapshot)
+            Mediator.uow.persist(resultSnapshot)
             Mediator.uow.save()
 
             return Response
@@ -34,7 +47,10 @@ object MarkMediaProcessingSucceededCmd {
     }
 
     data class Request(
-        val externalTaskId: String
+        val externalTaskId: String,
+        val assetSha256: String,
+        val assetLocation: String,
+        val completedAt: LocalDateTime,
     ) : RequestParam<Response>
 
     data object Response

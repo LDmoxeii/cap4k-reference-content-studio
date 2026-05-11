@@ -13,5 +13,8 @@ Accept: application/json
 
 {
   "externalTaskId": "{{externalTaskId}}",
-  "status": "SUCCEEDED"
+  "status": "SUCCEEDED",
+  "assetSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "assetLocation": "s3://content-studio/assets/{{externalTaskId}}.mp4",
+  "completedAt": "2026-05-11T10:15:30"
 }

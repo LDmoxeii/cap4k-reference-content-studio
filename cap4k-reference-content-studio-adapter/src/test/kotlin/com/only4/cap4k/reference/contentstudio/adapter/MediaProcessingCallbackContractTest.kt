@@ -7,13 +7,16 @@ import org.junit.jupiter.api.Test
 
 class MediaProcessingCallbackContractTest {
     @Test
-    fun `callback integration event keeps only external task id and status`() {
+    fun `callback integration event includes processing result fields`() {
         val propertyNames =
             MediaProcessingCallbackIntegrationEvent::class.java.declaredFields
                 .filterNot { it.isSynthetic || Modifier.isStatic(it.modifiers) }
                 .map { it.name }
                 .sorted()
 
-        assertEquals(listOf("externalTaskId", "status"), propertyNames)
+        assertEquals(
+            listOf("assetLocation", "assetSha256", "completedAt", "externalTaskId", "status"),
+            propertyNames,
+        )
     }
 }

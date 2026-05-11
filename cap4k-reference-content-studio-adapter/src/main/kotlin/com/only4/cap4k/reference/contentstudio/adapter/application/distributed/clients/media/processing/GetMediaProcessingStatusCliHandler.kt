@@ -11,8 +11,24 @@ class GetMediaProcessingStatusCliHandler(
 ) : RequestHandler<GetMediaProcessingStatusCli.Request, GetMediaProcessingStatusCli.Response> {
 
     override fun exec(request: GetMediaProcessingStatusCli.Request): GetMediaProcessingStatusCli.Response {
+        val status = fakeMediaProcessingCli.getStatus(request.externalTaskId)
         return GetMediaProcessingStatusCli.Response(
-            status = fakeMediaProcessingCli.getStatus(request.externalTaskId)
+            status = status,
+            assetSha256 = if (status == "SUCCEEDED") {
+                fakeMediaProcessingCli.getSucceededAssetSha256()
+            } else {
+                null
+            },
+            assetLocation = if (status == "SUCCEEDED") {
+                fakeMediaProcessingCli.getSucceededAssetLocation(request.externalTaskId)
+            } else {
+                null
+            },
+            completedAt = if (status == "SUCCEEDED") {
+                fakeMediaProcessingCli.getSucceededCompletedAt()
+            } else {
+                null
+            },
         )
     }
 }
