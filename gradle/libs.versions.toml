@@ -3,6 +3,7 @@ kotlin = "2.2.20"
 spring-boot = "3.5.6"
 spring-dependency-management = "1.1.7"
 springdoc = "2.8.13"
+swagger-annotations = "2.2.36"
 junit = "5.13.1"
 cap4k-ddd = "0.5.0-SNAPSHOT"
 
@@ -15,6 +16,7 @@ spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 h2 = { module = "com.h2database:h2" }
 springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+swagger-annotations-jakarta = { module = "io.swagger.core.v3:swagger-annotations-jakarta", version.ref = "swagger-annotations" }
 cap4k-ddd-starter = { module = "com.only4:cap4k-ddd-starter", version.ref = "cap4k-ddd" }
 ddd-integration-event-http = { module = "com.only4:ddd-integration-event-http", version.ref = "cap4k-ddd" }
 ddd-integration-event-http-jpa = { module = "com.only4:ddd-integration-event-http-jpa", version.ref = "cap4k-ddd" }

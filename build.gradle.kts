@@ -40,6 +40,8 @@ cap4k {
         adapterModulePath.set("cap4k-reference-content-studio-adapter")
     }
     templates {
+        overrideDirs.from("codegen/templates")
+        templateConflictPolicies.put("design/api_payload.kt.peb", "OVERWRITE")
         templateConflictPolicies.put("flow/entry.json.peb", "OVERWRITE")
         templateConflictPolicies.put("flow/entry.mmd.peb", "OVERWRITE")
         templateConflictPolicies.put("flow/index.json.peb", "OVERWRITE")

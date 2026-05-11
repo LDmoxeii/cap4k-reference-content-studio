@@ -1,0 +1,79 @@
+{% if pageRequest %}
+{{ use("com.only4.cap4k.ddd.core.application.query.PageRequest") -}}
+{% endif %}
+{{ use("io.swagger.v3.oas.annotations.media.Schema") -}}
+package {{ packageName }}
+
+{% for import in imports(imports) -%}
+import {{ import }}
+{% endfor %}
+object {{ typeName }} {
+
+{% if requestFields.size > 0 or pageRequest %}
+{% if requestNestedTypes.size > 0 %}
+    @Schema(name = "{{ typeName }}Request")
+    data class Request(
+{%- if pageRequest %}
+        override val pageNum: Int = 1,
+        override val pageSize: Int = 10{% if requestFields.size > 0 %},{% endif %}
+{% endif -%}
+{%- for field in requestFields %}
+        val {{ field.name }}: {{ type(field) | raw }}{% if field.defaultValue %} = {{ field.defaultValue | raw }}{% endif %}{% if not loop.last %},{% endif %}
+{%- endfor %}
+    ){% if pageRequest %} : PageRequest{% endif %} {
+{%- for nestedType in requestNestedTypes %}
+        @Schema(name = "{{ typeName }}Request{{ nestedType.name }}")
+        data class {{ nestedType.name }}(
+{%- for field in nestedType.fields %}
+            val {{ field.name }}: {{ type(field) | raw }}{% if field.defaultValue %} = {{ field.defaultValue | raw }}{% endif %}{% if not loop.last %},{% endif %}
+{%- endfor %}
+        )
+{%- endfor %}
+    }
+{% else %}
+    @Schema(name = "{{ typeName }}Request")
+    data class Request(
+{%- if pageRequest %}
+        override val pageNum: Int = 1,
+        override val pageSize: Int = 10{% if requestFields.size > 0 %},{% endif %}
+{% endif -%}
+{%- for field in requestFields %}
+        val {{ field.name }}: {{ type(field) | raw }}{% if field.defaultValue %} = {{ field.defaultValue | raw }}{% endif %}{% if not loop.last %},{% endif %}
+{%- endfor %}
+    ){% if pageRequest %} : PageRequest{% endif %}
+{% endif %}
+{% else %}
+    @Schema(name = "{{ typeName }}Request")
+    class Request
+{% endif %}
+
+{% if responseFields.size > 0 %}
+{% if responseNestedTypes.size > 0 %}
+    @Schema(name = "{{ typeName }}Response")
+    data class Response(
+{%- for field in responseFields %}
+        val {{ field.name }}: {{ type(field) | raw }}{% if field.defaultValue %} = {{ field.defaultValue | raw }}{% endif %}{% if not loop.last %},{% endif %}
+{%- endfor %}
+    ) {
+{%- for nestedType in responseNestedTypes %}
+        @Schema(name = "{{ typeName }}Response{{ nestedType.name }}")
+        data class {{ nestedType.name }}(
+{%- for field in nestedType.fields %}
+            val {{ field.name }}: {{ type(field) | raw }}{% if field.defaultValue %} = {{ field.defaultValue | raw }}{% endif %}{% if not loop.last %},{% endif %}
+{%- endfor %}
+        )
+{%- endfor %}
+    }
+{% else %}
+    @Schema(name = "{{ typeName }}Response")
+    data class Response(
+{%- for field in responseFields %}
+        val {{ field.name }}: {{ type(field) | raw }}{% if field.defaultValue %} = {{ field.defaultValue | raw }}{% endif %}{% if not loop.last %},{% endif %}
+{%- endfor %}
+    )
+{% endif %}
+{% else %}
+    @Schema(name = "{{ typeName }}Response")
+    class Response
+{% endif %}
+}

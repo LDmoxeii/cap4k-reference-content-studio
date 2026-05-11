@@ -1,15 +1,18 @@
 
 package com.only4.cap4k.reference.contentstudio.adapter.portal.api.payload.content.read
 
+import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 import java.util.UUID
 
 object GetContentDetailPayload {
 
+    @Schema(name = "GetContentDetailPayloadRequest")
     data class Request(
         val contentId: UUID
     )
 
+    @Schema(name = "GetContentDetailPayloadResponse")
     data class Response(
         val contentId: UUID,
         val title: String,

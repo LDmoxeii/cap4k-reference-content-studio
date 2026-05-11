@@ -12,6 +12,7 @@ dependencies {
     implementation("org.springframework:spring-context")
     implementation("org.springframework.data:spring-data-jpa")
     implementation("org.springframework:spring-web")
+    compileOnly(libs.swagger.annotations.jakarta)
 
     testImplementation("org.junit.jupiter:junit-jupiter:${libs.versions.junit.get()}")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
