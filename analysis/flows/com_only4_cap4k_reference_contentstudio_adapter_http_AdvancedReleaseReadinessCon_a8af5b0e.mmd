@@ -1,0 +1,15 @@
+flowchart TD
+  N1[AdvancedReleaseReadinessController::createGated]
+  N2[CreateGatedContentDraftCmd.Handler]
+  N3[CreateGatedContentDraftCmd.Request]
+  N4[ContentDraftCreatedDomainEventSubscriber::on]
+  N5[Content::&lt;get-id&gt;]
+  N6[Content::onCreate]
+  N7[ContentDraftCreatedDomainEvent]
+  N1 -->|ControllerMethodToCommand| N3
+  N2 -->|CommandHandlerToEntityMethod| N5
+  N2 -->|CommandHandlerToEntityMethod| N6
+  N3 -->|CommandToCommandHandler| N2
+  N6 -->|EntityMethodToDomainEvent| N7
+  N7 -->|DomainEventToHandler| N4
+

@@ -1,0 +1,49 @@
+{
+  "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::complete",
+  "entryType": "controllermethod",
+  "nodeCount": 4,
+  "edgeCount": 3,
+  "nodes": [
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::complete",
+      "name": "AdvancedReleaseReadinessController::complete",
+      "fullName": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::complete",
+      "type": "controllermethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Handler",
+      "name": "CompletePublicationReleaseReadinessCmd.Handler",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Handler",
+      "type": "commandhandler"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Request",
+      "name": "CompletePublicationReleaseReadinessCmd.Request",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Request",
+      "type": "command"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::complete",
+      "name": "PublicationReleaseReadiness::complete",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::complete",
+      "type": "entitymethod"
+    }
+  ],
+  "edges": [
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::complete",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Request",
+      "type": "ControllerMethodToCommand"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Handler",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::complete",
+      "type": "CommandHandlerToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Handler",
+      "type": "CommandToCommandHandler"
+    }
+  ]
+}

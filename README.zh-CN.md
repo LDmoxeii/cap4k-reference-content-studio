@@ -94,6 +94,25 @@ Swagger / OpenAPI 仍然存在，但它们更像契约快照，而不是整条 h
 这条顺序和仓库里的本地 happy-path smoke 覆盖一致：
 审核通过会创建媒体处理任务，真正发布要等回调完成之后才发生。
 
+如果要运行显式 opt-in 的 gated release 路线，先理解默认顺序，再执行
+`http/advanced-release-readiness.http`。
+
+## 高级编写示例映射
+
+默认路径仍然是即时发布：媒体处理成功后，application 通过 `PublishContentCmd`
+发布内容。
+
+高级路径是显式 opt-in：
+
+- `MediaProcessingResultSnapshot` 演示 separate-table value object 持久化。
+- `PublicationEligibilityDomainService` 返回可审计的发布资格结论。
+- gated content 使用 `PublicationReleaseReadiness` 记录跨时间等待状态，再进入发布。
+- `codegen/templates/design/api_payload.kt.peb` 演示项目级模板覆盖：
+  生成的 API payload 能保持稳定 OpenAPI schema 名称，而不需要手改生成文件。
+
+这条 gated 路线是 Saga / process 候选边界，但本参考项目默认不启用 Saga runtime，
+而是先用明确的流程状态聚合表达等待点。
+
 ## OpenAPI 位置
 
 这个仓库里有两种 OpenAPI 入口：

@@ -104,6 +104,25 @@ That sequence matches the local happy-path smoke coverage in this repository:
 review approval creates the media-processing task, and the publish transition
 happens only after the callback completes.
 
+For the opt-in gated release path, run `http/advanced-release-readiness.http`
+after you understand the default sequence.
+
+## Advanced Authoring Examples
+
+The default path still uses immediate publication: after media processing
+succeeds, the application publishes the content through `PublishContentCmd`.
+
+The advanced path is opt-in:
+
+- `MediaProcessingResultSnapshot` demonstrates separate-table value-object persistence.
+- `PublicationEligibilityDomainService` returns an auditable publication decision.
+- Gated content uses `PublicationReleaseReadiness` to record cross-time waiting state before publishing.
+- `codegen/templates/design/api_payload.kt.peb` demonstrates a project-level template override:
+  generated API payloads keep stable OpenAPI schema names without hand-editing generated files.
+
+The gated path is a Saga/process candidate, but this reference project keeps it
+as an explicit process-state aggregate instead of enabling Saga runtime by default.
+
 ## OpenAPI Location
 
 There are two OpenAPI surfaces:

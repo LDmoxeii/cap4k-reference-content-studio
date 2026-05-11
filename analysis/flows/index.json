@@ -1,8 +1,8 @@
 {
   "inputDirs": [
-    "C:\\Users\\LD_moxeii\\Documents\\code\\only-workspace\\cap4k-reference-content-studio\\cap4k-reference-content-studio-adapter\\build\\cap4k-code-analysis",
-    "C:\\Users\\LD_moxeii\\Documents\\code\\only-workspace\\cap4k-reference-content-studio\\cap4k-reference-content-studio-application\\build\\cap4k-code-analysis",
-    "C:\\Users\\LD_moxeii\\Documents\\code\\only-workspace\\cap4k-reference-content-studio\\cap4k-reference-content-studio-domain\\build\\cap4k-code-analysis"
+    "C:\\Users\\LD_moxeii\\.config\\superpowers\\worktrees\\cap4k-reference-content-studio\\advanced-authoring-examples\\cap4k-reference-content-studio-adapter\\build\\cap4k-code-analysis",
+    "C:\\Users\\LD_moxeii\\.config\\superpowers\\worktrees\\cap4k-reference-content-studio\\advanced-authoring-examples\\cap4k-reference-content-studio-application\\build\\cap4k-code-analysis",
+    "C:\\Users\\LD_moxeii\\.config\\superpowers\\worktrees\\cap4k-reference-content-studio\\advanced-authoring-examples\\cap4k-reference-content-studio-domain\\build\\cap4k-code-analysis"
   ],
   "entryTypes": [
     "<anonymous>",
@@ -15,22 +15,54 @@
   "entryTypeCounts": {
     "<anonymous>": 1,
     "clisendermethod": 1,
-    "commandsendermethod": 1,
-    "controllermethod": 5,
+    "commandsendermethod": 3,
+    "controllermethod": 9,
     "integrationevent": 1,
     "querysendermethod": 1
   },
-  "nodeCount": 98,
-  "edgeCount": 51,
-  "flowCount": 10,
+  "nodeCount": 156,
+  "edgeCount": 78,
+  "flowCount": 16,
   "flows": [
     {
       "entryId": "<anonymous>",
       "entryType": "<anonymous>",
-      "nodeCount": 25,
-      "edgeCount": 26,
+      "nodeCount": 30,
+      "edgeCount": 30,
       "json": "anonymous.json",
       "mermaid": "anonymous.mmd"
+    },
+    {
+      "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::complete",
+      "entryType": "controllermethod",
+      "nodeCount": 4,
+      "edgeCount": 3,
+      "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon.json",
+      "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon.mmd"
+    },
+    {
+      "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::confirmManual",
+      "entryType": "controllermethod",
+      "nodeCount": 4,
+      "edgeCount": 3,
+      "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_0f8bd4ce.json",
+      "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_0f8bd4ce.mmd"
+    },
+    {
+      "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::createGated",
+      "entryType": "controllermethod",
+      "nodeCount": 7,
+      "edgeCount": 6,
+      "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_a8af5b0e.json",
+      "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_a8af5b0e.mmd"
+    },
+    {
+      "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::passCopyright",
+      "entryType": "controllermethod",
+      "nodeCount": 4,
+      "edgeCount": 3,
+      "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_8e5b89c7.json",
+      "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_8e5b89c7.mmd"
     },
     {
       "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
@@ -73,6 +105,14 @@
       "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_submitRevi.mmd"
     },
     {
+      "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Handler::exec",
+      "entryType": "commandsendermethod",
+      "nodeCount": 11,
+      "edgeCount": 10,
+      "json": "com_only4_cap4k_reference_contentstudio_application_commands_content_workflow_Co.json",
+      "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_content_workflow_Co.mmd"
+    },
+    {
       "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Handler::exec",
       "entryType": "clisendermethod",
       "nodeCount": 3,
@@ -81,10 +121,18 @@
       "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_media_processing_St.mmd"
     },
     {
+      "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Handler::exec",
+      "entryType": "commandsendermethod",
+      "nodeCount": 7,
+      "edgeCount": 6,
+      "json": "com_only4_cap4k_reference_contentstudio_application_commands_release_readiness_C.json",
+      "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_release_readiness_C.mmd"
+    },
+    {
       "entryId": "com.only4.cap4k.reference.contentstudio.application.jobs.MediaProcessingPollingFallbackJob::pollSubmittedTasks",
       "entryType": "querysendermethod",
-      "nodeCount": 15,
-      "edgeCount": 14,
+      "nodeCount": 18,
+      "edgeCount": 17,
       "json": "com_only4_cap4k_reference_contentstudio_application_jobs_MediaProcessingPollingF.json",
       "mermaid": "com_only4_cap4k_reference_contentstudio_application_jobs_MediaProcessingPollingF.mmd"
     },
@@ -99,8 +147,8 @@
     {
       "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::onEvent",
       "entryType": "commandsendermethod",
-      "nodeCount": 11,
-      "edgeCount": 10,
+      "nodeCount": 14,
+      "edgeCount": 13,
       "json": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_Medi_912a8155.json",
       "mermaid": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_Medi_912a8155.mmd"
     }
