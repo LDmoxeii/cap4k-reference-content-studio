@@ -4,6 +4,7 @@ import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.publish
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.services.PublicationEligibilityDecision
@@ -33,7 +34,14 @@ object PublishContentCmd {
             }
             val publicationEligibilityDomainService =
                 Mediator.services.getService(PublicationEligibilityDomainService::class.java)
-            val decision = publicationEligibilityDomainService.evaluate(content, mediaProcessingTask)
+            val releaseReadinessSatisfied =
+                content.releasePolicy == ReleasePolicy.IMMEDIATE || request.releaseReadinessSatisfied
+            val decision =
+                publicationEligibilityDomainService.evaluate(
+                    content = content,
+                    task = mediaProcessingTask,
+                    releaseReadinessSatisfied = releaseReadinessSatisfied,
+                )
             check(decision == PublicationEligibilityDecision.Eligible) {
                 "Content ${request.contentId} is not eligible for publication: $decision."
             }
@@ -46,7 +54,8 @@ object PublishContentCmd {
 
     data class Request(
         val contentId: UUID,
-        val publishedAt: LocalDateTime
+        val publishedAt: LocalDateTime,
+        val releaseReadinessSatisfied: Boolean = false
     ) : RequestParam<Response>
 
     data object Response
