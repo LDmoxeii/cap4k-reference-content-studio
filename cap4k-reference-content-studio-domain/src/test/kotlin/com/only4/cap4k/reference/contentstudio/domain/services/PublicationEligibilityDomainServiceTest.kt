@@ -6,8 +6,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.C
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.UUID
@@ -16,20 +15,34 @@ class PublicationEligibilityDomainServiceTest {
     private val service = PublicationEligibilityDomainService()
 
     @Test
-    fun `publish eligibility requires approved review and succeeded media processing`() {
+    fun `approved content with succeeded media processing is eligible`() {
         val contentId = UUID.randomUUID()
-        val approvedContent = newContent(contentId = contentId, reviewStatus = ReviewStatus.APPROVED)
-        val pendingReviewContent = newContent(contentId = contentId, reviewStatus = ReviewStatus.PENDING)
-        val succeededTask = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUCCEEDED)
-        val submittedTask = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUBMITTED)
+        val content = newContent(contentId = contentId, reviewStatus = ReviewStatus.APPROVED)
+        val task = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUCCEEDED)
 
-        assertTrue(service.evaluate(content = approvedContent, task = succeededTask))
-        assertFalse(service.evaluate(content = pendingReviewContent, task = succeededTask))
-        assertFalse(service.evaluate(content = approvedContent, task = submittedTask))
+        assertEquals(PublicationEligibilityDecision.Eligible, service.evaluate(content = content, task = task))
     }
 
     @Test
-    fun `publish eligibility requires media task to belong to the content`() {
+    fun `pending review content is not approved`() {
+        val contentId = UUID.randomUUID()
+        val content = newContent(contentId = contentId, reviewStatus = ReviewStatus.PENDING)
+        val task = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUCCEEDED)
+
+        assertEquals(PublicationEligibilityDecision.ContentNotApproved, service.evaluate(content = content, task = task))
+    }
+
+    @Test
+    fun `submitted media processing task has not succeeded`() {
+        val contentId = UUID.randomUUID()
+        val content = newContent(contentId = contentId, reviewStatus = ReviewStatus.APPROVED)
+        val task = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUBMITTED)
+
+        assertEquals(PublicationEligibilityDecision.MediaProcessingNotSucceeded, service.evaluate(content = content, task = task))
+    }
+
+    @Test
+    fun `media processing task must belong to content`() {
         val content = newContent(
             contentId = UUID.randomUUID(),
             reviewStatus = ReviewStatus.APPROVED,
@@ -39,7 +52,22 @@ class PublicationEligibilityDomainServiceTest {
             processingStatus = MediaProcessingStatus.SUCCEEDED,
         )
 
-        assertFalse(service.evaluate(content = content, task = unrelatedTask))
+        assertEquals(
+            PublicationEligibilityDecision.TaskDoesNotBelongToContent,
+            service.evaluate(content = content, task = unrelatedTask),
+        )
+    }
+
+    @Test
+    fun `release readiness must be satisfied`() {
+        val contentId = UUID.randomUUID()
+        val content = newContent(contentId = contentId, reviewStatus = ReviewStatus.APPROVED)
+        val task = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUCCEEDED)
+
+        assertEquals(
+            PublicationEligibilityDecision.ReleaseReadinessNotSatisfied,
+            service.evaluate(content = content, task = task, releaseReadinessSatisfied = false),
+        )
     }
 
     private fun newContent(

@@ -6,6 +6,7 @@ import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.publish
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
+import com.only4.cap4k.reference.contentstudio.domain.services.PublicationEligibilityDecision
 import com.only4.cap4k.reference.contentstudio.domain.services.PublicationEligibilityDomainService
 import java.time.LocalDateTime
 import java.util.UUID
@@ -32,8 +33,9 @@ object PublishContentCmd {
             }
             val publicationEligibilityDomainService =
                 Mediator.services.getService(PublicationEligibilityDomainService::class.java)
-            check(publicationEligibilityDomainService.evaluate(content, mediaProcessingTask)) {
-                "Content ${request.contentId} is not eligible for publication."
+            val decision = publicationEligibilityDomainService.evaluate(content, mediaProcessingTask)
+            check(decision == PublicationEligibilityDecision.Eligible) {
+                "Content ${request.contentId} is not eligible for publication: $decision."
             }
             content.publish(request.publishedAt)
             Mediator.uow.save()

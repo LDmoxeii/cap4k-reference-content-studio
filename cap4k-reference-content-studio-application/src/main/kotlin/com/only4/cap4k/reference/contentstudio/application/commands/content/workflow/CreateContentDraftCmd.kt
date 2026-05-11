@@ -21,20 +21,20 @@ object CreateContentDraftCmd {
             val content =
                 Mediator.factories.create(
                     ContentFactory.Payload(
-                    id = UUID.randomUUID(),
-                    title = request.title,
-                    body = request.body,
-                    mediaSourceKey = request.mediaSourceKey,
-                    reviewStatus = ReviewStatus.PENDING,
-                    contentStatus = ContentStatus.DRAFT,
-                    releasePolicy = ReleasePolicy.IMMEDIATE,
-                    releaseWindowOpensAt = null,
-                    releaseWindowClosesAt = null,
-                    reviewerId = null,
-                    reviewedAt = null,
-                    publishedAt = null,
-                    dbCreatedAt = now,
-                    dbUpdatedAt = now,
+                        id = UUID.randomUUID(),
+                        title = request.title,
+                        body = request.body,
+                        mediaSourceKey = request.mediaSourceKey,
+                        reviewStatus = ReviewStatus.PENDING,
+                        contentStatus = ContentStatus.DRAFT,
+                        releasePolicy = ReleasePolicy.IMMEDIATE,
+                        releaseWindowOpensAt = null,
+                        releaseWindowClosesAt = null,
+                        reviewerId = null,
+                        reviewedAt = null,
+                        publishedAt = null,
+                        dbCreatedAt = now,
+                        dbUpdatedAt = now,
                     )
                 )
             Mediator.uow.save()

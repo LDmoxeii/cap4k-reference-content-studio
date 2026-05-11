@@ -10,9 +10,26 @@ import org.springframework.stereotype.Service
 @DomainService
 @Service
 class PublicationEligibilityDomainService {
-    fun evaluate(content: Content, task: MediaProcessingTask): Boolean {
-        return task.contentId == content.id &&
-            content.reviewStatus == ReviewStatus.APPROVED &&
-            task.processingStatus == MediaProcessingStatus.SUCCEEDED
+    fun evaluate(
+        content: Content,
+        task: MediaProcessingTask,
+        releaseReadinessSatisfied: Boolean = true,
+    ): PublicationEligibilityDecision {
+        return when {
+            task.contentId != content.id -> PublicationEligibilityDecision.TaskDoesNotBelongToContent
+            content.reviewStatus != ReviewStatus.APPROVED -> PublicationEligibilityDecision.ContentNotApproved
+            task.processingStatus != MediaProcessingStatus.SUCCEEDED ->
+                PublicationEligibilityDecision.MediaProcessingNotSucceeded
+            !releaseReadinessSatisfied -> PublicationEligibilityDecision.ReleaseReadinessNotSatisfied
+            else -> PublicationEligibilityDecision.Eligible
+        }
     }
+}
+
+sealed interface PublicationEligibilityDecision {
+    data object Eligible : PublicationEligibilityDecision
+    data object ContentNotApproved : PublicationEligibilityDecision
+    data object MediaProcessingNotSucceeded : PublicationEligibilityDecision
+    data object TaskDoesNotBelongToContent : PublicationEligibilityDecision
+    data object ReleaseReadinessNotSatisfied : PublicationEligibilityDecision
 }
