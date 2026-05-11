@@ -57,7 +57,13 @@ cap4k {
             username.set("sa")
             password.set("secret")
             schema.set("PUBLIC")
-            includeTables.set(listOf("content", "media_processing_task"))
+            includeTables.set(
+                listOf(
+                    "content",
+                    "media_processing_task",
+                    "publication_release_readiness"
+                )
+            )
             excludeTables.set(emptyList())
         }
         irAnalysis {
@@ -100,7 +106,6 @@ cap4k {
                 factory.set(true)
                 specification.set(false)
                 unique.set(false)
-                enumTranslation.set(false)
             }
         }
         flow {

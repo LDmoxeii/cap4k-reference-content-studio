@@ -1,4 +1,4 @@
-package com.only4.cap4k.reference.contentstudio.domain._share.meta.content
+package com.only4.cap4k.reference.contentstudio.domain._share.meta.publication_release_readiness
 
 import com.only4.cap4k.ddd.domain.repo.JpaPredicate
 import com.only4.cap4k.ddd.domain.repo.schema.ExpressionBuilder
@@ -7,7 +7,7 @@ import com.only4.cap4k.ddd.domain.repo.schema.OrderBuilder
 import com.only4.cap4k.ddd.domain.repo.schema.PredicateBuilder
 import com.only4.cap4k.ddd.domain.repo.schema.SchemaSpecification
 import com.only4.cap4k.ddd.domain.repo.schema.SubqueryConfigure
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Path
@@ -16,35 +16,31 @@ import jakarta.persistence.criteria.Subquery
 import java.util.UUID
 import org.springframework.data.jpa.domain.Specification
 
-class SContent(
-    private val root: Path<Content>,
+class SPublicationReleaseReadiness(
+    private val root: Path<PublicationReleaseReadiness>,
     private val criteriaBuilder: CriteriaBuilder,
 ) {
     class PROPERTY_NAMES {
 
         val id = "id"
 
-        val title = "title"
+        val contentId = "contentId"
 
-        val body = "body"
+        val mediaProcessingTaskId = "mediaProcessingTaskId"
 
-        val mediaSourceKey = "mediaSourceKey"
+        val readinessState = "readinessState"
 
-        val reviewStatus = "reviewStatus"
+        val copyrightStatus = "copyrightStatus"
 
-        val contentStatus = "contentStatus"
-
-        val releasePolicy = "releasePolicy"
+        val manualConfirmationStatus = "manualConfirmationStatus"
 
         val releaseWindowOpensAt = "releaseWindowOpensAt"
 
         val releaseWindowClosesAt = "releaseWindowClosesAt"
 
-        val reviewerId = "reviewerId"
+        val readyAt = "readyAt"
 
-        val reviewedAt = "reviewedAt"
-
-        val publishedAt = "publishedAt"
+        val cancelReason = "cancelReason"
 
         val dbCreatedAt = "dbCreatedAt"
 
@@ -57,46 +53,46 @@ class SContent(
         val props = PROPERTY_NAMES()
 
         @JvmStatic
-        fun specify(builder: PredicateBuilder<SContent>): Specification<Content> {
+        fun specify(builder: PredicateBuilder<SPublicationReleaseReadiness>): Specification<PublicationReleaseReadiness> {
             return specify(builder, false, emptyList())
         }
 
         @JvmStatic
-        fun specify(builder: PredicateBuilder<SContent>, distinct: Boolean): Specification<Content> {
+        fun specify(builder: PredicateBuilder<SPublicationReleaseReadiness>, distinct: Boolean): Specification<PublicationReleaseReadiness> {
             return specify(builder, distinct, emptyList())
         }
 
         @JvmStatic
         fun specify(
-            builder: PredicateBuilder<SContent>,
-            vararg orderBuilders: OrderBuilder<SContent>,
-        ): Specification<Content> {
+            builder: PredicateBuilder<SPublicationReleaseReadiness>,
+            vararg orderBuilders: OrderBuilder<SPublicationReleaseReadiness>,
+        ): Specification<PublicationReleaseReadiness> {
             return specify(builder, orderBuilders.toList())
         }
 
         @JvmStatic
         fun specify(
-            builder: PredicateBuilder<SContent>,
-            orderBuilders: List<OrderBuilder<SContent>>,
-        ): Specification<Content> {
+            builder: PredicateBuilder<SPublicationReleaseReadiness>,
+            orderBuilders: List<OrderBuilder<SPublicationReleaseReadiness>>,
+        ): Specification<PublicationReleaseReadiness> {
             return specify(builder, false, orderBuilders)
         }
 
         @JvmStatic
         fun specify(
-            builder: PredicateBuilder<SContent>,
+            builder: PredicateBuilder<SPublicationReleaseReadiness>,
             distinct: Boolean,
-            vararg orderBuilders: OrderBuilder<SContent>,
-        ): Specification<Content> {
+            vararg orderBuilders: OrderBuilder<SPublicationReleaseReadiness>,
+        ): Specification<PublicationReleaseReadiness> {
             return specify(builder, distinct, orderBuilders.toList())
         }
 
         @JvmStatic
         fun specify(
-            builder: PredicateBuilder<SContent>,
+            builder: PredicateBuilder<SPublicationReleaseReadiness>,
             distinct: Boolean,
-            orderBuilders: List<OrderBuilder<SContent>>,
-        ): Specification<Content> {
+            orderBuilders: List<OrderBuilder<SPublicationReleaseReadiness>>,
+        ): Specification<PublicationReleaseReadiness> {
             return specify { schema, criteriaQuery, _ ->
                 criteriaQuery.where(builder.build(schema))
                 criteriaQuery.distinct(distinct)
@@ -108,9 +104,9 @@ class SContent(
         }
 
         @JvmStatic
-        fun specify(specifier: SchemaSpecification<Content, SContent>): Specification<Content> {
+        fun specify(specifier: SchemaSpecification<PublicationReleaseReadiness, SPublicationReleaseReadiness>): Specification<PublicationReleaseReadiness> {
             return Specification { root, criteriaQuery, criteriaBuilder ->
-                val schema = SContent(root, criteriaBuilder)
+                val schema = SPublicationReleaseReadiness(root, criteriaBuilder)
                 specifier.toPredicate(schema, criteriaQuery, criteriaBuilder)
             }
         }
@@ -118,8 +114,8 @@ class SContent(
         @JvmStatic
         fun <E> subquery(
             resultClass: Class<E>,
-            selectBuilder: ExpressionBuilder<SContent, E>,
-            predicateBuilder: PredicateBuilder<SContent>,
+            selectBuilder: ExpressionBuilder<SPublicationReleaseReadiness, E>,
+            predicateBuilder: PredicateBuilder<SPublicationReleaseReadiness>,
             criteriaBuilder: CriteriaBuilder,
             criteriaQuery: CriteriaQuery<*>,
         ): Subquery<E> {
@@ -132,74 +128,70 @@ class SContent(
         @JvmStatic
         fun <E> subquery(
             resultClass: Class<E>,
-            subqueryConfigure: SubqueryConfigure<E, SContent>,
+            subqueryConfigure: SubqueryConfigure<E, SPublicationReleaseReadiness>,
             criteriaBuilder: CriteriaBuilder,
             criteriaQuery: CriteriaQuery<*>,
         ): Subquery<E> {
             val sq = criteriaQuery.subquery(resultClass)
-            val root = sq.from(Content::class.java)
-            val schema = SContent(root, criteriaBuilder)
+            val root = sq.from(PublicationReleaseReadiness::class.java)
+            val schema = SPublicationReleaseReadiness(root, criteriaBuilder)
             subqueryConfigure.configure(sq, schema)
             return sq
         }
 
         @JvmStatic
-        fun predicateById(id: Any): JpaPredicate<Content> {
-            return JpaPredicate.byId(Content::class.java, id)
+        fun predicateById(id: Any): JpaPredicate<PublicationReleaseReadiness> {
+            return JpaPredicate.byId(PublicationReleaseReadiness::class.java, id)
         }
 
         @JvmStatic
-        fun predicateByIds(ids: Iterable<*>): JpaPredicate<Content> {
+        fun predicateByIds(ids: Iterable<*>): JpaPredicate<PublicationReleaseReadiness> {
             @Suppress("UNCHECKED_CAST")
-            return JpaPredicate.byIds(Content::class.java, ids as Iterable<Any>)
+            return JpaPredicate.byIds(PublicationReleaseReadiness::class.java, ids as Iterable<Any>)
         }
 
         @JvmStatic
-        fun predicateByIds(vararg ids: Any): JpaPredicate<Content> {
-            return JpaPredicate.byIds(Content::class.java, ids.toList())
+        fun predicateByIds(vararg ids: Any): JpaPredicate<PublicationReleaseReadiness> {
+            return JpaPredicate.byIds(PublicationReleaseReadiness::class.java, ids.toList())
         }
 
         @JvmStatic
-        fun predicate(builder: PredicateBuilder<SContent>): JpaPredicate<Content> {
-            return JpaPredicate.bySpecification(Content::class.java, specify(builder))
+        fun predicate(builder: PredicateBuilder<SPublicationReleaseReadiness>): JpaPredicate<PublicationReleaseReadiness> {
+            return JpaPredicate.bySpecification(PublicationReleaseReadiness::class.java, specify(builder))
         }
 
         @JvmStatic
-        fun predicate(specifier: SchemaSpecification<Content, SContent>): JpaPredicate<Content> {
-            return JpaPredicate.bySpecification(Content::class.java, specify(specifier))
+        fun predicate(specifier: SchemaSpecification<PublicationReleaseReadiness, SPublicationReleaseReadiness>): JpaPredicate<PublicationReleaseReadiness> {
+            return JpaPredicate.bySpecification(PublicationReleaseReadiness::class.java, specify(specifier))
         }
     }
 
     fun _criteriaBuilder(): CriteriaBuilder = criteriaBuilder
 
-    fun _root(): Path<Content> = root
+    fun _root(): Path<PublicationReleaseReadiness> = root
 
     val id: Field<UUID> by lazy {
         Field(root.get("id"), criteriaBuilder)
     }
 
-    val title: Field<String> by lazy {
-        Field(root.get("title"), criteriaBuilder)
+    val contentId: Field<UUID> by lazy {
+        Field(root.get("contentId"), criteriaBuilder)
     }
 
-    val body: Field<String> by lazy {
-        Field(root.get("body"), criteriaBuilder)
+    val mediaProcessingTaskId: Field<UUID> by lazy {
+        Field(root.get("mediaProcessingTaskId"), criteriaBuilder)
     }
 
-    val mediaSourceKey: Field<String> by lazy {
-        Field(root.get("mediaSourceKey"), criteriaBuilder)
+    val readinessState: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.enums.PublicationReleaseReadinessState> by lazy {
+        Field(root.get("readinessState"), criteriaBuilder)
     }
 
-    val reviewStatus: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus> by lazy {
-        Field(root.get("reviewStatus"), criteriaBuilder)
+    val copyrightStatus: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.enums.CopyrightReviewStatus> by lazy {
+        Field(root.get("copyrightStatus"), criteriaBuilder)
     }
 
-    val contentStatus: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus> by lazy {
-        Field(root.get("contentStatus"), criteriaBuilder)
-    }
-
-    val releasePolicy: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy> by lazy {
-        Field(root.get("releasePolicy"), criteriaBuilder)
+    val manualConfirmationStatus: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.enums.ManualReleaseConfirmationStatus> by lazy {
+        Field(root.get("manualConfirmationStatus"), criteriaBuilder)
     }
 
     val releaseWindowOpensAt: Field<java.time.LocalDateTime> by lazy {
@@ -210,16 +202,12 @@ class SContent(
         Field(root.get("releaseWindowClosesAt"), criteriaBuilder)
     }
 
-    val reviewerId: Field<UUID> by lazy {
-        Field(root.get("reviewerId"), criteriaBuilder)
+    val readyAt: Field<java.time.LocalDateTime> by lazy {
+        Field(root.get("readyAt"), criteriaBuilder)
     }
 
-    val reviewedAt: Field<java.time.LocalDateTime> by lazy {
-        Field(root.get("reviewedAt"), criteriaBuilder)
-    }
-
-    val publishedAt: Field<java.time.LocalDateTime> by lazy {
-        Field(root.get("publishedAt"), criteriaBuilder)
+    val cancelReason: Field<String> by lazy {
+        Field(root.get("cancelReason"), criteriaBuilder)
     }
 
     val dbCreatedAt: Field<java.time.LocalDateTime> by lazy {
@@ -258,7 +246,7 @@ class SContent(
 
     fun not(restriction: Predicate): Predicate = criteriaBuilder.not(restriction)
 
-    fun spec(builder: PredicateBuilder<SContent>): Predicate {
+    fun spec(builder: PredicateBuilder<SPublicationReleaseReadiness>): Predicate {
         return builder.build(this)
     }
 }

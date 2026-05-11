@@ -17,6 +17,9 @@ class Content(
     mediaSourceKey: String,
     reviewStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus,
     contentStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus,
+    releasePolicy: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy,
+    releaseWindowOpensAt: java.time.LocalDateTime? = null,
+    releaseWindowClosesAt: java.time.LocalDateTime? = null,
     reviewerId: UUID? = null,
     reviewedAt: java.time.LocalDateTime? = null,
     publishedAt: java.time.LocalDateTime? = null,
@@ -50,6 +53,19 @@ class Content(
     @Column(name = "content_status")
     @Convert(converter = com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus.Converter::class)
     var contentStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus = contentStatus
+        internal set
+
+    @Column(name = "release_policy")
+    @Convert(converter = com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy.Converter::class)
+    var releasePolicy: com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy = releasePolicy
+        internal set
+
+    @Column(name = "release_window_opens_at")
+    var releaseWindowOpensAt: java.time.LocalDateTime? = releaseWindowOpensAt
+        internal set
+
+    @Column(name = "release_window_closes_at")
+    var releaseWindowClosesAt: java.time.LocalDateTime? = releaseWindowClosesAt
         internal set
 
     @Column(name = "reviewer_id")
