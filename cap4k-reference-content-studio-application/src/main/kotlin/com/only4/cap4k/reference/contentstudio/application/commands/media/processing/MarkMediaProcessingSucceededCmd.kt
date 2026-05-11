@@ -4,6 +4,7 @@ import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSucceeded
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultStatus
@@ -29,6 +30,13 @@ object MarkMediaProcessingSucceededCmd {
             ) {
                 "Media processing task for external task id ${request.externalTaskId} was not found."
             }
+            if (task.processingStatus == MediaProcessingStatus.SUCCEEDED) {
+                check(task.externalTaskId == request.externalTaskId) {
+                    "Succeeded media processing task external task id does not match request."
+                }
+                return Response
+            }
+
             val resultSnapshot = MediaProcessingResultSnapshot.create(
                 mediaProcessingTaskId = task.id,
                 externalTaskId = request.externalTaskId,
