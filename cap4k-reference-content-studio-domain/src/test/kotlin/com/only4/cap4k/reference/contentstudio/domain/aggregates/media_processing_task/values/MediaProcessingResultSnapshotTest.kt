@@ -1,7 +1,7 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -12,26 +12,33 @@ class MediaProcessingResultSnapshotTest {
     private val completedAt = LocalDateTime.parse("2026-05-11T10:15:30")
 
     @Test
-    fun `hash is stable for the same business value`() {
-        val first = snapshot(assetSha256 = "a".repeat(64))
-        val second = snapshot(assetSha256 = "a".repeat(64))
+    fun `creates a normalized succeeded result snapshot`() {
+        val snapshot =
+            snapshot(
+                externalTaskId = " external-123 ",
+                assetSha256 = "A".repeat(64),
+            )
 
-        assertEquals(first.hash(), second.hash())
-        assertEquals(first.id, second.id)
-    }
-
-    @Test
-    fun `hash changes when asset sha changes`() {
-        val first = snapshot(assetSha256 = "a".repeat(64))
-        val second = snapshot(assetSha256 = "b".repeat(64))
-
-        assertNotEquals(first.hash(), second.hash())
+        assertFalse(snapshot.id.isBlank())
+        assertEquals(taskId, snapshot.mediaProcessingTaskId)
+        assertEquals("external-123", snapshot.externalTaskId)
+        assertEquals(MediaProcessingResultStatus.SUCCEEDED, snapshot.resultStatus)
+        assertEquals("a".repeat(64), snapshot.assetSha256)
+        assertEquals("s3://content-studio/assets/external-123.mp4", snapshot.assetLocation)
+        assertEquals(completedAt, snapshot.completedAt)
     }
 
     @Test
     fun `blank external task id is rejected`() {
         assertThrows(IllegalArgumentException::class.java) {
             snapshot(externalTaskId = "   ")
+        }
+    }
+
+    @Test
+    fun `invalid asset sha is rejected`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            snapshot(assetSha256 = "not-a-sha")
         }
     }
 

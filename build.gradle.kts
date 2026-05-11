@@ -1,4 +1,8 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import org.gradle.api.tasks.Sync
+import java.nio.file.Paths
+import java.util.concurrent.TimeUnit
 
 plugins {
     id("com.only4.cap4k.plugin.pipeline") version "0.5.0-SNAPSHOT"
@@ -9,21 +13,27 @@ plugins {
 
 allprojects {
     repositories {
-        maven {
-            name = "AliYunCap4k"
-            url = uri("https://packages.aliyun.com/67053c6149e9309ce56b9e9e/maven/cap4k")
-            credentials {
-                username = providers.gradleProperty("aliyun.maven.username").orNull ?: "defaultUsername"
-                password = providers.gradleProperty("aliyun.maven.password").orNull ?: "defaultPassword"
-            }
+        mavenLocal {
             content {
                 includeGroup("com.only4")
             }
         }
         maven {
             url = uri("https://maven.aliyun.com/repository/public")
+            content {
+                excludeGroupByRegex("com\\.only4(\\..*)?")
+            }
         }
-        mavenCentral()
+        mavenCentral {
+            content {
+                excludeGroupByRegex("com\\.only4(\\..*)?")
+            }
+        }
+    }
+
+    configurations.configureEach {
+        resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
+        resolutionStrategy.cacheDynamicVersionsFor(0, TimeUnit.SECONDS)
     }
 }
 
@@ -130,6 +140,41 @@ tasks.register("syncGeneratedSnapshots") {
             project.tasks.named("syncGeneratedSnapshots")
         }
     )
+}
+
+tasks.register("normalizeAnalysisFlowIndex") {
+    group = "verification"
+    description = "Normalize committed analysis flow index metadata."
+    outputs.upToDateWhen { false }
+
+    doLast {
+        val indexFile = layout.projectDirectory.file("analysis/flows/index.json").asFile
+        if (!indexFile.isFile) {
+            return@doLast
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        val root = JsonSlurper().parse(indexFile) as MutableMap<String, Any?>
+        val projectPath = layout.projectDirectory.asFile.toPath()
+        val inputDirs =
+            (root["inputDirs"] as? List<*>)
+                ?.filterIsInstance<String>()
+                ?.map { value ->
+                    val path = Paths.get(value)
+                    if (path.isAbsolute && path.startsWith(projectPath)) {
+                        projectPath.relativize(path).toString().replace("\\", "/")
+                    } else {
+                        value.replace("\\", "/")
+                    }
+                }
+                ?: emptyList()
+        root["inputDirs"] = inputDirs
+        indexFile.writeText(JsonOutput.prettyPrint(JsonOutput.toJson(root)) + System.lineSeparator())
+    }
+}
+
+tasks.named("cap4kAnalysisGenerate") {
+    finalizedBy(tasks.named("normalizeAnalysisFlowIndex"))
 }
 
 subprojects {

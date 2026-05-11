@@ -68,8 +68,10 @@
     "desc": "mark media processing task as succeeded",
     "aggregates": ["MediaProcessingTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "externalTaskId", "type": "String", "nullable": true }
+      { "name": "externalTaskId", "type": "String" },
+      { "name": "assetSha256", "type": "String" },
+      { "name": "assetLocation", "type": "String" },
+      { "name": "completedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": []
   },
@@ -213,7 +215,10 @@
       { "name": "externalTaskId", "type": "String" }
     ],
     "responseFields": [
-      { "name": "status", "type": "String" }
+      { "name": "status", "type": "String" },
+      { "name": "assetSha256", "type": "String", "nullable": true },
+      { "name": "assetLocation", "type": "String", "nullable": true },
+      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true }
     ]
   },
   {

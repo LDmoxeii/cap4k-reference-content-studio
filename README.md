@@ -44,7 +44,10 @@ From your local `cap4k` checkout, run the publish step first:
 
 This repo depends on `0.5.0-SNAPSHOT` artifacts from `mavenLocal()`. If you
 skip that step, Gradle resolution will fail even if this repository itself is
-checked out correctly.
+checked out correctly. The build resolves `cap4k` artifacts from `mavenLocal()`
+first and disables the changing-module cache for snapshot dependencies, so
+publishing `cap4k` again and rerunning this build picks up the latest local
+snapshot without relying on a private repository.
 
 ## Shortest Startup Path
 
@@ -146,7 +149,8 @@ If you want to learn the project through tests, use this order:
   - runtime boot
   - full HTTP happy path
 
-The remaining committed tests are there to support the runnable reference workflow or a thin callback contract. They are not meant to replace the domain-first reading path.
+The remaining committed tests are there to support the runnable reference workflow.
+They are not meant to replace the domain-first reading path.
 
 ## Analysis Reports
 

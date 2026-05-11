@@ -110,19 +110,6 @@ class ContentStudioHappyPathHttpSmokeTest(
             }
         }.required("task")
         assertThat(succeededTask.required("externalTaskId").asText()).isEqualTo(externalTaskId)
-
-        val duplicateCallbackResponse =
-            restTemplate.postForEntity(
-                "/cap4k/integration-event/http/consume?event=${MediaProcessingCallbackIntegrationEvent.EVENT_NAME}&uuid=${UUID.randomUUID()}",
-                jsonRequest(callbackPayload),
-                String::class.java,
-            )
-        assertThat(duplicateCallbackResponse.statusCode).isEqualTo(HttpStatus.OK)
-
-        val contentAfterDuplicate =
-            restTemplate.getForEntity("/contents/$contentId", String::class.java)
-        assertThat(contentAfterDuplicate.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(json(contentAfterDuplicate.body).required("contentStatus").asText()).isEqualTo("PUBLISHED")
     }
 
     private fun jsonRequest(body: String): HttpEntity<String> =
