@@ -11,8 +11,8 @@ Accept: application/json
   "title": "Gated sample content",
   "body": "Sample gated content body",
   "mediaSourceKey": "sample-gated-media-source-key",
-  "releaseWindowOpensAt": "2026-05-11T00:00:00",
-  "releaseWindowClosesAt": "2026-05-12T00:00:00"
+  "releaseWindowOpensAt": "2026-01-01T00:00:00",
+  "releaseWindowClosesAt": "2099-12-31T23:59:59"
 }
 
 ### Then run review.http submit and approve with the created contentId.
