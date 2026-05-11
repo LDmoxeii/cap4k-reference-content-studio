@@ -8,27 +8,16 @@ import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-@SpringBootTest(
-    classes = [ContentStudioApplication::class],
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = [
-        "spring.datasource.url=jdbc:h2:mem:content-studio-happy-path;MODE=MySQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
-        "spring.datasource.driver-class-name=org.h2.Driver",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "server.port=0",
-    ],
-)
+@ContentStudioSpringBootTest
 class ContentStudioHappyPathHttpSmokeTest(
-    @Autowired private val restTemplate: TestRestTemplate,
-    @Autowired private val objectMapper: ObjectMapper,
+    @param:Autowired private val restTemplate: TestRestTemplate,
+    @param:Autowired private val objectMapper: ObjectMapper,
 ) {
 
     @Test
