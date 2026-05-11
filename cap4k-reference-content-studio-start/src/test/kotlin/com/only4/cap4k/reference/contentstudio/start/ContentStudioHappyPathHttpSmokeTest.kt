@@ -82,18 +82,21 @@ class ContentStudioHappyPathHttpSmokeTest(
             }
         }.required("task")
         val externalTaskId = submittedTask.required("externalTaskId").asText()
+        val callbackPayload =
+            """
+            {
+              "externalTaskId": "$externalTaskId",
+              "status": "${MediaProcessingCallbackIntegrationEvent.SUCCEEDED_STATUS}",
+              "assetSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "assetLocation": "s3://content-studio/assets/$externalTaskId.mp4",
+              "completedAt": "2026-05-11T10:15:30"
+            }
+            """.trimIndent()
 
         val callbackResponse =
             restTemplate.postForEntity(
                 "/cap4k/integration-event/http/consume?event=${MediaProcessingCallbackIntegrationEvent.EVENT_NAME}&uuid=${UUID.randomUUID()}",
-                jsonRequest(
-                    """
-                    {
-                      "externalTaskId": "$externalTaskId",
-                      "status": "${MediaProcessingCallbackIntegrationEvent.SUCCEEDED_STATUS}"
-                    }
-                    """.trimIndent()
-                ),
+                jsonRequest(callbackPayload),
                 String::class.java,
             )
         assertThat(callbackResponse.statusCode).isEqualTo(HttpStatus.OK)
@@ -118,6 +121,19 @@ class ContentStudioHappyPathHttpSmokeTest(
             }
         }.required("task")
         assertThat(succeededTask.required("externalTaskId").asText()).isEqualTo(externalTaskId)
+
+        val duplicateCallbackResponse =
+            restTemplate.postForEntity(
+                "/cap4k/integration-event/http/consume?event=${MediaProcessingCallbackIntegrationEvent.EVENT_NAME}&uuid=${UUID.randomUUID()}",
+                jsonRequest(callbackPayload),
+                String::class.java,
+            )
+        assertThat(duplicateCallbackResponse.statusCode).isEqualTo(HttpStatus.OK)
+
+        val contentAfterDuplicate =
+            restTemplate.getForEntity("/contents/$contentId", String::class.java)
+        assertThat(contentAfterDuplicate.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(json(contentAfterDuplicate.body).required("contentStatus").asText()).isEqualTo("PUBLISHED")
     }
 
     private fun jsonRequest(body: String): HttpEntity<String> =
