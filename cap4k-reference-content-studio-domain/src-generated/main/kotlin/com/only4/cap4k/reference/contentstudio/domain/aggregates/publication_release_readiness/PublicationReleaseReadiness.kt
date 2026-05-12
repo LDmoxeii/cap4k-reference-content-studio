@@ -19,6 +19,7 @@ class PublicationReleaseReadiness(
     manualConfirmationStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.enums.ManualReleaseConfirmationStatus,
     releaseWindowOpensAt: java.time.LocalDateTime,
     releaseWindowClosesAt: java.time.LocalDateTime,
+    releaseSagaId: String? = null,
     readyAt: java.time.LocalDateTime? = null,
     cancelReason: String? = null,
     dbCreatedAt: java.time.LocalDateTime,
@@ -60,6 +61,10 @@ class PublicationReleaseReadiness(
 
     @Column(name = "release_window_closes_at")
     var releaseWindowClosesAt: java.time.LocalDateTime = releaseWindowClosesAt
+        internal set
+
+    @Column(name = "release_saga_id")
+    var releaseSagaId: String? = releaseSagaId
         internal set
 
     @Column(name = "ready_at")

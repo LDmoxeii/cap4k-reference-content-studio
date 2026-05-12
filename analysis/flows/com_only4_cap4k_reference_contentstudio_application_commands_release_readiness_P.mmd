@@ -1,5 +1,5 @@
 flowchart TD
-  N1[ConfirmManualReleaseCmd.Handler::exec]
+  N1[PassCopyrightReviewCmd.Handler::exec]
   N2[RetryPublicationReleaseSagaCmd.Handler]
   N3[RetryPublicationReleaseSagaCmd.Request]
   N4[PublicationReleaseReadiness::&lt;get-releaseSagaId&gt;]
@@ -8,4 +8,3 @@ flowchart TD
   N2 -->|CommandHandlerToEntityMethod| N4
   N2 -->|CommandHandlerToEntityMethod| N5
   N3 -->|CommandToCommandHandler| N2
-

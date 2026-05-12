@@ -4,6 +4,8 @@ import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.OpenPublicationReleaseReadinessCmd
+import com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd
+import com.only4.cap4k.reference.contentstudio.application.sagas.publication.PublicationReleaseSaga
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import java.time.LocalDateTime
@@ -29,7 +31,7 @@ object ContinuePublicationAfterMediaSucceededCmd {
                         )
                     )
 
-                ReleasePolicy.GATED ->
+                ReleasePolicy.GATED -> {
                     Mediator.cmd.send(
                         OpenPublicationReleaseReadinessCmd.Request(
                             contentId = request.contentId,
@@ -42,6 +44,18 @@ object ContinuePublicationAfterMediaSucceededCmd {
                             },
                         )
                     )
+                    val sagaId = Mediator.requests.async(
+                        PublicationReleaseSaga.Request(
+                            contentId = request.contentId,
+                        )
+                    )
+                    Mediator.cmd.send(
+                        RegisterPublicationReleaseSagaCmd.Request(
+                            contentId = request.contentId,
+                            sagaId = sagaId,
+                        )
+                    )
+                }
             }
 
             return Response

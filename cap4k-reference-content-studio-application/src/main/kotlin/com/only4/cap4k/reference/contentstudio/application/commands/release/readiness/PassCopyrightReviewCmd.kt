@@ -26,6 +26,11 @@ object PassCopyrightReviewCmd {
                 }
             readiness.passCopyrightReview()
             Mediator.uow.save()
+            Mediator.cmd.send(
+                RetryPublicationReleaseSagaCmd.Request(
+                    contentId = request.contentId
+                )
+            )
 
             return Response
         }

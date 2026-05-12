@@ -52,6 +52,7 @@ create table if not exists publication_release_readiness (
     manual_confirmation_status int not null comment '@T=ManualReleaseConfirmationStatus;@E=0:WAITING:Waiting|1:CONFIRMED:Confirmed;',
     release_window_opens_at timestamp not null,
     release_window_closes_at timestamp not null,
+    release_saga_id varchar(64),
     ready_at timestamp,
     cancel_reason varchar(500),
     db_created_at timestamp not null,

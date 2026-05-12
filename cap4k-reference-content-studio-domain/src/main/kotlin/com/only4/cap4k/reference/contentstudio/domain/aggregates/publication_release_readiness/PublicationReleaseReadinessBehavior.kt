@@ -21,6 +21,26 @@ fun PublicationReleaseReadiness.confirmManualRelease() {
     manualConfirmationStatus = ManualReleaseConfirmationStatus.CONFIRMED
 }
 
+fun PublicationReleaseReadiness.registerReleaseSaga(sagaId: String, now: LocalDateTime) {
+    check(sagaId.isNotBlank()) {
+        "Release saga id must not be blank."
+    }
+    check(releaseSagaId == null || releaseSagaId == sagaId) {
+        "Publication release readiness is already bound to another saga."
+    }
+
+    releaseSagaId = sagaId
+    dbUpdatedAt = now
+}
+
+fun PublicationReleaseReadiness.canRetryReleaseSaga(now: LocalDateTime): Boolean =
+    readinessState == PublicationReleaseReadinessState.WAITING &&
+        copyrightStatus == CopyrightReviewStatus.PASSED &&
+        manualConfirmationStatus == ManualReleaseConfirmationStatus.CONFIRMED &&
+        !now.isBefore(releaseWindowOpensAt) &&
+        !now.isAfter(releaseWindowClosesAt) &&
+        !releaseSagaId.isNullOrBlank()
+
 fun PublicationReleaseReadiness.complete(now: LocalDateTime) {
     check(readinessState == PublicationReleaseReadinessState.WAITING) {
         "Only waiting publication release readiness can be completed."

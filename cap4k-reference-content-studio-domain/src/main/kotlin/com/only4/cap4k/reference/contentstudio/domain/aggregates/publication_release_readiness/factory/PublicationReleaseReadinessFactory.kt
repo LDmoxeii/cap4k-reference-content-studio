@@ -31,6 +31,7 @@ class PublicationReleaseReadinessFactory :
             manualConfirmationStatus = entityPayload.manualConfirmationStatus,
             releaseWindowOpensAt = entityPayload.releaseWindowOpensAt,
             releaseWindowClosesAt = entityPayload.releaseWindowClosesAt,
+            releaseSagaId = entityPayload.releaseSagaId,
             readyAt = entityPayload.readyAt,
             cancelReason = entityPayload.cancelReason,
             dbCreatedAt = entityPayload.dbCreatedAt,
@@ -60,6 +61,8 @@ class PublicationReleaseReadinessFactory :
         val releaseWindowOpensAt: LocalDateTime,
 
         val releaseWindowClosesAt: LocalDateTime,
+
+        val releaseSagaId: String?,
 
         val readyAt: LocalDateTime?,
 

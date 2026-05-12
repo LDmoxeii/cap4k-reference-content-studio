@@ -117,14 +117,24 @@ succeeds, the application publishes the content through `PublishContentCmd`.
 
 The advanced path is opt-in:
 
-- `MediaProcessingResultSnapshot` demonstrates separate-table value-object persistence.
+- `MediaProcessingResultSnapshot` is a handwritten result snapshot that exposes the current separate-table value-object boundary.
 - `PublicationEligibilityDomainService` returns an auditable publication decision.
-- Gated content uses `PublicationReleaseReadiness` to record cross-time waiting state before publishing.
+- Gated content uses `PublicationReleaseReadiness` to record cross-time waiting state, then
+  `PublicationReleaseSaga` resumes publication through the cap4k Saga runtime.
 - `codegen/templates/design/api_payload.kt.peb` demonstrates a project-level template override:
   generated API payloads keep stable OpenAPI schema names without hand-editing generated files.
 
-The gated path is a Saga/process candidate, but this reference project keeps it
-as an explicit process-state aggregate instead of enabling Saga runtime by default.
+The gated path is a real Saga example, but it is not the default publication path.
+The default path still publishes directly after media processing succeeds. Only
+explicit gated content enters Saga after media processing succeeds. The Saga writes
+`complete-release-readiness` and `publish-content` into `__saga_process`, then
+resumes publication after copyright review, manual confirmation, and the release
+window are satisfied.
+
+`MediaProcessingResultSnapshot` is still a handwritten result snapshot. Do not
+read it as complete generator support for value objects. Aggregate-object-graph
+support for separate-table value objects and first-class value-object generation
+remain cap4k follow-up work.
 
 ## OpenAPI Location
 

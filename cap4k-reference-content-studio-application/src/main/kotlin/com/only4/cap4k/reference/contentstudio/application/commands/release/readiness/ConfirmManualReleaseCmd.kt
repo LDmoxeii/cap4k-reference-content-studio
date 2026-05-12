@@ -26,6 +26,11 @@ object ConfirmManualReleaseCmd {
                 }
             readiness.confirmManualRelease()
             Mediator.uow.save()
+            Mediator.cmd.send(
+                RetryPublicationReleaseSagaCmd.Request(
+                    contentId = request.contentId
+                )
+            )
 
             return Response
         }

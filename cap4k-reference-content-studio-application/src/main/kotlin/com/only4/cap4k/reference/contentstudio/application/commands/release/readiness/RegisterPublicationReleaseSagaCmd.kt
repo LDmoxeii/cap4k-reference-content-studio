@@ -4,12 +4,12 @@ import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.publication_release_readiness.SPublicationReleaseReadiness
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.complete
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.registerReleaseSaga
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
 
-object CompletePublicationReleaseReadinessCmd {
+object RegisterPublicationReleaseSagaCmd {
 
     @Service
     class Handler : Command<Request, Response> {
@@ -25,7 +25,7 @@ object CompletePublicationReleaseReadinessCmd {
                 ) {
                     "Publication release readiness for content ${request.contentId} was not found."
                 }
-            readiness.complete(request.completedAt)
+            readiness.registerReleaseSaga(request.sagaId, LocalDateTime.now())
             Mediator.uow.save()
 
             return Response()
@@ -34,11 +34,10 @@ object CompletePublicationReleaseReadinessCmd {
 
     data class Request(
         val contentId: UUID,
-        val completedAt: LocalDateTime
+        val sagaId: String
     ) : RequestParam<Response>
 
     data class Response(
-        val readinessCompleted: Boolean = true
+        val registered: Boolean = true
     )
-
 }

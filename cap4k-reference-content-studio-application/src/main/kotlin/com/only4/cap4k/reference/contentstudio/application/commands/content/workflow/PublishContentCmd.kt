@@ -48,7 +48,7 @@ object PublishContentCmd {
             content.publish(request.publishedAt)
             Mediator.uow.save()
 
-            return Response
+            return Response()
         }
     }
 
@@ -58,6 +58,8 @@ object PublishContentCmd {
         val releaseReadinessSatisfied: Boolean = false
     ) : RequestParam<Response>
 
-    data object Response
+    data class Response(
+        val published: Boolean = true
+    )
 
 }

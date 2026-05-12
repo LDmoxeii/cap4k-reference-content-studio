@@ -14,11 +14,13 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.jdbc.core.JdbcTemplate
 
 @ContentStudioSpringBootTest
 class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
     @param:Autowired private val restTemplate: TestRestTemplate,
     @param:Autowired private val objectMapper: ObjectMapper,
+    @param:Autowired private val jdbcTemplate: JdbcTemplate,
 ) {
 
     @Test
@@ -107,6 +109,9 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
         val contentBeforeReadiness = restTemplate.getForEntity("/contents/$contentId", String::class.java)
         assertThat(contentBeforeReadiness.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(json(contentBeforeReadiness.body).required("contentStatus").asText()).isNotEqualTo("PUBLISHED")
+        assertThat(tableExists("__saga")).isTrue()
+        assertThat(tableExists("__saga_process")).isTrue()
+        waitForSagaCount(Duration.ofSeconds(5))
 
         assertThat(
             restTemplate.postForEntity(
@@ -122,13 +127,6 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
                 String::class.java,
             ).statusCode
         ).isEqualTo(HttpStatus.OK)
-        assertThat(
-            restTemplate.postForEntity(
-                "/advanced/contents/$contentId/release-readiness/complete",
-                HttpEntity.EMPTY,
-                String::class.java,
-            ).statusCode
-        ).isEqualTo(HttpStatus.OK)
 
         val contentAfterReadiness = waitForJson(Duration.ofSeconds(5)) {
             val response = restTemplate.getForEntity("/contents/$contentId", String::class.java)
@@ -139,6 +137,8 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
         }
         assertThat(contentAfterReadiness.required("reviewStatus").asText()).isEqualTo("APPROVED")
         assertThat(contentAfterReadiness.required("publishedAt").isNull).isFalse()
+        assertThat(sagaProcessCodes())
+            .contains("complete-release-readiness", "publish-content")
     }
 
     private fun jsonRequest(body: String): HttpEntity<String> =
@@ -151,6 +151,42 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
         )
 
     private fun json(body: String?): JsonNode = objectMapper.readTree(body)
+
+    private fun tableExists(tableName: String): Boolean =
+        jdbcTemplate.queryForObject(
+            """
+            select count(*)
+            from INFORMATION_SCHEMA.TABLES
+            where TABLE_SCHEMA = 'PUBLIC'
+              and TABLE_NAME = ?
+            """.trimIndent(),
+            Int::class.java,
+            tableName,
+        )!! > 0
+
+    private fun sagaCount(): Int =
+        jdbcTemplate.queryForObject("select count(*) from __saga", Int::class.java)!!
+
+    private fun waitForSagaCount(timeout: Duration): Int {
+        val deadlineNanos = System.nanoTime() + timeout.toNanos()
+        var latest = 0
+        while (System.nanoTime() < deadlineNanos) {
+            latest = sagaCount()
+            if (latest > 0) {
+                return latest
+            }
+            Thread.sleep(100)
+        }
+        return latest.also {
+            assertThat(it).isGreaterThan(0)
+        }
+    }
+
+    private fun sagaProcessCodes(): List<String> =
+        jdbcTemplate.queryForList(
+            "select process_code from __saga_process order by id",
+            String::class.java,
+        )
 
     private fun waitForJson(timeout: Duration, fetch: () -> JsonNode?): JsonNode {
         val deadlineNanos = System.nanoTime() + timeout.toNanos()

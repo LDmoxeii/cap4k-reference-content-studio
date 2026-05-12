@@ -38,6 +38,8 @@ class SPublicationReleaseReadiness(
 
         val releaseWindowClosesAt = "releaseWindowClosesAt"
 
+        val releaseSagaId = "releaseSagaId"
+
         val readyAt = "readyAt"
 
         val cancelReason = "cancelReason"
@@ -200,6 +202,10 @@ class SPublicationReleaseReadiness(
 
     val releaseWindowClosesAt: Field<java.time.LocalDateTime> by lazy {
         Field(root.get("releaseWindowClosesAt"), criteriaBuilder)
+    }
+
+    val releaseSagaId: Field<String> by lazy {
+        Field(root.get("releaseSagaId"), criteriaBuilder)
     }
 
     val readyAt: Field<java.time.LocalDateTime> by lazy {

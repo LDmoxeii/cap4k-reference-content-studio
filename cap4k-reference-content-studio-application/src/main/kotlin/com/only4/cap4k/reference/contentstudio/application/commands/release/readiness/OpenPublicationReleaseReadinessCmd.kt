@@ -33,6 +33,7 @@ object OpenPublicationReleaseReadinessCmd {
                         manualConfirmationStatus = ManualReleaseConfirmationStatus.WAITING,
                         releaseWindowOpensAt = request.releaseWindowOpensAt,
                         releaseWindowClosesAt = request.releaseWindowClosesAt,
+                        releaseSagaId = null,
                         readyAt = null,
                         cancelReason = null,
                         dbCreatedAt = LocalDateTime.now(),

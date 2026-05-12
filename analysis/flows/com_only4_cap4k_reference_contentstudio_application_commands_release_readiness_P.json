@@ -1,13 +1,13 @@
 {
-  "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.ConfirmManualReleaseCmd.Handler::exec",
+  "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.PassCopyrightReviewCmd.Handler::exec",
   "entryType": "commandsendermethod",
   "nodeCount": 5,
   "edgeCount": 4,
   "nodes": [
     {
-      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.ConfirmManualReleaseCmd.Handler::exec",
-      "name": "ConfirmManualReleaseCmd.Handler::exec",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.ConfirmManualReleaseCmd.Handler::exec",
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.PassCopyrightReviewCmd.Handler::exec",
+      "name": "PassCopyrightReviewCmd.Handler::exec",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.PassCopyrightReviewCmd.Handler::exec",
       "type": "commandsendermethod"
     },
     {
@@ -37,7 +37,7 @@
   ],
   "edges": [
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.ConfirmManualReleaseCmd.Handler::exec",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.PassCopyrightReviewCmd.Handler::exec",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RetryPublicationReleaseSagaCmd.Request",
       "type": "CommandSenderMethodToCommand"
     },

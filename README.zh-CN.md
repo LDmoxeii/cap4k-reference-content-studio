@@ -106,14 +106,21 @@ Swagger / OpenAPI 仍然存在，但它们更像契约快照，而不是整条 h
 
 高级路径是显式 opt-in：
 
-- `MediaProcessingResultSnapshot` 演示 separate-table value object 持久化。
+- `MediaProcessingResultSnapshot` 是手写结果快照，用来暴露 separate-table value object 的当前能力边界。
 - `PublicationEligibilityDomainService` 返回可审计的发布资格结论。
-- gated content 使用 `PublicationReleaseReadiness` 记录跨时间等待状态，再进入发布。
+- gated content 使用 `PublicationReleaseReadiness` 记录跨时间等待状态，并由
+  `PublicationReleaseSaga` 通过 cap4k Saga runtime 恢复推进发布。
 - `codegen/templates/design/api_payload.kt.peb` 演示项目级模板覆盖：
   生成的 API payload 能保持稳定 OpenAPI schema 名称，而不需要手改生成文件。
 
-这条 gated 路线是 Saga / process 候选边界，但本参考项目默认不启用 Saga runtime，
-而是先用明确的流程状态聚合表达等待点。
+这条 gated 路线是真实 Saga 示例，但它不是默认发布路径。默认路径仍然是媒体处理成功后
+直接发布；只有显式创建 gated content 时，才会在媒体处理成功后进入 Saga。Saga 会把
+`complete-release-readiness` 和 `publish-content` 作为子流程写入 `__saga_process`，
+等待版权复核、人工确认和发布时间窗这些未来事实满足后再恢复发布。
+
+`MediaProcessingResultSnapshot` 仍然是手写结果快照，不应被理解成完整生成器能力。
+separate-table value object 纳入聚合对象图，以及一等 value object 生成能力，仍是
+cap4k 后续迭代项。
 
 ## OpenAPI 位置
 

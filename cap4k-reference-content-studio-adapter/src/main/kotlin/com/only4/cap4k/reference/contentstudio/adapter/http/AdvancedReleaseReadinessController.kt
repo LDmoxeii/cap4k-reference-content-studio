@@ -3,10 +3,8 @@ package com.only4.cap4k.reference.contentstudio.adapter.http
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.adapter.portal.api.payload.content.workflow.CreateGatedContentDraftPayload
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd
-import com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.ConfirmManualReleaseCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.PassCopyrightReviewCmd
-import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -42,15 +40,5 @@ class AdvancedReleaseReadinessController {
     @PostMapping("/{contentId}/release-readiness/manual-confirm")
     fun confirmManual(@PathVariable contentId: UUID) {
         Mediator.cmd.send(ConfirmManualReleaseCmd.Request(contentId = contentId))
-    }
-
-    @PostMapping("/{contentId}/release-readiness/complete")
-    fun complete(@PathVariable contentId: UUID) {
-        Mediator.cmd.send(
-            CompletePublicationReleaseReadinessCmd.Request(
-                contentId = contentId,
-                completedAt = LocalDateTime.now(),
-            )
-        )
     }
 }

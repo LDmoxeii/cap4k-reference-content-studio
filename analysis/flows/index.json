@@ -15,13 +15,13 @@
     "entryTypeCounts": {
         "<anonymous>": 1,
         "clisendermethod": 1,
-        "commandsendermethod": 3,
-        "controllermethod": 9,
+        "commandsendermethod": 4,
+        "controllermethod": 8,
         "integrationevent": 1,
         "querysendermethod": 1
     },
-    "nodeCount": 156,
-    "edgeCount": 78,
+    "nodeCount": 166,
+    "edgeCount": 85,
     "flowCount": 16,
     "flows": [
         {
@@ -33,20 +33,12 @@
             "mermaid": "anonymous.mmd"
         },
         {
-            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::complete",
+            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::confirmManual",
             "entryType": "controllermethod",
             "nodeCount": 4,
             "edgeCount": 3,
             "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon.json",
             "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon.mmd"
-        },
-        {
-            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::confirmManual",
-            "entryType": "controllermethod",
-            "nodeCount": 4,
-            "edgeCount": 3,
-            "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_0f8bd4ce.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_0f8bd4ce.mmd"
         },
         {
             "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::createGated",
@@ -107,8 +99,8 @@
         {
             "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Handler::exec",
             "entryType": "commandsendermethod",
-            "nodeCount": 11,
-            "edgeCount": 10,
+            "nodeCount": 14,
+            "edgeCount": 13,
             "json": "com_only4_cap4k_reference_contentstudio_application_commands_content_workflow_Co.json",
             "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_content_workflow_Co.mmd"
         },
@@ -121,12 +113,20 @@
             "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_media_processing_St.mmd"
         },
         {
-            "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.CompletePublicationReleaseReadinessCmd.Handler::exec",
+            "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.ConfirmManualReleaseCmd.Handler::exec",
             "entryType": "commandsendermethod",
-            "nodeCount": 7,
-            "edgeCount": 6,
+            "nodeCount": 5,
+            "edgeCount": 4,
             "json": "com_only4_cap4k_reference_contentstudio_application_commands_release_readiness_C.json",
             "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_release_readiness_C.mmd"
+        },
+        {
+            "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.PassCopyrightReviewCmd.Handler::exec",
+            "entryType": "commandsendermethod",
+            "nodeCount": 5,
+            "edgeCount": 4,
+            "json": "com_only4_cap4k_reference_contentstudio_application_commands_release_readiness_P.json",
+            "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_release_readiness_P.mmd"
         },
         {
             "entryId": "com.only4.cap4k.reference.contentstudio.application.jobs.MediaProcessingPollingFallbackJob::pollSubmittedTasks",

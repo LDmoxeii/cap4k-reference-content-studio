@@ -27,6 +27,4 @@ Accept: application/json
 POST {{baseUrl}}/advanced/contents/{{contentId}}/release-readiness/manual-confirm
 Accept: application/json
 
-### Complete release readiness and publish.
-POST {{baseUrl}}/advanced/contents/{{contentId}}/release-readiness/complete
-Accept: application/json
+### Re-run query.http after both readiness facts; Saga retry publishes the content.

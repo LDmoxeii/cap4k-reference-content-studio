@@ -7,6 +7,10 @@ runscript from 'classpath:db/schema/content-studio-schema.sql';
 -- __archived_event
 -- __request
 -- __archived_request
+-- __saga
+-- __saga_process
+-- __archived_saga
+-- __archived_saga_process
 -- __event_http_subscriber
 -- __locker
 
@@ -116,6 +120,108 @@ create index if not exists idx___archived_request_request_type on __archived_req
 create index if not exists idx___archived_request_create_at on __archived_request(create_at);
 create index if not exists idx___archived_request_expire_at on __archived_request(expire_at);
 create index if not exists idx___archived_request_next_try_time on __archived_request(next_try_time);
+
+create table if not exists __saga (
+    id bigint auto_increment primary key,
+    saga_uuid varchar(64) not null default '',
+    svc_name varchar(255) not null default '',
+    saga_type varchar(255) not null default '',
+    param clob,
+    param_type varchar(255) not null default '',
+    result clob,
+    result_type varchar(255) not null default '',
+    exception clob,
+    expire_at timestamp not null default current_timestamp,
+    create_at timestamp not null default current_timestamp,
+    saga_state int not null default 0,
+    last_try_time timestamp not null default current_timestamp,
+    next_try_time timestamp not null default timestamp '1970-01-01 00:00:00',
+    tried_times int not null default 0,
+    try_times int not null default 0,
+    version int not null default 0,
+    db_created_at timestamp not null default current_timestamp,
+    db_updated_at timestamp not null default current_timestamp
+);
+
+create index if not exists idx___saga_db_created_at on __saga(db_created_at);
+create index if not exists idx___saga_db_updated_at on __saga(db_updated_at);
+create index if not exists idx___saga_saga_uuid on __saga(saga_uuid);
+create index if not exists idx___saga_saga_type on __saga(saga_type, svc_name);
+create index if not exists idx___saga_create_at on __saga(create_at);
+create index if not exists idx___saga_expire_at on __saga(expire_at);
+create index if not exists idx___saga_next_try_time on __saga(next_try_time);
+
+create table if not exists __saga_process (
+    id bigint auto_increment primary key,
+    saga_id bigint not null default 0,
+    process_code varchar(255) not null default '',
+    param clob,
+    param_type varchar(255) not null default '',
+    result clob,
+    result_type varchar(255) not null default '',
+    exception clob,
+    process_state int not null default 0,
+    create_at timestamp not null default current_timestamp,
+    last_try_time timestamp not null default current_timestamp,
+    tried_times int not null default 0,
+    db_created_at timestamp not null default current_timestamp,
+    db_updated_at timestamp not null default current_timestamp
+);
+
+create index if not exists idx___saga_process_db_created_at on __saga_process(db_created_at);
+create index if not exists idx___saga_process_db_updated_at on __saga_process(db_updated_at);
+create index if not exists idx___saga_process_saga_id on __saga_process(saga_id);
+
+create table if not exists __archived_saga (
+    id bigint primary key,
+    saga_uuid varchar(64) not null default '',
+    svc_name varchar(255) not null default '',
+    saga_type varchar(255) not null default '',
+    param clob,
+    param_type varchar(255) not null default '',
+    result clob,
+    result_type varchar(255) not null default '',
+    exception clob,
+    expire_at timestamp not null default current_timestamp,
+    create_at timestamp not null default current_timestamp,
+    saga_state int not null default 0,
+    last_try_time timestamp not null default current_timestamp,
+    next_try_time timestamp not null default timestamp '1970-01-01 00:00:00',
+    tried_times int not null default 0,
+    try_times int not null default 0,
+    version int not null default 0,
+    db_created_at timestamp not null default current_timestamp,
+    db_updated_at timestamp not null default current_timestamp
+);
+
+create index if not exists idx___archived_saga_db_created_at on __archived_saga(db_created_at);
+create index if not exists idx___archived_saga_db_updated_at on __archived_saga(db_updated_at);
+create index if not exists idx___archived_saga_saga_uuid on __archived_saga(saga_uuid);
+create index if not exists idx___archived_saga_saga_type on __archived_saga(saga_type, svc_name);
+create index if not exists idx___archived_saga_create_at on __archived_saga(create_at);
+create index if not exists idx___archived_saga_expire_at on __archived_saga(expire_at);
+create index if not exists idx___archived_saga_next_try_time on __archived_saga(next_try_time);
+
+create table if not exists __archived_saga_process (
+    id bigint primary key,
+    saga_id bigint not null default 0,
+    process_code varchar(255) not null default '',
+    param clob,
+    param_type varchar(255) not null default '',
+    result clob,
+    result_type varchar(255) not null default '',
+    exception clob,
+    process_state int not null default 0,
+    create_at timestamp not null default current_timestamp,
+    last_try_time timestamp not null default current_timestamp,
+    tried_times int not null default 0,
+    db_created_at timestamp not null default current_timestamp,
+    db_updated_at timestamp not null default current_timestamp
+);
+
+create index if not exists idx___archived_saga_process_db_created_at on __archived_saga_process(db_created_at);
+create index if not exists idx___archived_saga_process_db_updated_at on __archived_saga_process(db_updated_at);
+create index if not exists idx___archived_saga_process_saga_id on __archived_saga_process(saga_id);
 
 create table if not exists __event_http_subscriber (
     id bigint auto_increment primary key,

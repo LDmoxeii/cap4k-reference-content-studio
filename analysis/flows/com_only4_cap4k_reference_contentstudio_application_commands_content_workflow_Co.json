@@ -1,8 +1,8 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Handler::exec",
   "entryType": "commandsendermethod",
-  "nodeCount": 11,
-  "edgeCount": 10,
+  "nodeCount": 14,
+  "edgeCount": 13,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Handler::exec",
@@ -32,6 +32,18 @@
       "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.OpenPublicationReleaseReadinessCmd.Request",
       "name": "OpenPublicationReleaseReadinessCmd.Request",
       "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.OpenPublicationReleaseReadinessCmd.Request",
+      "type": "command"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd.Handler",
+      "name": "RegisterPublicationReleaseSagaCmd.Handler",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd.Handler",
+      "type": "commandhandler"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd.Request",
+      "name": "RegisterPublicationReleaseSagaCmd.Request",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd.Request",
       "type": "command"
     },
     {
@@ -69,6 +81,12 @@
       "name": "PublicationReleaseReadiness::onCreate",
       "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::onCreate",
       "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::registerReleaseSaga",
+      "name": "PublicationReleaseReadiness::registerReleaseSaga",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::registerReleaseSaga",
+      "type": "entitymethod"
     }
   ],
   "edges": [
@@ -80,6 +98,11 @@
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Handler::exec",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.OpenPublicationReleaseReadinessCmd.Request",
+      "type": "CommandSenderMethodToCommand"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Handler::exec",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd.Request",
       "type": "CommandSenderMethodToCommand"
     },
     {
@@ -110,6 +133,16 @@
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.OpenPublicationReleaseReadinessCmd.Request",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.OpenPublicationReleaseReadinessCmd.Handler",
+      "type": "CommandToCommandHandler"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd.Handler",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::registerReleaseSaga",
+      "type": "CommandHandlerToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RegisterPublicationReleaseSagaCmd.Handler",
       "type": "CommandToCommandHandler"
     },
     {
