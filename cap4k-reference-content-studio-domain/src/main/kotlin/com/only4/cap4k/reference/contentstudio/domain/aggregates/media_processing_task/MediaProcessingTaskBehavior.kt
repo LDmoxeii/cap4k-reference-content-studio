@@ -50,6 +50,7 @@ fun MediaProcessingTask.markSucceeded(resultSnapshot: MediaProcessingResultSnaps
     }
 
     processingStatus = MediaProcessingStatus.SUCCEEDED
+    this.resultSnapshot = resultSnapshot
     events().attach(this) {
         MediaProcessingSucceededDomainEvent(
             entity = this,

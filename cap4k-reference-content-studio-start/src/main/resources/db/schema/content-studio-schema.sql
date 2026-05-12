@@ -20,28 +20,12 @@ create table if not exists media_processing_task (
     content_id uuid not null,
     external_task_id varchar(120),
     processing_status int not null comment '@T=MediaProcessingStatus;@E=0:PENDING:Pending|1:SUBMITTED:Submitted|2:SUCCEEDED:Succeeded;',
+    result_snapshot clob comment '@T=MediaProcessingResultSnapshot;',
     db_created_at timestamp not null,
     db_updated_at timestamp not null,
     constraint uq_media_processing_task_content_id unique (content_id),
     constraint fk_media_processing_task_content foreign key (content_id) references content(id)
 );
-
-create table if not exists media_processing_result_snapshot (
-    id varchar(64) primary key,
-    media_processing_task_id uuid not null,
-    external_task_id varchar(120) not null,
-    result_status int not null comment '@T=MediaProcessingResultStatus;@E=0:SUCCEEDED:Succeeded|1:FAILED:Failed;',
-    asset_sha256 varchar(64) not null,
-    asset_location varchar(500) not null,
-    completed_at timestamp not null,
-    db_created_at timestamp not null,
-    db_updated_at timestamp not null,
-    constraint fk_media_processing_result_snapshot_task
-        foreign key (media_processing_task_id) references media_processing_task(id)
-);
-
-comment on table media_processing_result_snapshot is
-    'Media processing result snapshot @Parent=media_processing_task;@VO;';
 
 create table if not exists publication_release_readiness (
     id uuid primary key,

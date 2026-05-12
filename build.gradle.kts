@@ -49,6 +49,9 @@ cap4k {
         templateConflictPolicies.put("flow/entry.mmd.peb", "OVERWRITE")
         templateConflictPolicies.put("flow/index.json.peb", "OVERWRITE")
     }
+    types {
+        registryFile.set("design/types.json")
+    }
     sources {
         designJson {
             enabled.set(true)

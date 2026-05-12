@@ -10,6 +10,8 @@ dependencies {
     implementation("org.springframework:spring-context")
     implementation("org.springframework.data:spring-data-jpa")
     implementation("org.hibernate.orm:hibernate-core")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     testImplementation("org.junit.jupiter:junit-jupiter:${libs.versions.junit.get()}")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

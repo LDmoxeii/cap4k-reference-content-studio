@@ -47,7 +47,6 @@ object MarkMediaProcessingSucceededCmd {
                 now = LocalDateTime.now(),
             )
             task.markSucceeded(resultSnapshot)
-            Mediator.uow.persist(resultSnapshot)
             Mediator.uow.save()
 
             return Response

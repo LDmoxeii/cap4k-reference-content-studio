@@ -1,7 +1,11 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values
 
+import com.only4.cap4k.ddd.core.domain.aggregate.ValueObject
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -26,6 +30,26 @@ class MediaProcessingResultSnapshotTest {
         assertEquals("a".repeat(64), snapshot.assetSha256)
         assertEquals("s3://content-studio/assets/external-123.mp4", snapshot.assetLocation)
         assertEquals(completedAt, snapshot.completedAt)
+    }
+
+    @Test
+    fun `result snapshot remains a json-backed value not a separate table entity`() {
+        val type = MediaProcessingResultSnapshot::class.java
+
+        assertNull(type.getAnnotation(Entity::class.java))
+        assertNull(type.getAnnotation(Table::class.java))
+        assertFalse(ValueObject::class.java.isAssignableFrom(type))
+    }
+
+    @Test
+    fun `converter round trips result snapshot as json`() {
+        val converter = MediaProcessingResultSnapshotConverter()
+        val snapshot = snapshot()
+
+        val json = converter.convertToDatabaseColumn(snapshot)
+        val restored = converter.convertToEntityAttribute(json)
+
+        assertEquals(snapshot, restored)
     }
 
     @Test

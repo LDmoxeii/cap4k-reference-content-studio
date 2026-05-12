@@ -15,6 +15,7 @@ class MediaProcessingTask(
     contentId: UUID,
     externalTaskId: String? = null,
     processingStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus,
+    resultSnapshot: com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot? = null,
     dbCreatedAt: java.time.LocalDateTime,
     dbUpdatedAt: java.time.LocalDateTime
 ) {
@@ -36,6 +37,11 @@ class MediaProcessingTask(
     @Column(name = "processing_status")
     @Convert(converter = com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus.Converter::class)
     var processingStatus: com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus = processingStatus
+        internal set
+
+    @Column(name = "result_snapshot")
+    @Convert(converter = com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshotConverter::class)
+    var resultSnapshot: com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot? = resultSnapshot
         internal set
 
     @Column(name = "db_created_at")

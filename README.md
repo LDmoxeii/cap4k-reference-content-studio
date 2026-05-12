@@ -117,7 +117,7 @@ succeeds, the application publishes the content through `PublishContentCmd`.
 
 The advanced path is opt-in:
 
-- `MediaProcessingResultSnapshot` is a handwritten result snapshot that exposes the current separate-table value-object boundary.
+- `MediaProcessingResultSnapshot` is a handwritten JSON-backed value concept persisted through `media_processing_task.result_snapshot`.
 - `PublicationEligibilityDomainService` returns an auditable publication decision.
 - Gated content uses `PublicationReleaseReadiness` to record cross-time waiting state, then
   `PublicationReleaseSaga` resumes publication through the cap4k Saga runtime.
@@ -132,9 +132,8 @@ resumes publication after copyright review, manual confirmation, and the release
 window are satisfied.
 
 `MediaProcessingResultSnapshot` is still a handwritten result snapshot. Do not
-read it as complete generator support for value objects. Aggregate-object-graph
-support for separate-table value objects and first-class value-object generation
-remain cap4k follow-up work.
+read it as complete generator support for value objects. First-class
+value-object generation remains cap4k follow-up work.
 
 ## OpenAPI Location
 

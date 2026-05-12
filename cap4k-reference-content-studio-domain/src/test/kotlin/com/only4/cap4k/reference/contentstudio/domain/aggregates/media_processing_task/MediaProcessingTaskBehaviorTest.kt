@@ -89,6 +89,7 @@ class MediaProcessingTaskBehaviorTest {
         task.markSucceeded(snapshot)
 
         assertEquals(MediaProcessingStatus.SUCCEEDED, task.processingStatus)
+        assertEquals(snapshot, task.resultSnapshot)
 
         val event = assertInstanceOf(
             MediaProcessingSucceededDomainEvent::class.java,

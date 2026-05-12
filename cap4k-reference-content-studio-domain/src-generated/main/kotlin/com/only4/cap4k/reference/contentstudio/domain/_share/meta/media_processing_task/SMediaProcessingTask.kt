@@ -30,6 +30,8 @@ class SMediaProcessingTask(
 
         val processingStatus = "processingStatus"
 
+        val resultSnapshot = "resultSnapshot"
+
         val dbCreatedAt = "dbCreatedAt"
 
         val dbUpdatedAt = "dbUpdatedAt"
@@ -172,6 +174,10 @@ class SMediaProcessingTask(
 
     val processingStatus: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus> by lazy {
         Field(root.get("processingStatus"), criteriaBuilder)
+    }
+
+    val resultSnapshot: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot> by lazy {
+        Field(root.get("resultSnapshot"), criteriaBuilder)
     }
 
     val dbCreatedAt: Field<java.time.LocalDateTime> by lazy {
