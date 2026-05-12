@@ -20,15 +20,8 @@ allprojects {
         }
         maven {
             url = uri("https://maven.aliyun.com/repository/public")
-            content {
-                excludeGroupByRegex("com\\.only4(\\..*)?")
-            }
         }
-        mavenCentral {
-            content {
-                excludeGroupByRegex("com\\.only4(\\..*)?")
-            }
-        }
+        mavenCentral()
     }
 
     configurations.configureEach {

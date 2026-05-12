@@ -8,20 +8,9 @@ pluginManagement {
         }
         maven {
             url = uri("https://maven.aliyun.com/repository/public")
-            content {
-                excludeGroupByRegex("com\\.only4(\\..*)?")
-            }
         }
-        mavenCentral {
-            content {
-                excludeGroupByRegex("com\\.only4(\\..*)?")
-            }
-        }
-        gradlePluginPortal {
-            content {
-                excludeGroupByRegex("com\\.only4(\\..*)?")
-            }
-        }
+        mavenCentral()
+        gradlePluginPortal()
     }
 }
 
@@ -35,20 +24,9 @@ dependencyResolutionManagement {
         }
         maven {
             url = uri("https://maven.aliyun.com/repository/public")
-            content {
-                excludeGroupByRegex("com\\.only4(\\..*)?")
-            }
         }
-        mavenCentral {
-            content {
-                excludeGroupByRegex("com\\.only4(\\..*)?")
-            }
-        }
-        gradlePluginPortal {
-            content {
-                excludeGroupByRegex("com\\.only4(\\..*)?")
-            }
-        }
+        mavenCentral()
+        gradlePluginPortal()
     }
 
     versionCatalogs {
