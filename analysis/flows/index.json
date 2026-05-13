@@ -15,14 +15,14 @@
     "entryTypeCounts": {
         "<anonymous>": 1,
         "clisendermethod": 1,
-        "commandsendermethod": 4,
+        "commandsendermethod": 3,
         "controllermethod": 8,
         "integrationevent": 1,
         "querysendermethod": 1
     },
-    "nodeCount": 166,
-    "edgeCount": 85,
-    "flowCount": 16,
+    "nodeCount": 168,
+    "edgeCount": 86,
+    "flowCount": 15,
     "flows": [
         {
             "entryId": "<anonymous>",
@@ -137,20 +137,12 @@
             "mermaid": "com_only4_cap4k_reference_contentstudio_application_jobs_MediaProcessingPollingF.mmd"
         },
         {
-            "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEvent",
+            "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
             "entryType": "integrationevent",
-            "nodeCount": 1,
-            "edgeCount": 0,
-            "json": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_Medi.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_Medi.mmd"
-        },
-        {
-            "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::onEvent",
-            "entryType": "commandsendermethod",
-            "nodeCount": 14,
-            "edgeCount": 13,
-            "json": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_Medi_912a8155.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_Medi_912a8155.mmd"
+            "nodeCount": 15,
+            "edgeCount": 14,
+            "json": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_inbo.json",
+            "mermaid": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_inbo.mmd"
         }
     ]
 }

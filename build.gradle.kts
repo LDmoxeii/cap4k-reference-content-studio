@@ -102,6 +102,12 @@ cap4k {
         designDomainEventHandler {
             enabled.set(true)
         }
+        designIntegrationEvent {
+            enabled.set(true)
+        }
+        designIntegrationEventSubscriber {
+            enabled.set(true)
+        }
         designQuery {
             enabled.set(true)
         }

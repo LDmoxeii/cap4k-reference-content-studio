@@ -1,0 +1,31 @@
+flowchart TD
+  N1[ContinuePublicationAfterMediaSucceededCmd.Handler]
+  N2[ContinuePublicationAfterMediaSucceededCmd.Request]
+  N3[MarkMediaProcessingSucceededCmd.Handler]
+  N4[MarkMediaProcessingSucceededCmd.Request]
+  N5[MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded]
+  N6[MediaProcessingCallbackIntegrationEventSubscriber::on]
+  N7[MediaProcessingCallbackIntegrationEvent]
+  N8[Content::&lt;get-releasePolicy&gt;]
+  N9[Content::&lt;get-releaseWindowClosesAt&gt;]
+  N10[Content::&lt;get-releaseWindowOpensAt&gt;]
+  N11[MediaProcessingTask::&lt;get-externalTaskId&gt;]
+  N12[MediaProcessingTask::&lt;get-id&gt;]
+  N13[MediaProcessingTask::&lt;get-processingStatus&gt;]
+  N14[MediaProcessingTask::markSucceeded]
+  N15[MediaProcessingSucceededDomainEvent]
+  N1 -->|CommandHandlerToEntityMethod| N8
+  N1 -->|CommandHandlerToEntityMethod| N9
+  N1 -->|CommandHandlerToEntityMethod| N10
+  N2 -->|CommandToCommandHandler| N1
+  N3 -->|CommandHandlerToEntityMethod| N11
+  N3 -->|CommandHandlerToEntityMethod| N12
+  N3 -->|CommandHandlerToEntityMethod| N13
+  N3 -->|CommandHandlerToEntityMethod| N14
+  N4 -->|CommandToCommandHandler| N3
+  N5 -->|DomainEventHandlerToCommand| N2
+  N6 -->|IntegrationEventHandlerToCommand| N4
+  N7 -->|IntegrationEventToHandler| N6
+  N14 -->|EntityMethodToDomainEvent| N15
+  N15 -->|DomainEventToHandler| N5
+

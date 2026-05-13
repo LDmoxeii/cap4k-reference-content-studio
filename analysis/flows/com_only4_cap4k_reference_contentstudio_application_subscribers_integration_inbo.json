@@ -1,8 +1,8 @@
 {
-  "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::onEvent",
-  "entryType": "commandsendermethod",
-  "nodeCount": 14,
-  "edgeCount": 13,
+  "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
+  "entryType": "integrationevent",
+  "nodeCount": 15,
+  "edgeCount": 14,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Handler",
@@ -35,10 +35,16 @@
       "type": "domaineventhandler"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::onEvent",
-      "name": "MediaProcessingCallbackIntegrationEventSubscriber::onEvent",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::onEvent",
-      "type": "commandsendermethod"
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::on",
+      "name": "MediaProcessingCallbackIntegrationEventSubscriber::on",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::on",
+      "type": "integrationeventhandler"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
+      "name": "MediaProcessingCallbackIntegrationEvent",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
+      "type": "integrationevent"
     },
     {
       "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releasePolicy>",
@@ -141,9 +147,14 @@
       "type": "DomainEventHandlerToCommand"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::onEvent",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::on",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd.Request",
-      "type": "CommandSenderMethodToCommand"
+      "type": "IntegrationEventHandlerToCommand"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::on",
+      "type": "IntegrationEventToHandler"
     },
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSucceeded",

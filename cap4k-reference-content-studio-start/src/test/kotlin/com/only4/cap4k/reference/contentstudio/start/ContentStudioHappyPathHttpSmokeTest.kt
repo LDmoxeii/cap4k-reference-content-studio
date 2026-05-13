@@ -2,7 +2,7 @@ package com.only4.cap4k.reference.contentstudio.start
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEvent
+import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
 import java.time.Duration
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
@@ -75,7 +75,7 @@ class ContentStudioHappyPathHttpSmokeTest(
             """
             {
               "externalTaskId": "$externalTaskId",
-              "status": "${MediaProcessingCallbackIntegrationEvent.SUCCEEDED_STATUS}",
+              "status": "SUCCEEDED",
               "assetSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "assetLocation": "s3://content-studio/assets/$externalTaskId.mp4",
               "completedAt": "2026-05-11T10:15:30"

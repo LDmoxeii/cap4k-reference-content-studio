@@ -301,6 +301,23 @@
     "responseFields": []
   },
   {
+    "tag": "integration_event",
+    "package": "media.processing",
+    "name": "MediaProcessingCallback",
+    "desc": "media processing callback from external media service",
+    "aggregates": ["MediaProcessingTask"],
+    "role": "inbound",
+    "eventName": "cap4k.reference.contentstudio.media-processing.succeeded",
+    "requestFields": [
+      { "name": "externalTaskId", "type": "String" },
+      { "name": "status", "type": "String" },
+      { "name": "assetSha256", "type": "String" },
+      { "name": "assetLocation", "type": "String" },
+      { "name": "completedAt", "type": "java.time.LocalDateTime" }
+    ],
+    "responseFields": []
+  },
+  {
     "tag": "command",
     "package": "content.workflow",
     "name": "CreateGatedContentDraft",
