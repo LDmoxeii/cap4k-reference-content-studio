@@ -1,5 +1,10 @@
 # cap4k-reference-content-studio
 
+[![CI](https://github.com/LDmoxeii/cap4k-reference-content-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/LDmoxeii/cap4k-reference-content-studio/actions/workflows/ci.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/LDmoxeii/cap4k-reference-content-studio)](https://github.com/LDmoxeii/cap4k-reference-content-studio/releases)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LDmoxeii/cap4k-reference-content-studio/blob/master/LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/LDmoxeii/cap4k-reference-content-studio)
+
 `cap4k-reference-content-studio` 是 `cap4k` 的可运行参考项目。
 它展示了一个小而完整的内容发布流程，建立在生成出来的
 domain / application / adapter 分层之上：

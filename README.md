@@ -1,5 +1,10 @@
 # cap4k-reference-content-studio
 
+[![CI](https://github.com/LDmoxeii/cap4k-reference-content-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/LDmoxeii/cap4k-reference-content-studio/actions/workflows/ci.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/LDmoxeii/cap4k-reference-content-studio)](https://github.com/LDmoxeii/cap4k-reference-content-studio/releases)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LDmoxeii/cap4k-reference-content-studio/blob/master/LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/LDmoxeii/cap4k-reference-content-studio)
+
 `cap4k-reference-content-studio` is the runnable reference project for `cap4k`.
 It demonstrates a small end-to-end content workflow on top of the generated
 domain/application/adapter split:
