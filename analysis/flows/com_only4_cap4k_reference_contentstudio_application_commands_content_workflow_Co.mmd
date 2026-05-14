@@ -1,29 +1,23 @@
 flowchart TD
   N1[ContinuePublicationAfterMediaSucceededCmd.Handler::exec]
-  N2[PublishContentCmd.Handler]
-  N3[PublishContentCmd.Request]
-  N4[OpenPublicationReleaseReadinessCmd.Handler]
-  N5[OpenPublicationReleaseReadinessCmd.Request]
-  N6[RegisterPublicationReleaseSagaCmd.Handler]
-  N7[RegisterPublicationReleaseSagaCmd.Request]
-  N8[ContentPublishedDomainEventSubscriber::on]
-  N9[Content::&lt;get-releasePolicy&gt;]
-  N10[Content::publish]
-  N11[ContentPublishedDomainEvent]
-  N12[PublicationReleaseReadiness::&lt;get-id&gt;]
-  N13[PublicationReleaseReadiness::onCreate]
-  N14[PublicationReleaseReadiness::registerReleaseSaga]
+  N2[PublishContentCmd.Request]
+  N3[OpenPublicationReleaseReadinessCmd.Request]
+  N4[RegisterPublicationReleaseSagaCmd.Request]
+  N5[ContentPublishedDomainEventSubscriber::on]
+  N6[Content::&lt;get-releasePolicy&gt;]
+  N7[Content::publish]
+  N8[ContentPublishedDomainEvent]
+  N9[PublicationReleaseReadiness::&lt;get-id&gt;]
+  N10[PublicationReleaseReadiness::onCreate]
+  N11[PublicationReleaseReadiness::registerReleaseSaga]
+  N1 -->|CommandSenderMethodToCommand| N2
   N1 -->|CommandSenderMethodToCommand| N3
-  N1 -->|CommandSenderMethodToCommand| N5
-  N1 -->|CommandSenderMethodToCommand| N7
-  N2 -->|CommandHandlerToEntityMethod| N9
-  N2 -->|CommandHandlerToEntityMethod| N10
-  N3 -->|CommandToCommandHandler| N2
-  N4 -->|CommandHandlerToEntityMethod| N12
-  N4 -->|CommandHandlerToEntityMethod| N13
-  N5 -->|CommandToCommandHandler| N4
-  N6 -->|CommandHandlerToEntityMethod| N14
-  N7 -->|CommandToCommandHandler| N6
-  N10 -->|EntityMethodToDomainEvent| N11
-  N11 -->|DomainEventToHandler| N8
+  N1 -->|CommandSenderMethodToCommand| N4
+  N2 -->|CommandToEntityMethod| N6
+  N2 -->|CommandToEntityMethod| N7
+  N3 -->|CommandToEntityMethod| N9
+  N3 -->|CommandToEntityMethod| N10
+  N4 -->|CommandToEntityMethod| N11
+  N7 -->|EntityMethodToDomainEvent| N8
+  N8 -->|DomainEventToHandler| N5
 

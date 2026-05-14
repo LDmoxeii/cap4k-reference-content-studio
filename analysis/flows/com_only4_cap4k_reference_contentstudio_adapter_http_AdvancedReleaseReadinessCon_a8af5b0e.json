@@ -1,20 +1,14 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::createGated",
   "entryType": "controllermethod",
-  "nodeCount": 7,
-  "edgeCount": 6,
+  "nodeCount": 6,
+  "edgeCount": 5,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::createGated",
       "name": "AdvancedReleaseReadinessController::createGated",
       "fullName": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::createGated",
       "type": "controllermethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd.Handler",
-      "name": "CreateGatedContentDraftCmd.Handler",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd.Handler",
-      "type": "commandhandler"
     },
     {
       "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd.Request",
@@ -54,19 +48,14 @@
       "type": "ControllerMethodToCommand"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd.Handler",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd.Request",
       "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-id>",
-      "type": "CommandHandlerToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd.Handler",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::onCreate",
-      "type": "CommandHandlerToEntityMethod"
+      "type": "CommandToEntityMethod"
     },
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateGatedContentDraftCmd.Handler",
-      "type": "CommandToCommandHandler"
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::onCreate",
+      "type": "CommandToEntityMethod"
     },
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::onCreate",
