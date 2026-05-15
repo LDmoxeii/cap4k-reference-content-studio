@@ -38,21 +38,11 @@ Spring Boot process and an in-memory H2 database.
 ## Prerequisites
 
 1. Use JDK 17.
-2. Publish the required `cap4k` snapshot artifacts to `mavenLocal()` before
-   you build or start this repo.
-
-From your local `cap4k` checkout, run the publish step first:
-
-```bash
-./gradlew publishToMavenLocal
-```
-
-This repo depends on `0.5.0-SNAPSHOT` artifacts from `mavenLocal()`. If you
-skip that step, Gradle resolution will fail even if this repository itself is
-checked out correctly. The build resolves `cap4k` artifacts from `mavenLocal()`
-first and disables the changing-module cache for snapshot dependencies, so
-publishing `cap4k` again and rerunning this build picks up the latest local
-snapshot without relying on a private repository.
+2. Clone the repository and run Gradle directly. This repo consumes `cap4k`
+   `0.6.0` from Maven Central, so no separate `cap4k` checkout or
+   local artifact bootstrap step is required.
+3. The public Gradle plugin id used for cap4k pipeline tasks is
+   `io.github.ldmoxeii.cap4k.pipeline`.
 
 ## Shortest Startup Path
 

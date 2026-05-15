@@ -37,18 +37,11 @@ domain / application / adapter 分层之上：
 ## 前置条件
 
 1. 使用 JDK 17。
-2. 在构建或启动这个仓库之前，先把所需的 `cap4k` 快照工件发布到 `mavenLocal()`。
-
-从你的本地 `cap4k` 目录先执行发布步骤：
-
-```bash
-./gradlew publishToMavenLocal
-```
-
-这个仓库依赖 `mavenLocal()` 里的 `0.5.0-SNAPSHOT` 工件。如果跳过这一步，
-即使这个仓库本身检出正确，Gradle 也会解析失败。构建会优先从
-`mavenLocal()` 解析 `cap4k` 工件，并关闭快照依赖的 changing-module 缓存；
-重新发布 `cap4k` 后再次执行本仓库构建，就会使用最新的本地快照，不依赖私有仓库。
+2. 克隆仓库后直接运行 Gradle 即可。这个仓库从 Maven Central 消费
+   `cap4k 0.6.0`，不再需要单独检出 `cap4k` 仓库，也不需要先执行
+   本地工件引导发布步骤。
+3. cap4k pipeline 相关任务使用的公开 Gradle plugin id 是
+   `io.github.ldmoxeii.cap4k.pipeline`。
 
 ## 最短启动路径
 

@@ -5,7 +5,7 @@ spring-dependency-management = "1.1.7"
 springdoc = "2.8.13"
 swagger-annotations = "2.2.36"
 junit = "5.13.1"
-cap4k-ddd = "0.5.0-SNAPSHOT"
+cap4k-ddd = "0.6.0"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -17,11 +17,13 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 h2 = { module = "com.h2database:h2" }
 springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
 swagger-annotations-jakarta = { module = "io.swagger.core.v3:swagger-annotations-jakarta", version.ref = "swagger-annotations" }
-cap4k-ddd-starter = { module = "com.only4:cap4k-ddd-starter", version.ref = "cap4k-ddd" }
-ddd-integration-event-http = { module = "com.only4:ddd-integration-event-http", version.ref = "cap4k-ddd" }
-ddd-integration-event-http-jpa = { module = "com.only4:ddd-integration-event-http-jpa", version.ref = "cap4k-ddd" }
-cap4k-plugin-code-analysis-compiler = { module = "com.only4:cap4k-plugin-code-analysis-compiler", version.ref = "cap4k-ddd" }
-cap4k-plugin-code-analysis-core = { module = "com.only4:cap4k-plugin-code-analysis-core", version.ref = "cap4k-ddd" }
+ddd-core = { module = "io.github.ldmoxeii:ddd-core", version.ref = "cap4k-ddd" }
+ddd-domain-repo-jpa = { module = "io.github.ldmoxeii:ddd-domain-repo-jpa", version.ref = "cap4k-ddd" }
+cap4k-ddd-starter = { module = "io.github.ldmoxeii:cap4k-ddd-starter", version.ref = "cap4k-ddd" }
+ddd-integration-event-http = { module = "io.github.ldmoxeii:ddd-integration-event-http", version.ref = "cap4k-ddd" }
+ddd-integration-event-http-jpa = { module = "io.github.ldmoxeii:ddd-integration-event-http-jpa", version.ref = "cap4k-ddd" }
+cap4k-plugin-code-analysis-compiler = { module = "io.github.ldmoxeii:cap4k-plugin-code-analysis-compiler", version.ref = "cap4k-ddd" }
+cap4k-plugin-code-analysis-core = { module = "io.github.ldmoxeii:cap4k-plugin-code-analysis-core", version.ref = "cap4k-ddd" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -29,3 +31,4 @@ kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotl
 kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+cap4k-pipeline = { id = "io.github.ldmoxeii.cap4k.pipeline", version.ref = "cap4k-ddd" }

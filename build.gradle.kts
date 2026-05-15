@@ -2,10 +2,9 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.gradle.api.tasks.Sync
 import java.nio.file.Paths
-import java.util.concurrent.TimeUnit
 
 plugins {
-    id("com.only4.cap4k.plugin.pipeline") version "0.5.0-SNAPSHOT"
+    alias(libs.plugins.cap4k.pipeline)
     base
     alias(libs.plugins.spring.boot) apply false
     alias(libs.plugins.spring.dependency.management) apply false
@@ -13,20 +12,7 @@ plugins {
 
 allprojects {
     repositories {
-        mavenLocal {
-            content {
-                includeGroup("com.only4")
-            }
-        }
-        maven {
-            url = uri("https://maven.aliyun.com/repository/public")
-        }
         mavenCentral()
-    }
-
-    configurations.configureEach {
-        resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
-        resolutionStrategy.cacheDynamicVersionsFor(0, TimeUnit.SECONDS)
     }
 }
 
