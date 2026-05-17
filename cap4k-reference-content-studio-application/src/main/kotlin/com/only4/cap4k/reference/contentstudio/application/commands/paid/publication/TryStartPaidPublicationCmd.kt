@@ -63,10 +63,11 @@ object TryStartPaidPublicationCmd {
                     )
                 )
             val sagaId =
-                Mediator.requests.async(
+                Mediator.requests.schedule(
                     PaidPublicationSaga.Request(
                         paidPublicationTaskId = task.id,
-                    )
+                    ),
+                    now.plusSeconds(1),
                 )
             task.recordSagaStarted(sagaId, now)
             Mediator.uow.save()

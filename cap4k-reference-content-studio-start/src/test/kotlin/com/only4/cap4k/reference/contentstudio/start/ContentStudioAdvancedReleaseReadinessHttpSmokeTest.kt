@@ -111,7 +111,7 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
         assertThat(json(contentBeforeReadiness.body).required("contentStatus").asText()).isNotEqualTo("PUBLISHED")
         assertThat(tableExists("__saga")).isTrue()
         assertThat(tableExists("__saga_process")).isTrue()
-        assertThat(sagaCount()).isZero()
+        assertThat(sagaCount(contentId)).isZero()
 
         assertThat(
             restTemplate.postForEntity(
@@ -128,7 +128,7 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
             ).statusCode
         ).isEqualTo(HttpStatus.OK)
 
-        waitForSagaCount(Duration.ofSeconds(5))
+        waitForSagaCount(Duration.ofSeconds(5), contentId)
 
         val contentAfterReadiness = waitForJson(Duration.ofSeconds(5)) {
             val response = restTemplate.getForEntity("/contents/$contentId", String::class.java)
@@ -139,7 +139,7 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
         }
         assertThat(contentAfterReadiness.required("reviewStatus").asText()).isEqualTo("APPROVED")
         assertThat(contentAfterReadiness.required("publishedAt").isNull).isFalse()
-        assertThat(sagaProcessCodes())
+        assertThat(sagaProcessCodes(contentId))
             .contains("complete-release-readiness", "publish-content")
     }
 
@@ -166,14 +166,23 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
             tableName,
         )!! > 0
 
-    private fun sagaCount(): Int =
-        jdbcTemplate.queryForObject("select count(*) from __saga", Int::class.java)!!
+    private fun sagaCount(contentId: String): Int =
+        jdbcTemplate.queryForObject(
+            """
+            select count(*)
+            from __saga saga
+            join publication_release_readiness readiness on readiness.release_saga_id = saga.saga_uuid
+            where readiness.content_id = ?
+            """.trimIndent(),
+            Int::class.java,
+            UUID.fromString(contentId),
+        )!!
 
-    private fun waitForSagaCount(timeout: Duration): Int {
+    private fun waitForSagaCount(timeout: Duration, contentId: String): Int {
         val deadlineNanos = System.nanoTime() + timeout.toNanos()
         var latest = 0
         while (System.nanoTime() < deadlineNanos) {
-            latest = sagaCount()
+            latest = sagaCount(contentId)
             if (latest > 0) {
                 return latest
             }
@@ -184,10 +193,18 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
         }
     }
 
-    private fun sagaProcessCodes(): List<String> =
+    private fun sagaProcessCodes(contentId: String): List<String> =
         jdbcTemplate.queryForList(
-            "select process_code from __saga_process order by id",
+            """
+            select process.process_code
+            from __saga_process process
+            join __saga saga on saga.id = process.saga_id
+            join publication_release_readiness readiness on readiness.release_saga_id = saga.saga_uuid
+            where readiness.content_id = ?
+            order by process.id
+            """.trimIndent(),
             String::class.java,
+            UUID.fromString(contentId),
         )
 
     private fun waitForJson(timeout: Duration, fetch: () -> JsonNode?): JsonNode {

@@ -8,7 +8,6 @@ import java.time.Duration
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -29,19 +28,6 @@ class ContentStudioPaidPublicationSagaSmokeTest(
     @param:Autowired private val jdbcTemplate: JdbcTemplate,
     @param:Autowired private val fakePaidPublicationCliState: FakePaidPublicationCliState,
 ) {
-
-    @BeforeEach
-    fun resetPaidPublicationSmokeState() {
-        fakePaidPublicationCliState.setFailActivation(false)
-        listOf(
-            "__archived_saga_process",
-            "__saga_process",
-            "__archived_saga",
-            "__saga",
-        ).forEach { table ->
-            jdbcTemplate.execute("delete from $table")
-        }
-    }
 
     @AfterEach
     fun resetFakePaidPublicationCliState() {
@@ -75,7 +61,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
     fun `paid publication saga marks manual repair when entitlement activation fails after publish`() {
         fakePaidPublicationCliState.setFailActivation(true)
 
-        val contentId = runPaidPublicationPath()
+        val contentId = runPaidPublicationPath(waitForPublishedContent = false)
 
         val task = waitForPaidPublicationTask(Duration.ofSeconds(10), contentId) { row ->
             row.paidPublicationStatus == 4
@@ -83,9 +69,10 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         assertThat(task.paidPublicationStatus).isEqualTo(4)
         assertThat(task.payoutHoldStatus).isEqualTo(2)
         assertThat(task.entitlementPlanStatus).isEqualTo(3)
+        assertPublishedContent(contentId)
     }
 
-    private fun runPaidPublicationPath(): UUID {
+    private fun runPaidPublicationPath(waitForPublishedContent: Boolean = true): UUID {
         val createResponse =
             restTemplate.postForEntity(
                 "/advanced/contents/paid",
@@ -154,6 +141,14 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             )
         assertThat(callbackResponse.statusCode).isEqualTo(HttpStatus.OK)
 
+        if (waitForPublishedContent) {
+            assertPublishedContent(contentId)
+        }
+
+        return contentId
+    }
+
+    private fun assertPublishedContent(contentId: UUID) {
         val content = waitForJson(Duration.ofSeconds(10)) {
             val response = restTemplate.getForEntity("/contents/$contentId", String::class.java)
             assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
@@ -162,8 +157,6 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             }
         }
         assertThat(content.required("contentStatus").asText()).isEqualTo("PUBLISHED")
-
-        return contentId
     }
 
     private fun sagaProcessCodes(contentId: UUID): List<String> =
