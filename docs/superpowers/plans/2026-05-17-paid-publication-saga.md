@@ -1000,9 +1000,11 @@ git commit -m "feat: implement paid publication commands"
 Create `PaidPublicationSaga.kt` with the process constants from the spec and this request:
 
 ```kotlin
+// Current cap4k Saga process caching makes automatic forward retry unsafe after compensation.
+// cap4k issue #58 tracks first-class compensation runtime support.
 @Retry(
-    retryTimes = 30,
-    retryIntervals = [1, 1, 5, 5, 10],
+    retryTimes = 1,
+    retryIntervals = [1],
     expireAfter = 1440
 )
 data class Request(
@@ -1023,7 +1025,7 @@ execProcess(PROCESS_ACTIVATE_ENTITLEMENT_PLAN, ActivateAccessEntitlementPlanCmd.
 
 - [ ] **Step 2: Write compensation block**
 
-Use this exact failure handling shape:
+Use this failure handling shape. Forward success returns `published = true`; a forward failure with successful compensation returns `published = false`; only compensation failure rethrows the primary failure.
 
 ```kotlin
 override fun exec(request: Request): Response {
@@ -1031,13 +1033,17 @@ override fun exec(request: Request): Response {
         runForward(request)
         Response(published = true)
     } catch (primary: Throwable) {
-        compensateBestEffort(request, primary)
-        throw primary
+        val compensationFailures = compensateBestEffort(request, primary)
+        if (compensationFailures.isNotEmpty()) {
+            compensationFailures.forEach(primary::addSuppressed)
+            throw primary
+        }
+        Response(published = false)
     }
 }
 ```
 
-`compensateBestEffort` must run:
+`compensateBestEffort` must return the compensation failures and must run every compensation command, including `MarkPaidPublicationFailedCmd` even when earlier compensation failed:
 
 ```kotlin
 CancelEntitlementPlanIfCreatedCmd.Request(request.paidPublicationTaskId, primary.message ?: "Paid publication saga failed.")
@@ -1045,7 +1051,7 @@ ReleasePayoutHoldIfReservedCmd.Request(request.paidPublicationTaskId, primary.me
 MarkPaidPublicationFailedCmd.Request(request.paidPublicationTaskId, buildFailureReason(primary, compensationFailures))
 ```
 
-Add suppressed compensation failures to `primary`.
+Add suppressed compensation failures to `primary` before rethrowing only when compensation fails. Do not automatically retry the forward path after compensation; the current cap4k runtime can return cached `EXECUTED` process results and reuse old compensation process records.
 
 - [ ] **Step 3: Compile Saga**
 

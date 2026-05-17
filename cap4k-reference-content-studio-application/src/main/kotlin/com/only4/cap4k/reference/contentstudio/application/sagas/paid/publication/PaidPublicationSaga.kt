@@ -31,8 +31,12 @@ object PaidPublicationSaga {
                 runForward(request)
                 Response(published = true)
             } catch (primary: Throwable) {
-                compensateBestEffort(request, primary)
-                throw primary
+                val compensationFailures = compensateBestEffort(request, primary)
+                if (compensationFailures.isNotEmpty()) {
+                    compensationFailures.forEach(primary::addSuppressed)
+                    throw primary
+                }
+                Response(published = false)
             }
 
         private fun runForward(request: Request) {
@@ -54,7 +58,7 @@ object PaidPublicationSaga {
             )
         }
 
-        private fun compensateBestEffort(request: Request, primary: Throwable) {
+        private fun compensateBestEffort(request: Request, primary: Throwable): List<Throwable> {
             val compensationFailures = mutableListOf<Throwable>()
             val reason = primary.message ?: "Paid publication saga failed."
 
@@ -86,7 +90,7 @@ object PaidPublicationSaga {
                 )
             }
 
-            compensationFailures.forEach(primary::addSuppressed)
+            return compensationFailures
         }
 
         private fun runCompensation(compensationFailures: MutableList<Throwable>, block: () -> Unit) {
@@ -110,9 +114,11 @@ object PaidPublicationSaga {
         }
     }
 
+    // Current cap4k Saga process caching makes automatic forward retry unsafe after compensation.
+    // cap4k issue #58 tracks first-class compensation runtime support.
     @Retry(
-        retryTimes = 30,
-        retryIntervals = [1, 1, 5, 5, 10],
+        retryTimes = 1,
+        retryIntervals = [1],
         expireAfter = 1440,
     )
     data class Request(

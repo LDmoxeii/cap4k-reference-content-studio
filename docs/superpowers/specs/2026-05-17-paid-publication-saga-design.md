@@ -56,7 +56,7 @@ cap4k Saga provides useful low-level runtime behavior here:
 - completed process codes are skipped during retry;
 - failed Saga records can be retried by scheduled compensation or operator action.
 
-The current runtime is still not a full compensation Saga engine. The example must be honest: compensation is hand-written through idempotent commands, and future cap4k Saga runtime improvements are tracked separately in cap4k issue #58.
+The current runtime is still not a full compensation Saga engine. The example must be honest: compensation is hand-written through idempotent commands, and the handler must not automatically retry the forward path after compensation. Future cap4k Saga runtime improvements are tracked separately in cap4k issue #58.
 
 ## Current Runtime Constraints
 
@@ -67,6 +67,7 @@ The example must respect current cap4k Saga behavior:
 - There is no separate compensation process state.
 - There is no workflow `wait` or external signal API.
 - There is no per-instance retry policy.
+- `execProcess` returns cached results for `EXECUTED` process records, so automatic forward retry after compensation can skip forward steps and reuse stale compensation records.
 - If a compensation command fails, the handler must preserve the primary failure and record enough diagnostic context through business state.
 
 ## Final Domain Shape
@@ -142,7 +143,7 @@ Subscriber, job, controller, and integration-event entry code must not start the
 
 - `ReserveCreatorPayoutHoldCmd`
 - `CreateAccessEntitlementPlanCmd`
-- `PublishContentCmd`
+- `PublishPaidPublicationContentCmd`
 - `ActivateAccessEntitlementPlanCmd`
 
 Each command must be zero-trust and idempotent:
@@ -179,6 +180,13 @@ object PaidPublicationSaga {
     const val PROCESS_RELEASE_PAYOUT_HOLD = "release-payout-hold-if-reserved"
     const val PROCESS_MARK_PUBLICATION_FAILED = "mark-paid-publication-failed"
 
+    // Current cap4k Saga process caching makes automatic forward retry unsafe after compensation.
+    // cap4k issue #58 tracks first-class compensation runtime support.
+    @Retry(
+        retryTimes = 1,
+        retryIntervals = [1],
+        expireAfter = 1440,
+    )
     data class Request(
         val paidPublicationTaskId: UUID,
     ) : SagaParam<Response>
@@ -194,8 +202,12 @@ object PaidPublicationSaga {
                 runForward(request)
                 Response(published = true)
             } catch (primary: Throwable) {
-                compensateBestEffort(request, primary)
-                throw primary
+                val compensationFailures = compensateBestEffort(request, primary)
+                if (compensationFailures.isNotEmpty()) {
+                    compensationFailures.forEach(primary::addSuppressed)
+                    throw primary
+                }
+                Response(published = false)
             }
         }
 
@@ -210,17 +222,15 @@ object PaidPublicationSaga {
             )
             execProcess(
                 PROCESS_PUBLISH_CONTENT,
-                PublishContentCmd.Request(
-                    paidPublicationTaskId = request.paidPublicationTaskId,
-                ),
+                PublishPaidPublicationContentCmd.Request(request.paidPublicationTaskId),
             )
             execProcess(
                 PROCESS_ACTIVATE_ENTITLEMENT_PLAN,
-                ActivateEntitlementPlanCmd.Request(request.paidPublicationTaskId),
+                ActivateAccessEntitlementPlanCmd.Request(request.paidPublicationTaskId),
             )
         }
 
-        private fun compensateBestEffort(request: Request, primary: Throwable) {
+        private fun compensateBestEffort(request: Request, primary: Throwable): List<Throwable> {
             val compensationFailures = mutableListOf<Throwable>()
 
             runCompensation(compensationFailures) {
@@ -253,13 +263,13 @@ object PaidPublicationSaga {
                 )
             }
 
-            compensationFailures.forEach { primary.addSuppressed(it) }
+            return compensationFailures
         }
     }
 }
 ```
 
-This is intentionally not presented as the ideal final cap4k Saga API. It is the correct current-runtime shape until cap4k issue #58 introduces better compensation support.
+This is intentionally not presented as the ideal final cap4k Saga API. It is the correct current-runtime shape until cap4k issue #58 introduces better compensation support. A forward failure with successful compensation completes with `published = false`; only compensation failure rethrows the primary failure with suppressed compensation failures.
 
 ## Manual Repair Boundary
 
