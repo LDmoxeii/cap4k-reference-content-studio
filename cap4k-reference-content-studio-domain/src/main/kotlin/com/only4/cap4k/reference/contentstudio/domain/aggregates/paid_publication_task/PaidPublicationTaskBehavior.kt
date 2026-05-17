@@ -88,13 +88,13 @@ fun PaidPublicationTask.recordEntitlementPlanActivated() {
 fun PaidPublicationTask.markPublished(publishedAt: LocalDateTime) {
     when (paidPublicationStatus) {
         PaidPublicationStatus.PUBLISHED -> return
-        PaidPublicationStatus.FAILED -> error("Cannot publish a failed paid publication task.")
-        PaidPublicationStatus.PENDING,
-        PaidPublicationStatus.RUNNING,
-        PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR -> {
+        PaidPublicationStatus.RUNNING -> {
             paidPublicationStatus = PaidPublicationStatus.PUBLISHED
             this.publishedAt = publishedAt
         }
+        PaidPublicationStatus.PENDING -> error("Cannot publish a pending paid publication task.")
+        PaidPublicationStatus.FAILED -> error("Cannot publish a failed paid publication task.")
+        PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR -> error("Cannot publish a paid publication task that requires operator repair.")
     }
 }
 

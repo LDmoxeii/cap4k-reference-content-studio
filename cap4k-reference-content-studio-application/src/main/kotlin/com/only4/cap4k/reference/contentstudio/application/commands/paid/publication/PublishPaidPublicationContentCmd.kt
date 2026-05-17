@@ -6,6 +6,9 @@ import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.paid_publication_task.SPaidPublicationTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.markPublished
 import java.time.LocalDateTime
 import java.util.UUID
@@ -18,6 +21,19 @@ object PublishPaidPublicationContentCmd {
 
         override fun exec(request: Request): Response {
             val task = loadTask(request.paidPublicationTaskId)
+            if (task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED) {
+                return Response(published = false)
+            }
+            check(task.paidPublicationStatus == PaidPublicationStatus.RUNNING) {
+                "Paid publication task ${task.id} is not running."
+            }
+            check(task.payoutHoldStatus == PayoutHoldStatus.RESERVED) {
+                "Paid publication task ${task.id} has no reserved payout hold."
+            }
+            check(task.entitlementPlanStatus == EntitlementPlanStatus.CREATED) {
+                "Paid publication task ${task.id} has no created entitlement plan."
+            }
+
             val now = LocalDateTime.now()
             val response =
                 // Local synchronous reuse of the existing content write boundary; process orchestration remains in Saga.

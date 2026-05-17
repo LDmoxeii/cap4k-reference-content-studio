@@ -20,7 +20,10 @@ object MarkPaidPublicationFailedCmd {
         override fun exec(request: Request): Response {
             val task = loadTask(request.paidPublicationTaskId)
             val now = LocalDateTime.now()
-            if (task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED) {
+            if (
+                task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED ||
+                task.paidPublicationStatus == PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR
+            ) {
                 task.markRequiresOperatorRepair(request.failedReason, now)
             } else {
                 task.markFailed(request.failedReason, now)

@@ -62,7 +62,7 @@ class PaidPublicationTaskBehaviorTest {
 
     @Test
     fun `published task can require operator repair`() {
-        val task = newTask()
+        val task = newTask(paidPublicationStatus = PaidPublicationStatus.RUNNING)
         val publishedAt = LocalDateTime.of(2026, 5, 17, 11, 0)
         val failedAt = LocalDateTime.of(2026, 5, 17, 11, 30)
 
@@ -73,6 +73,30 @@ class PaidPublicationTaskBehaviorTest {
         assertEquals(publishedAt, task.publishedAt)
         assertEquals(failedAt, task.failedAt)
         assertEquals("entitlement callback failed", task.failedReason)
+    }
+
+    @Test
+    fun `only running task can be marked published`() {
+        val publishedAt = LocalDateTime.of(2026, 5, 17, 11, 0)
+        val task = newTask(paidPublicationStatus = PaidPublicationStatus.RUNNING)
+
+        task.markPublished(publishedAt)
+        task.markPublished(publishedAt.plusMinutes(5))
+
+        assertEquals(PaidPublicationStatus.PUBLISHED, task.paidPublicationStatus)
+        assertEquals(publishedAt, task.publishedAt)
+    }
+
+    @Test
+    fun `pending and repair tasks cannot be marked published`() {
+        val publishedAt = LocalDateTime.of(2026, 5, 17, 11, 0)
+
+        assertThrows(IllegalStateException::class.java) {
+            newTask(paidPublicationStatus = PaidPublicationStatus.PENDING).markPublished(publishedAt)
+        }
+        assertThrows(IllegalStateException::class.java) {
+            newTask(paidPublicationStatus = PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR).markPublished(publishedAt)
+        }
     }
 
     @Test
