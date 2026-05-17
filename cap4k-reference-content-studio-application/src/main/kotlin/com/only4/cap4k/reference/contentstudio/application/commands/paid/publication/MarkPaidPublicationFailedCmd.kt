@@ -3,7 +3,9 @@ package com.only4.cap4k.reference.contentstudio.application.commands.paid.public
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
+import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.paid_publication_task.SPaidPublicationTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.markFailed
@@ -24,7 +26,7 @@ object MarkPaidPublicationFailedCmd {
             }
 
             val now = LocalDateTime.now()
-            if (task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED) {
+            if (task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED || contentIsPublished(task)) {
                 task.markRequiresOperatorRepair(request.failedReason, now)
             } else {
                 task.markFailed(request.failedReason, now)
@@ -46,4 +48,9 @@ object MarkPaidPublicationFailedCmd {
         checkNotNull(Mediator.repositories.findOne(SPaidPublicationTask.predicateById(paidPublicationTaskId))) {
             "Paid publication task $paidPublicationTaskId was not found."
         }
+
+    private fun contentIsPublished(task: PaidPublicationTask): Boolean =
+        checkNotNull(Mediator.repositories.findOne(SContent.predicateById(task.contentId))) {
+            "Content ${task.contentId} was not found."
+        }.contentStatus == ContentStatus.PUBLISHED
 }

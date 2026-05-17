@@ -45,7 +45,7 @@ object PublishPaidPublicationContentCmd {
                     )
                 )
             if (response.published) {
-                task.markPublished(now)
+                loadTask(request.paidPublicationTaskId).markPublished(now)
                 Mediator.uow.save()
             }
 

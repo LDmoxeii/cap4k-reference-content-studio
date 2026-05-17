@@ -2,6 +2,7 @@ package com.only4.cap4k.reference.contentstudio.application.subscribers.domain.m
 
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd
+import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.TryStartPaidPublicationCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.OpenPublicationReleaseReadinessCmd
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
 import java.time.LocalDateTime
@@ -31,6 +32,13 @@ class MediaProcessingSucceededDomainEventSubscriber {
                 contentId = event.contentId,
                 mediaProcessingTaskId = event.taskId,
             )
+        )
+    }
+
+    @EventListener(MediaProcessingSucceededDomainEvent::class)
+    fun startPaidPublication(event: MediaProcessingSucceededDomainEvent) {
+        Mediator.cmd.send(
+            TryStartPaidPublicationCmd.Request(contentId = event.contentId)
         )
     }
 }

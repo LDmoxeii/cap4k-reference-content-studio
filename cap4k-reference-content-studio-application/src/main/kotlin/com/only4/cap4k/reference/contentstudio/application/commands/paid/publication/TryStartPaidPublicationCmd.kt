@@ -35,12 +35,10 @@ object TryStartPaidPublicationCmd {
                 return Response(taskId = existingTask.id, started = false)
             }
 
-            check(content.releasePolicy == ReleasePolicy.PAID) {
-                "Content ${request.contentId} is not paid content."
+            if (content.releasePolicy != ReleasePolicy.PAID || content.contentStatus == ContentStatus.PUBLISHED) {
+                return Response(taskId = existingTask?.id, started = false)
             }
-            check(content.contentStatus != ContentStatus.PUBLISHED) {
-                "Content ${request.contentId} is already published."
-            }
+
             val mediaProcessingTask =
                 checkNotNull(
                     Mediator.repositories.findFirst(
