@@ -76,6 +76,17 @@
     "responseFields": []
   },
   {
+    "tag": "command",
+    "package": "media.processing",
+    "name": "RefreshMediaProcessingTaskStatus",
+    "desc": "refresh media processing task status from external media service",
+    "aggregates": ["MediaProcessingTask"],
+    "requestFields": [
+      { "name": "externalTaskId", "type": "String" }
+    ],
+    "responseFields": []
+  },
+  {
     "tag": "query",
     "package": "content.read",
     "name": "GetContentDetail",
