@@ -6,8 +6,22 @@ import com.only4.cap4k.reference.contentstudio.application.distributed.clients.p
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.paid.publication.CreateAccessEntitlementPlanCli
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.paid.publication.ReleaseCreatorPayoutHoldCli
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.paid.publication.ReserveCreatorPayoutHoldCli
+import java.util.concurrent.atomic.AtomicBoolean
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+
+@Service
+class FakePaidPublicationCliState(
+    @Value("\${contentStudio.fakeEntitlement.failActivation:false}") initialFailActivation: Boolean
+) {
+    private val failActivation = AtomicBoolean(initialFailActivation)
+
+    fun shouldFailActivation(): Boolean = failActivation.get()
+
+    fun setFailActivation(value: Boolean) {
+        failActivation.set(value)
+    }
+}
 
 @Service
 class ReserveCreatorPayoutHoldCliHandler : RequestHandler<ReserveCreatorPayoutHoldCli.Request, ReserveCreatorPayoutHoldCli.Response> {
@@ -51,11 +65,11 @@ class CancelAccessEntitlementPlanCliHandler : RequestHandler<CancelAccessEntitle
 
 @Service
 class ActivateAccessEntitlementPlanCliHandler(
-    @Value("\${contentStudio.fakeEntitlement.failActivation:false}") private val failActivation: Boolean
+    private val state: FakePaidPublicationCliState
 ) : RequestHandler<ActivateAccessEntitlementPlanCli.Request, ActivateAccessEntitlementPlanCli.Response> {
 
     override fun exec(request: ActivateAccessEntitlementPlanCli.Request): ActivateAccessEntitlementPlanCli.Response {
-        if (failActivation) {
+        if (state.shouldFailActivation()) {
             throw IllegalStateException("Fake entitlement activation failed.")
         }
         return ActivateAccessEntitlementPlanCli.Response(

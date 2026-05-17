@@ -2,41 +2,57 @@ package com.only4.cap4k.reference.contentstudio.start
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.only4.cap4k.reference.contentstudio.adapter.application.distributed.clients.paid.publication.FakePaidPublicationCliState
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
 import java.time.Duration
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.test.annotation.DirtiesContext
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.jdbc.core.JdbcTemplate
 
-@SpringBootTest(
-    classes = [ContentStudioApplication::class],
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = [
-        "spring.datasource.url=jdbc:h2:mem:content-studio-paid-success-test;MODE=MySQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
-        "spring.datasource.driver-class-name=org.h2.Driver",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "server.port=0",
-    ],
-)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class ContentStudioPaidPublicationSagaSuccessSmokeTest(
+@ContentStudioSpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+class ContentStudioPaidPublicationSagaSmokeTest(
     @param:Autowired private val restTemplate: TestRestTemplate,
     @param:Autowired private val objectMapper: ObjectMapper,
     @param:Autowired private val jdbcTemplate: JdbcTemplate,
-) : ContentStudioPaidPublicationSagaSmokeSupport(restTemplate, objectMapper, jdbcTemplate) {
+    @param:Autowired private val fakePaidPublicationCliState: FakePaidPublicationCliState,
+) {
+
+    @BeforeEach
+    fun resetPaidPublicationSmokeState() {
+        fakePaidPublicationCliState.setFailActivation(false)
+        listOf(
+            "__archived_saga_process",
+            "__saga_process",
+            "__archived_saga",
+            "__saga",
+        ).forEach { table ->
+            jdbcTemplate.execute("delete from $table")
+        }
+    }
+
+    @AfterEach
+    fun resetFakePaidPublicationCliState() {
+        fakePaidPublicationCliState.setFailActivation(false)
+    }
 
     @Test
+    @Order(1)
     fun `paid publication saga publishes content and activates entitlement plan`() {
+        fakePaidPublicationCliState.setFailActivation(false)
+
         val contentId = runPaidPublicationPath()
 
         val task = waitForPaidPublicationTask(Duration.ofSeconds(10), contentId) { row ->
@@ -45,7 +61,7 @@ class ContentStudioPaidPublicationSagaSuccessSmokeTest(
         assertThat(task.paidPublicationStatus).isEqualTo(2)
         assertThat(task.payoutHoldStatus).isEqualTo(1)
         assertThat(task.entitlementPlanStatus).isEqualTo(2)
-        assertThat(sagaProcessCodes())
+        assertThat(sagaProcessCodes(contentId))
             .contains(
                 "reserve-payout-hold",
                 "create-entitlement-plan",
@@ -53,29 +69,12 @@ class ContentStudioPaidPublicationSagaSuccessSmokeTest(
                 "activate-entitlement-plan",
             )
     }
-}
-
-@SpringBootTest(
-    classes = [ContentStudioApplication::class],
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = [
-        "spring.datasource.url=jdbc:h2:mem:content-studio-paid-failure-test;MODE=MySQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
-        "spring.datasource.driver-class-name=org.h2.Driver",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "server.port=0",
-        "contentStudio.fakeEntitlement.failActivation=true",
-    ],
-)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class ContentStudioPaidPublicationSagaManualRepairSmokeTest(
-    @param:Autowired private val restTemplate: TestRestTemplate,
-    @param:Autowired private val objectMapper: ObjectMapper,
-    @param:Autowired private val jdbcTemplate: JdbcTemplate,
-) : ContentStudioPaidPublicationSagaSmokeSupport(restTemplate, objectMapper, jdbcTemplate) {
 
     @Test
+    @Order(2)
     fun `paid publication saga marks manual repair when entitlement activation fails after publish`() {
+        fakePaidPublicationCliState.setFailActivation(true)
+
         val contentId = runPaidPublicationPath()
 
         val task = waitForPaidPublicationTask(Duration.ofSeconds(10), contentId) { row ->
@@ -85,15 +84,8 @@ class ContentStudioPaidPublicationSagaManualRepairSmokeTest(
         assertThat(task.payoutHoldStatus).isEqualTo(2)
         assertThat(task.entitlementPlanStatus).isEqualTo(3)
     }
-}
 
-abstract class ContentStudioPaidPublicationSagaSmokeSupport(
-    private val restTemplate: TestRestTemplate,
-    private val objectMapper: ObjectMapper,
-    private val jdbcTemplate: JdbcTemplate,
-) {
-
-    protected fun runPaidPublicationPath(): UUID {
+    private fun runPaidPublicationPath(): UUID {
         val createResponse =
             restTemplate.postForEntity(
                 "/advanced/contents/paid",
@@ -174,13 +166,21 @@ abstract class ContentStudioPaidPublicationSagaSmokeSupport(
         return contentId
     }
 
-    protected fun sagaProcessCodes(): List<String> =
+    private fun sagaProcessCodes(contentId: UUID): List<String> =
         jdbcTemplate.queryForList(
-            "select process_code from __saga_process order by id",
+            """
+            select process.process_code
+            from __saga_process process
+            join __saga saga on saga.id = process.saga_id
+            join paid_publication_task task on task.publication_saga_id = saga.saga_uuid
+            where task.content_id = ?
+            order by process.id
+            """.trimIndent(),
             String::class.java,
+            contentId,
         )
 
-    protected fun waitForPaidPublicationTask(
+    private fun waitForPaidPublicationTask(
         timeout: Duration,
         contentId: UUID,
         ready: (PaidPublicationTaskRow) -> Boolean,
