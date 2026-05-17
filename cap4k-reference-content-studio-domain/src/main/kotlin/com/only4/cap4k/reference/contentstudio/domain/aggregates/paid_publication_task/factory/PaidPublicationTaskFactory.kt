@@ -22,6 +22,7 @@ class PaidPublicationTaskFactory : AggregateFactory<PaidPublicationTaskFactory.P
 
     override fun create(entityPayload: Payload): PaidPublicationTask =
         PaidPublicationTask(
+            id = entityPayload.id,
             contentId = entityPayload.contentId,
             paidPublicationStatus = PaidPublicationStatus.PENDING,
             publicationSagaId = null,
@@ -45,6 +46,8 @@ class PaidPublicationTaskFactory : AggregateFactory<PaidPublicationTaskFactory.P
         description = ""
     )
     data class Payload(
+
+        val id: UUID,
 
         val contentId: UUID,
 

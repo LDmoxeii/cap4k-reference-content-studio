@@ -78,15 +78,18 @@ class PaidPublicationTaskBehaviorTest {
     @Test
     fun `factory creates pending task with empty external state`() {
         val now = LocalDateTime.of(2026, 5, 17, 9, 30)
+        val id = UUID.randomUUID()
         val contentId = UUID.randomUUID()
 
         val task = PaidPublicationTaskFactory().create(
             PaidPublicationTaskFactory.Payload(
+                id = id,
                 contentId = contentId,
                 now = now,
             )
         )
 
+        assertEquals(id, task.id)
         assertEquals(contentId, task.contentId)
         assertEquals(PaidPublicationStatus.PENDING, task.paidPublicationStatus)
         assertEquals(PayoutHoldStatus.NONE, task.payoutHoldStatus)
