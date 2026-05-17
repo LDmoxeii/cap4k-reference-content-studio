@@ -88,22 +88,22 @@ Delete old release-readiness feature files:
 - Modify: `cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql`
 - Modify: `build.gradle.kts`
 
-- [ ] **Step 1: Update schema source**
+- [ ] **Step 1: Add paid schema source while keeping release readiness**
 
-Replace the `content.release_policy` enum comment and remove release-window columns:
+Replace the `content.release_policy` enum comment with the transition enum that keeps existing gated content compatible and adds paid publication:
 
 ```sql
-release_policy int not null comment '@T=ReleasePolicy;@E=0:IMMEDIATE:Immediate|1:PAID:Paid;',
+release_policy int not null comment '@T=ReleasePolicy;@E=0:IMMEDIATE:Immediate|1:GATED:Gated|2:PAID:Paid;',
 ```
 
-Remove these columns from `content`:
+Keep these columns in `content` until Task 7 deletes the old release-readiness path:
 
 ```sql
 release_window_opens_at timestamp,
 release_window_closes_at timestamp,
 ```
 
-Delete the full `publication_release_readiness` table.
+Keep the full `publication_release_readiness` table until Task 7.
 
 Add the new table:
 
@@ -150,6 +150,7 @@ includeTables.set(
     listOf(
         "content",
         "media_processing_task",
+        "publication_release_readiness",
         "paid_publication_task"
     )
 )
@@ -157,7 +158,7 @@ includeTables.set(
 
 - [ ] **Step 3: Update design JSON**
 
-Remove every design object for the old gated release path:
+Keep every design object for the old gated release path until Task 7:
 
 ```text
 CopyrightReviewPassed
@@ -172,7 +173,7 @@ ListPublicationReleaseReadinessReadyToContinue
 CreateGatedContentDraftPayload
 ```
 
-Add these design objects. Keep package names exactly as shown so generated files land in predictable folders:
+Also add these paid publication design objects. Keep package names exactly as shown so generated files land in predictable folders:
 
 ```json
 {
@@ -437,10 +438,10 @@ Expected: all three tasks complete successfully.
 Run:
 
 ```powershell
-rg -n "PublicationReleaseReadiness|CreateGated|ReleaseReadiness|releaseWindow" design cap4k-reference-content-studio-*/src-generated
+rg -n "PaidPublicationTask|paid_publication_task|CreatePaidContentDraft|TryStartPaidPublication|ReserveCreatorPayoutHold|CreateAccessEntitlementPlan" design cap4k-reference-content-studio-domain/src-generated cap4k-reference-content-studio-adapter/src-generated
 ```
 
-Expected: no generated references remain except historical docs/specs under `docs/superpowers`.
+Expected: paid publication generated artifacts exist. Old `PublicationReleaseReadiness` generated artifacts are expected to remain until Task 7.
 
 - [ ] **Step 6: Commit generated input changes**
 
