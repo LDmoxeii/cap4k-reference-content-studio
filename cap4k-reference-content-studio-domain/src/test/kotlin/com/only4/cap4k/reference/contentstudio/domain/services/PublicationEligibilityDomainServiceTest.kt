@@ -59,14 +59,14 @@ class PublicationEligibilityDomainServiceTest {
     }
 
     @Test
-    fun `release readiness must be satisfied`() {
+    fun `policy gate must be satisfied`() {
         val contentId = UUID.randomUUID()
         val content = newContent(contentId = contentId, reviewStatus = ReviewStatus.APPROVED)
         val task = newTask(contentId = contentId, processingStatus = MediaProcessingStatus.SUCCEEDED)
 
         assertEquals(
-            PublicationEligibilityDecision.ReleaseReadinessNotSatisfied,
-            service.evaluate(content = content, task = task, releaseReadinessSatisfied = false),
+            PublicationEligibilityDecision.PolicyGateNotSatisfied,
+            service.evaluate(content = content, task = task, policyGateSatisfied = false),
         )
     }
 
@@ -84,8 +84,6 @@ class PublicationEligibilityDomainServiceTest {
             reviewStatus = reviewStatus,
             contentStatus = contentStatus,
             releasePolicy = ReleasePolicy.IMMEDIATE,
-            releaseWindowOpensAt = null,
-            releaseWindowClosesAt = null,
             reviewerId = null,
             reviewedAt = null,
             publishedAt = null,

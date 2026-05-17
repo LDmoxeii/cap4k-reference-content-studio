@@ -28,8 +28,6 @@ object CreatePaidContentDraftCmd {
                         reviewStatus = ReviewStatus.PENDING,
                         contentStatus = ContentStatus.DRAFT,
                         releasePolicy = ReleasePolicy.PAID,
-                        releaseWindowOpensAt = null,
-                        releaseWindowClosesAt = null,
                         reviewerId = null,
                         reviewedAt = null,
                         publishedAt = null,

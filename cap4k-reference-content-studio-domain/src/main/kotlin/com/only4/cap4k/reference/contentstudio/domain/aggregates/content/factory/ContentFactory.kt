@@ -29,8 +29,6 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
             reviewStatus = entityPayload.reviewStatus,
             contentStatus = entityPayload.contentStatus,
             releasePolicy = entityPayload.releasePolicy,
-            releaseWindowOpensAt = entityPayload.releaseWindowOpensAt,
-            releaseWindowClosesAt = entityPayload.releaseWindowClosesAt,
             reviewerId = entityPayload.reviewerId,
             reviewedAt = entityPayload.reviewedAt,
             publishedAt = entityPayload.publishedAt,
@@ -60,10 +58,6 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
         val contentStatus: ContentStatus,
 
         val releasePolicy: ReleasePolicy = ReleasePolicy.IMMEDIATE,
-
-        val releaseWindowOpensAt: LocalDateTime? = null,
-
-        val releaseWindowClosesAt: LocalDateTime? = null,
 
         val reviewerId: UUID?,
 

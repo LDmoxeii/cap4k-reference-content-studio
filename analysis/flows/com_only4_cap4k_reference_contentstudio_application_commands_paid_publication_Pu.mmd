@@ -1,0 +1,11 @@
+flowchart TD
+  N1[PublishContentCmd.Request]
+  N2[PublishPaidPublicationContentCmd.Handler::exec]
+  N3[Content::&lt;get-releasePolicy&gt;]
+  N4[Content::publish]
+  N5[ContentPublishedDomainEvent]
+  N1 -->|CommandToEntityMethod| N3
+  N1 -->|CommandToEntityMethod| N4
+  N2 -->|CommandSenderMethodToCommand| N1
+  N4 -->|EntityMethodToDomainEvent| N5
+

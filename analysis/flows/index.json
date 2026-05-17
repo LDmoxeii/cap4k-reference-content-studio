@@ -5,72 +5,22 @@
         "cap4k-reference-content-studio-domain/build/cap4k-code-analysis"
     ],
     "entryTypes": [
-        "controllermethod",
-        "integrationevent"
+        "commandsendermethod"
     ],
     "entryTypeCounts": {
-        "controllermethod": 6,
-        "integrationevent": 1
+        "commandsendermethod": 1
     },
-    "nodeCount": 66,
-    "edgeCount": 34,
-    "flowCount": 7,
+    "nodeCount": 80,
+    "edgeCount": 41,
+    "flowCount": 1,
     "flows": [
         {
-            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::confirmManual",
-            "entryType": "controllermethod",
-            "nodeCount": 6,
-            "edgeCount": 5,
-            "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon.mmd"
-        },
-        {
-            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::createGated",
-            "entryType": "controllermethod",
-            "nodeCount": 2,
-            "edgeCount": 1,
-            "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_a8af5b0e.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_a8af5b0e.mmd"
-        },
-        {
-            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::passCopyright",
-            "entryType": "controllermethod",
-            "nodeCount": 6,
-            "edgeCount": 5,
-            "json": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_8e5b89c7.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_AdvancedReleaseReadinessCon_8e5b89c7.mmd"
-        },
-        {
-            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
-            "entryType": "controllermethod",
-            "nodeCount": 2,
-            "edgeCount": 1,
-            "json": "com_only4_cap4k_reference_contentstudio_adapter_http_ContentController_create.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ContentController_create.mmd"
-        },
-        {
-            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
-            "entryType": "controllermethod",
-            "nodeCount": 2,
-            "edgeCount": 1,
-            "json": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_approve.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_approve.mmd"
-        },
-        {
-            "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::submitReview",
-            "entryType": "controllermethod",
-            "nodeCount": 2,
-            "edgeCount": 1,
-            "json": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_submitRevi.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_submitRevi.mmd"
-        },
-        {
-            "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
-            "entryType": "integrationevent",
-            "nodeCount": 3,
-            "edgeCount": 2,
-            "json": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_inbo.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_inbo.mmd"
+            "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd.Handler::exec",
+            "entryType": "commandsendermethod",
+            "nodeCount": 5,
+            "edgeCount": 4,
+            "json": "com_only4_cap4k_reference_contentstudio_application_commands_paid_publication_Pu.json",
+            "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_paid_publication_Pu.mmd"
         }
     ]
 }

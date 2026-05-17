@@ -102,8 +102,8 @@ That sequence matches the local happy-path smoke coverage in this repository:
 review approval creates the media-processing task, and the publish transition
 happens only after the callback completes.
 
-For the opt-in gated release path, run `http/advanced-release-readiness.http`
-after you understand the default sequence.
+For the opt-in paid publication path, run `http/content.http` with the paid draft
+request after you understand the default sequence.
 
 ## Advanced Authoring Examples
 
@@ -114,18 +114,17 @@ The advanced path is opt-in:
 
 - `MediaProcessingResultSnapshot` is a handwritten JSON-backed value concept persisted through `media_processing_task.result_snapshot`.
 - `PublicationEligibilityDomainService` returns an auditable publication decision.
-- Gated content uses `PublicationReleaseReadiness` to record cross-time waiting state. After
-  copyright review, manual confirmation, and the release window are satisfied,
-  `PublicationReleaseSaga` resumes publication through the cap4k Saga runtime.
+- Paid content uses `PaidPublicationTask` to record cross-step publication state.
+  `PaidPublicationSaga` coordinates payout hold reservation, entitlement plan creation,
+  content publication, entitlement activation, and compensation on failure.
 - `codegen/templates/design/api_payload.kt.peb` demonstrates a project-level template override:
   generated API payloads keep stable OpenAPI schema names without hand-editing generated files.
 
-The gated path is a real Saga example, but it is not the default publication path.
+The paid path is a real Saga example, but it is not the default publication path.
 The default path still publishes directly after media processing succeeds. Explicit
-gated content opens `PublicationReleaseReadiness` after media processing succeeds,
-but it enters Saga only after copyright review, manual confirmation, and the
-release window are satisfied. The Saga then writes `complete-release-readiness`
-and `publish-content` into `__saga_process` while resuming publication.
+paid content starts paid publication after media processing succeeds, then the Saga
+drives the paid publication sub-steps and records compensation when a downstream
+paid-publication step fails.
 
 `MediaProcessingResultSnapshot` is still a handwritten result snapshot. Do not
 read it as complete generator support for value objects. First-class

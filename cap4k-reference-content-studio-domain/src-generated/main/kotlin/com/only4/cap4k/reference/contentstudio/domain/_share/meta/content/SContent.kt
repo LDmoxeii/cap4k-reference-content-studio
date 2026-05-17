@@ -36,10 +36,6 @@ class SContent(
 
         val releasePolicy = "releasePolicy"
 
-        val releaseWindowOpensAt = "releaseWindowOpensAt"
-
-        val releaseWindowClosesAt = "releaseWindowClosesAt"
-
         val reviewerId = "reviewerId"
 
         val reviewedAt = "reviewedAt"
@@ -200,14 +196,6 @@ class SContent(
 
     val releasePolicy: Field<com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy> by lazy {
         Field(root.get("releasePolicy"), criteriaBuilder)
-    }
-
-    val releaseWindowOpensAt: Field<java.time.LocalDateTime> by lazy {
-        Field(root.get("releaseWindowOpensAt"), criteriaBuilder)
-    }
-
-    val releaseWindowClosesAt: Field<java.time.LocalDateTime> by lazy {
-        Field(root.get("releaseWindowClosesAt"), criteriaBuilder)
     }
 
     val reviewerId: Field<UUID> by lazy {

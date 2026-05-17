@@ -34,15 +34,15 @@ object PublishContentCmd {
             }
             val publicationEligibilityDomainService =
                 Mediator.services.getService(PublicationEligibilityDomainService::class.java)
-            val releaseReadinessSatisfied =
-                content.releasePolicy == ReleasePolicy.IMMEDIATE || request.releaseReadinessSatisfied
+            val policyGateSatisfied =
+                content.releasePolicy == ReleasePolicy.IMMEDIATE || request.policyGateSatisfied
             val decision =
                 publicationEligibilityDomainService.evaluate(
                     content = content,
                     task = mediaProcessingTask,
-                    releaseReadinessSatisfied = releaseReadinessSatisfied,
+                    policyGateSatisfied = policyGateSatisfied,
                 )
-            if (decision == PublicationEligibilityDecision.ReleaseReadinessNotSatisfied) {
+            if (decision == PublicationEligibilityDecision.PolicyGateNotSatisfied) {
                 return Response(published = false)
             }
             check(decision == PublicationEligibilityDecision.Eligible) {
@@ -58,7 +58,7 @@ object PublishContentCmd {
     data class Request(
         val contentId: UUID,
         val publishedAt: LocalDateTime,
-        val releaseReadinessSatisfied: Boolean = false
+        val policyGateSatisfied: Boolean = false
     ) : RequestParam<Response>
 
     data class Response(

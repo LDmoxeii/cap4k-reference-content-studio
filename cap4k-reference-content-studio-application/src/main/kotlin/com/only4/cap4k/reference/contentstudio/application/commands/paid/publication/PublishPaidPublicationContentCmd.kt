@@ -41,7 +41,7 @@ object PublishPaidPublicationContentCmd {
                     PublishContentCmd.Request(
                         contentId = task.contentId,
                         publishedAt = now,
-                        releaseReadinessSatisfied = true,
+                        policyGateSatisfied = true,
                     )
                 )
             if (response.published) {

@@ -125,8 +125,6 @@ class ContentBehaviorTest {
             reviewStatus = reviewStatus,
             contentStatus = contentStatus,
             releasePolicy = ReleasePolicy.IMMEDIATE,
-            releaseWindowOpensAt = null,
-            releaseWindowClosesAt = null,
             reviewerId = null,
             reviewedAt = null,
             publishedAt = null,

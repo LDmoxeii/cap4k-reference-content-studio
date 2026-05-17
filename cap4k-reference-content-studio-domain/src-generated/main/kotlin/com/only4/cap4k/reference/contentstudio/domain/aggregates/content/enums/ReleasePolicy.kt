@@ -9,8 +9,6 @@ enum class ReleasePolicy(
 
     IMMEDIATE(0, "Immediate"),
 
-    GATED(1, "Gated"),
-
     PAID(2, "Paid");
 
     companion object {

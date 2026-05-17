@@ -47,7 +47,7 @@
     "requestFields": [
       { "name": "contentId", "type": "java.util.UUID" },
       { "name": "publishedAt", "type": "java.time.LocalDateTime" },
-      { "name": "releaseReadinessSatisfied", "type": "Boolean" }
+      { "name": "policyGateSatisfied", "type": "Boolean" }
     ],
     "responseFields": [
       { "name": "published", "type": "Boolean" }
@@ -314,30 +314,6 @@
     "responseFields": []
   },
   {
-    "tag": "domain_event",
-    "package": "publication.release.readiness",
-    "name": "CopyrightReviewPassed",
-    "desc": "copyright review passed for publication release readiness",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
-    ],
-    "responseFields": []
-  },
-  {
-    "tag": "domain_event",
-    "package": "publication.release.readiness",
-    "name": "ManualReleaseConfirmed",
-    "desc": "manual release confirmed for publication release readiness",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
-    ],
-    "responseFields": []
-  },
-  {
     "tag": "integration_event",
     "package": "media.processing",
     "name": "MediaProcessingCallback",
@@ -357,23 +333,6 @@
   {
     "tag": "command",
     "package": "content.workflow",
-    "name": "CreateGatedContentDraft",
-    "desc": "create gated content draft",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "title", "type": "String" },
-      { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" },
-      { "name": "releaseWindowOpensAt", "type": "java.time.LocalDateTime" },
-      { "name": "releaseWindowClosesAt", "type": "java.time.LocalDateTime" }
-    ],
-    "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
-    ]
-  },
-  {
-    "tag": "command",
-    "package": "content.workflow",
     "name": "CreatePaidContentDraft",
     "desc": "create paid content draft",
     "aggregates": ["Content"],
@@ -384,82 +343,6 @@
     ],
     "responseFields": [
       { "name": "contentId", "type": "java.util.UUID" }
-    ]
-  },
-  {
-    "tag": "command",
-    "package": "release.readiness",
-    "name": "OpenPublicationReleaseReadiness",
-    "desc": "open publication release readiness for gated content",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "mediaProcessingTaskId", "type": "java.util.UUID" }
-    ],
-    "responseFields": [
-      { "name": "readinessId", "type": "java.util.UUID", "nullable": true },
-      { "name": "opened", "type": "Boolean" }
-    ]
-  },
-  {
-    "tag": "command",
-    "package": "release.readiness",
-    "name": "PassCopyrightReview",
-    "desc": "pass copyright review for gated publication",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
-    ],
-    "responseFields": []
-  },
-  {
-    "tag": "command",
-    "package": "release.readiness",
-    "name": "ConfirmManualRelease",
-    "desc": "confirm manual release for gated publication",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
-    ],
-    "responseFields": []
-  },
-  {
-    "tag": "command",
-    "package": "release.readiness",
-    "name": "CompletePublicationReleaseReadiness",
-    "desc": "complete release readiness and publish content",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "completedAt", "type": "java.time.LocalDateTime" }
-    ],
-    "responseFields": []
-  },
-  {
-    "tag": "command",
-    "package": "release.readiness",
-    "name": "TryContinuePublicationRelease",
-    "desc": "try continuing gated publication after release readiness is satisfied",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
-    ],
-    "responseFields": [
-      { "name": "continued", "type": "Boolean" }
-    ]
-  },
-  {
-    "tag": "query",
-    "package": "release.readiness",
-    "name": "ListPublicationReleaseReadinessReadyToContinue",
-    "desc": "list gated publication readiness records ready to continue",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "requestFields": [
-      { "name": "now", "type": "java.time.LocalDateTime" }
-    ],
-    "responseFields": [
-      { "name": "items", "type": "List<ReadyItem>" },
-      { "name": "items[].contentId", "type": "java.util.UUID" }
     ]
   },
   {
@@ -631,23 +514,6 @@
     ],
     "responseFields": [
       { "name": "activated", "type": "Boolean" }
-    ]
-  },
-  {
-    "tag": "api_payload",
-    "package": "content.workflow",
-    "name": "CreateGatedContentDraftPayload",
-    "desc": "create gated content draft http payload",
-    "aggregates": [],
-    "requestFields": [
-      { "name": "title", "type": "String" },
-      { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" },
-      { "name": "releaseWindowOpensAt", "type": "java.time.LocalDateTime" },
-      { "name": "releaseWindowClosesAt", "type": "java.time.LocalDateTime" }
-    ],
-    "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
     ]
   },
   {

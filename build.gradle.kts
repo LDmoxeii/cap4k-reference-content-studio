@@ -55,7 +55,6 @@ cap4k {
                 listOf(
                     "content",
                     "media_processing_task",
-                    "publication_release_readiness",
                     "paid_publication_task"
                 )
             )
