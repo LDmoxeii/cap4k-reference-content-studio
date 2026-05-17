@@ -102,8 +102,8 @@ That sequence matches the local happy-path smoke coverage in this repository:
 review approval creates the media-processing task, and the publish transition
 happens only after the callback completes.
 
-For the opt-in paid publication path, run `http/content.http` with the paid draft
-request after you understand the default sequence.
+For the opt-in paid publication path, run `http/paid-publication.http` to create
+the paid draft after you understand the default sequence.
 
 ## Advanced Authoring Examples
 

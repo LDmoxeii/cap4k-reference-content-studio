@@ -94,8 +94,8 @@ Swagger / OpenAPI 仍然存在，但它们更像契约快照，而不是整条 h
 这条顺序和仓库里的本地 happy-path smoke 覆盖一致：
 审核通过会创建媒体处理任务，真正发布要等回调完成之后才发生。
 
-如果要运行显式 opt-in 的 paid publication 路线，先理解默认顺序，再在
-`http/content.http` 中执行 paid draft 请求。
+如果要运行显式 opt-in 的 paid publication 路线，先理解默认顺序，再通过
+`http/paid-publication.http` 创建 paid draft。
 
 ## 高级编写示例映射
 
