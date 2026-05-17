@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 class MediaProcessingCallbackIntegrationEventSubscriber {
 
     @EventListener(MediaProcessingCallbackIntegrationEvent::class)
-    fun on(event: MediaProcessingCallbackIntegrationEvent) {
+    fun markMediaProcessingSucceeded(event: MediaProcessingCallbackIntegrationEvent) {
         if (event.status.uppercase() != SUCCEEDED_STATUS) {
             return
         }

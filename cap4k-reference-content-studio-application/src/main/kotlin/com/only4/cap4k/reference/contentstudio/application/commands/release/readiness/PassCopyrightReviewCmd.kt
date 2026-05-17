@@ -23,14 +23,9 @@ object PassCopyrightReviewCmd {
                     )
                 ) {
                     "Publication release readiness for content ${request.contentId} was not found."
-                }
+            }
             readiness.passCopyrightReview()
             Mediator.uow.save()
-            Mediator.cmd.send(
-                RetryPublicationReleaseSagaCmd.Request(
-                    contentId = request.contentId
-                )
-            )
 
             return Response
         }

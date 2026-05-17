@@ -42,6 +42,9 @@ object PublishContentCmd {
                     task = mediaProcessingTask,
                     releaseReadinessSatisfied = releaseReadinessSatisfied,
                 )
+            if (decision == PublicationEligibilityDecision.ReleaseReadinessNotSatisfied) {
+                return Response(published = false)
+            }
             check(decision == PublicationEligibilityDecision.Eligible) {
                 "Content ${request.contentId} is not eligible for publication: $decision."
             }

@@ -3,14 +3,15 @@ package com.only4.cap4k.reference.contentstudio.application.commands.release.rea
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
-import com.only4.cap4k.ddd.core.application.saga.SagaManager
+import com.only4.cap4k.reference.contentstudio.application.sagas.publication.PublicationReleaseSaga
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.publication_release_readiness.SPublicationReleaseReadiness
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.canRetryReleaseSaga
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.canStartPublicationReleaseSaga
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.recordPublicationReleaseSagaStarted
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
 
-object RetryPublicationReleaseSagaCmd {
+object TryContinuePublicationReleaseCmd {
 
     @Service
     class Handler : Command<Request, Response> {
@@ -27,12 +28,20 @@ object RetryPublicationReleaseSagaCmd {
                     "Publication release readiness for content ${request.contentId} was not found."
                 }
             val now = LocalDateTime.now()
-            if (!readiness.canRetryReleaseSaga(now)) {
-                return Response(retried = false)
+            if (!readiness.canStartPublicationReleaseSaga(now)) {
+                return Response(continued = false)
             }
 
-            SagaManager.instance.retry(requireNotNull(readiness.releaseSagaId))
-            return Response(retried = true)
+            val sagaId =
+                Mediator.requests.async(
+                    PublicationReleaseSaga.Request(
+                        contentId = request.contentId,
+                    )
+                )
+            readiness.recordPublicationReleaseSagaStarted(sagaId, now)
+            Mediator.uow.save()
+
+            return Response(continued = true)
         }
     }
 
@@ -41,6 +50,7 @@ object RetryPublicationReleaseSagaCmd {
     ) : RequestParam<Response>
 
     data class Response(
-        val retried: Boolean
+        val continued: Boolean
     )
+
 }

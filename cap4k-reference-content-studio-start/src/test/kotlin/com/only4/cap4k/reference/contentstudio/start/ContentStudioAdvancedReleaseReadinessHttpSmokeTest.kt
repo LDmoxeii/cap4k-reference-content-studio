@@ -111,7 +111,7 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
         assertThat(json(contentBeforeReadiness.body).required("contentStatus").asText()).isNotEqualTo("PUBLISHED")
         assertThat(tableExists("__saga")).isTrue()
         assertThat(tableExists("__saga_process")).isTrue()
-        waitForSagaCount(Duration.ofSeconds(5))
+        assertThat(sagaCount()).isZero()
 
         assertThat(
             restTemplate.postForEntity(
@@ -127,6 +127,8 @@ class ContentStudioAdvancedReleaseReadinessHttpSmokeTest(
                 String::class.java,
             ).statusCode
         ).isEqualTo(HttpStatus.OK)
+
+        waitForSagaCount(Duration.ofSeconds(5))
 
         val contentAfterReadiness = waitForJson(Duration.ofSeconds(5)) {
             val response = restTemplate.getForEntity("/contents/$contentId", String::class.java)

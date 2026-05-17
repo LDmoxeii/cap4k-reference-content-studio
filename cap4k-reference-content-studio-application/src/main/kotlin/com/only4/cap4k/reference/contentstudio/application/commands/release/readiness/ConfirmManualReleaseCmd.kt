@@ -23,14 +23,9 @@ object ConfirmManualReleaseCmd {
                     )
                 ) {
                     "Publication release readiness for content ${request.contentId} was not found."
-                }
+            }
             readiness.confirmManualRelease()
             Mediator.uow.save()
-            Mediator.cmd.send(
-                RetryPublicationReleaseSagaCmd.Request(
-                    contentId = request.contentId
-                )
-            )
 
             return Response
         }

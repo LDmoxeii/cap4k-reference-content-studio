@@ -15,7 +15,7 @@ class MediaProcessingPollingFallbackJob {
         val submittedTasks =
             Mediator.qry.send(ListSubmittedMediaProcessingTasksForPollingQry.Request()).items
 
-        submittedTasks.forEach { task ->
+        for (task in submittedTasks) {
             Mediator.cmd.send(
                 RefreshMediaProcessingTaskStatusCmd.Request(
                     externalTaskId = task.externalTaskId,

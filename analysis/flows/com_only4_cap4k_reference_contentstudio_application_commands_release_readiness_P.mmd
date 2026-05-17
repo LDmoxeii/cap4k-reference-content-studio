@@ -1,8 +1,8 @@
 flowchart TD
   N1[PassCopyrightReviewCmd.Handler::exec]
-  N2[RetryPublicationReleaseSagaCmd.Request]
-  N3[PublicationReleaseReadiness::&lt;get-releaseSagaId&gt;]
-  N4[PublicationReleaseReadiness::canRetryReleaseSaga]
+  N2[TryContinuePublicationReleaseCmd.Request]
+  N3[PublicationReleaseReadiness::canStartPublicationReleaseSaga]
+  N4[PublicationReleaseReadiness::recordPublicationReleaseSagaStarted]
   N1 -->|CommandSenderMethodToCommand| N2
   N2 -->|CommandToEntityMethod| N3
   N2 -->|CommandToEntityMethod| N4

@@ -1,11 +1,5 @@
 flowchart TD
   N1[ReviewController::submitReview]
   N2[SubmitContentForReviewCmd.Request]
-  N3[ContentSubmittedForReviewDomainEventSubscriber::on]
-  N4[Content::submitForReview]
-  N5[ContentSubmittedForReviewDomainEvent]
   N1 -->|ControllerMethodToCommand| N2
-  N2 -->|CommandToEntityMethod| N4
-  N4 -->|EntityMethodToDomainEvent| N5
-  N5 -->|DomainEventToHandler| N3
 

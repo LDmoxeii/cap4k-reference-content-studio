@@ -1,8 +1,8 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::confirmManual",
   "entryType": "controllermethod",
-  "nodeCount": 3,
-  "edgeCount": 2,
+  "nodeCount": 6,
+  "edgeCount": 5,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedReleaseReadinessController::confirmManual",
@@ -17,10 +17,28 @@
       "type": "command"
     },
     {
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.TryContinuePublicationReleaseCmd.Request",
+      "name": "TryContinuePublicationReleaseCmd.Request",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.TryContinuePublicationReleaseCmd.Request",
+      "type": "command"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.publication_release_readiness.ManualReleaseConfirmedDomainEventSubscriber::tryContinuePublicationRelease",
+      "name": "ManualReleaseConfirmedDomainEventSubscriber::tryContinuePublicationRelease",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.publication_release_readiness.ManualReleaseConfirmedDomainEventSubscriber::tryContinuePublicationRelease",
+      "type": "domaineventhandler"
+    },
+    {
       "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::confirmManualRelease",
       "name": "PublicationReleaseReadiness::confirmManualRelease",
       "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::confirmManualRelease",
       "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.events.ManualReleaseConfirmedDomainEvent",
+      "name": "ManualReleaseConfirmedDomainEvent",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.events.ManualReleaseConfirmedDomainEvent",
+      "type": "domainevent"
     }
   ],
   "edges": [
@@ -33,6 +51,21 @@
       "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.ConfirmManualReleaseCmd.Request",
       "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::confirmManualRelease",
       "type": "CommandToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.publication_release_readiness.ManualReleaseConfirmedDomainEventSubscriber::tryContinuePublicationRelease",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.TryContinuePublicationReleaseCmd.Request",
+      "type": "DomainEventHandlerToCommand"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::confirmManualRelease",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.events.ManualReleaseConfirmedDomainEvent",
+      "type": "EntityMethodToDomainEvent"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.events.ManualReleaseConfirmedDomainEvent",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.publication_release_readiness.ManualReleaseConfirmedDomainEventSubscriber::tryContinuePublicationRelease",
+      "type": "DomainEventToHandler"
     }
   ]
 }

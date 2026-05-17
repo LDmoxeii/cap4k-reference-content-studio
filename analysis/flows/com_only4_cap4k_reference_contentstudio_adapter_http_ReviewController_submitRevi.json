@@ -1,8 +1,8 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::submitReview",
   "entryType": "controllermethod",
-  "nodeCount": 5,
-  "edgeCount": 4,
+  "nodeCount": 2,
+  "edgeCount": 1,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::submitReview",
@@ -15,24 +15,6 @@
       "name": "SubmitContentForReviewCmd.Request",
       "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.SubmitContentForReviewCmd.Request",
       "type": "command"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::on",
-      "name": "ContentSubmittedForReviewDomainEventSubscriber::on",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::on",
-      "type": "domaineventhandler"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::submitForReview",
-      "name": "Content::submitForReview",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::submitForReview",
-      "type": "entitymethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentSubmittedForReviewDomainEvent",
-      "name": "ContentSubmittedForReviewDomainEvent",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentSubmittedForReviewDomainEvent",
-      "type": "domainevent"
     }
   ],
   "edges": [
@@ -40,21 +22,6 @@
       "fromId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::submitReview",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.SubmitContentForReviewCmd.Request",
       "type": "ControllerMethodToCommand"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.SubmitContentForReviewCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::submitForReview",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::submitForReview",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentSubmittedForReviewDomainEvent",
-      "type": "EntityMethodToDomainEvent"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentSubmittedForReviewDomainEvent",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::on",
-      "type": "DomainEventToHandler"
     }
   ]
 }

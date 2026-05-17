@@ -114,17 +114,18 @@ The advanced path is opt-in:
 
 - `MediaProcessingResultSnapshot` is a handwritten JSON-backed value concept persisted through `media_processing_task.result_snapshot`.
 - `PublicationEligibilityDomainService` returns an auditable publication decision.
-- Gated content uses `PublicationReleaseReadiness` to record cross-time waiting state, then
+- Gated content uses `PublicationReleaseReadiness` to record cross-time waiting state. After
+  copyright review, manual confirmation, and the release window are satisfied,
   `PublicationReleaseSaga` resumes publication through the cap4k Saga runtime.
 - `codegen/templates/design/api_payload.kt.peb` demonstrates a project-level template override:
   generated API payloads keep stable OpenAPI schema names without hand-editing generated files.
 
 The gated path is a real Saga example, but it is not the default publication path.
-The default path still publishes directly after media processing succeeds. Only
-explicit gated content enters Saga after media processing succeeds. The Saga writes
-`complete-release-readiness` and `publish-content` into `__saga_process`, then
-resumes publication after copyright review, manual confirmation, and the release
-window are satisfied.
+The default path still publishes directly after media processing succeeds. Explicit
+gated content opens `PublicationReleaseReadiness` after media processing succeeds,
+but it enters Saga only after copyright review, manual confirmation, and the
+release window are satisfied. The Saga then writes `complete-release-readiness`
+and `publish-content` into `__saga_process` while resuming publication.
 
 `MediaProcessingResultSnapshot` is still a handwritten result snapshot. Do not
 read it as complete generator support for value objects. First-class

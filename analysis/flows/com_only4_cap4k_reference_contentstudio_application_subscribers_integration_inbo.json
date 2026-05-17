@@ -1,15 +1,9 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
   "entryType": "integrationevent",
-  "nodeCount": 13,
-  "edgeCount": 12,
+  "nodeCount": 3,
+  "edgeCount": 2,
   "nodes": [
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Request",
-      "name": "ContinuePublicationAfterMediaSucceededCmd.Request",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Request",
-      "type": "command"
-    },
     {
       "id": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd.Request",
       "name": "MarkMediaProcessingSucceededCmd.Request",
@@ -17,15 +11,9 @@
       "type": "command"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.media_processing_task.MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded",
-      "name": "MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.media_processing_task.MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded",
-      "type": "domaineventhandler"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::on",
-      "name": "MediaProcessingCallbackIntegrationEventSubscriber::on",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::on",
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::markMediaProcessingSucceeded",
+      "name": "MediaProcessingCallbackIntegrationEventSubscriber::markMediaProcessingSucceeded",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::markMediaProcessingSucceeded",
       "type": "integrationeventhandler"
     },
     {
@@ -33,116 +21,18 @@
       "name": "MediaProcessingCallbackIntegrationEvent",
       "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
       "type": "integrationevent"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releasePolicy>",
-      "name": "Content::<get-releasePolicy>",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releasePolicy>",
-      "type": "entitymethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releaseWindowClosesAt>",
-      "name": "Content::<get-releaseWindowClosesAt>",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releaseWindowClosesAt>",
-      "type": "entitymethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releaseWindowOpensAt>",
-      "name": "Content::<get-releaseWindowOpensAt>",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releaseWindowOpensAt>",
-      "type": "entitymethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-externalTaskId>",
-      "name": "MediaProcessingTask::<get-externalTaskId>",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-externalTaskId>",
-      "type": "entitymethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-id>",
-      "name": "MediaProcessingTask::<get-id>",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-id>",
-      "type": "entitymethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-processingStatus>",
-      "name": "MediaProcessingTask::<get-processingStatus>",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-processingStatus>",
-      "type": "entitymethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSucceeded",
-      "name": "MediaProcessingTask::markSucceeded",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSucceeded",
-      "type": "entitymethod"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent",
-      "name": "MediaProcessingSucceededDomainEvent",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent",
-      "type": "domainevent"
     }
   ],
   "edges": [
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releasePolicy>",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releaseWindowClosesAt>",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releaseWindowOpensAt>",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-externalTaskId>",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-id>",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-processingStatus>",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSucceeded",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.media_processing_task.MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ContinuePublicationAfterMediaSucceededCmd.Request",
-      "type": "DomainEventHandlerToCommand"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::on",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::markMediaProcessingSucceeded",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.MarkMediaProcessingSucceededCmd.Request",
       "type": "IntegrationEventHandlerToCommand"
     },
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::on",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.MediaProcessingCallbackIntegrationEventSubscriber::markMediaProcessingSucceeded",
       "type": "IntegrationEventToHandler"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSucceeded",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent",
-      "type": "EntityMethodToDomainEvent"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.media_processing_task.MediaProcessingSucceededDomainEventSubscriber::onMediaProcessingSucceeded",
-      "type": "DomainEventToHandler"
     }
   ]
 }

@@ -11,38 +11,38 @@
       "type": "commandsendermethod"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RetryPublicationReleaseSagaCmd.Request",
-      "name": "RetryPublicationReleaseSagaCmd.Request",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RetryPublicationReleaseSagaCmd.Request",
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.TryContinuePublicationReleaseCmd.Request",
+      "name": "TryContinuePublicationReleaseCmd.Request",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.TryContinuePublicationReleaseCmd.Request",
       "type": "command"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::<get-releaseSagaId>",
-      "name": "PublicationReleaseReadiness::<get-releaseSagaId>",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::<get-releaseSagaId>",
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::canStartPublicationReleaseSaga",
+      "name": "PublicationReleaseReadiness::canStartPublicationReleaseSaga",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::canStartPublicationReleaseSaga",
       "type": "entitymethod"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::canRetryReleaseSaga",
-      "name": "PublicationReleaseReadiness::canRetryReleaseSaga",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::canRetryReleaseSaga",
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::recordPublicationReleaseSagaStarted",
+      "name": "PublicationReleaseReadiness::recordPublicationReleaseSagaStarted",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::recordPublicationReleaseSagaStarted",
       "type": "entitymethod"
     }
   ],
   "edges": [
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.PassCopyrightReviewCmd.Handler::exec",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RetryPublicationReleaseSagaCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.TryContinuePublicationReleaseCmd.Request",
       "type": "CommandSenderMethodToCommand"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RetryPublicationReleaseSagaCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::<get-releaseSagaId>",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.TryContinuePublicationReleaseCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::canStartPublicationReleaseSaga",
       "type": "CommandToEntityMethod"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.RetryPublicationReleaseSagaCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::canRetryReleaseSaga",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.release.readiness.TryContinuePublicationReleaseCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.publication_release_readiness.PublicationReleaseReadiness::recordPublicationReleaseSagaStarted",
       "type": "CommandToEntityMethod"
     }
   ]

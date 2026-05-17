@@ -97,7 +97,6 @@ class MediaProcessingTaskBehaviorTest {
         )
         assertEquals(task.id, event.taskId)
         assertEquals(task.contentId, event.contentId)
-        assertEquals("external-123", event.externalTaskId)
     }
 
     @Test

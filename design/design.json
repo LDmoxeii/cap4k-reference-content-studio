@@ -46,9 +46,12 @@
     "aggregates": ["Content"],
     "requestFields": [
       { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
+      { "name": "publishedAt", "type": "java.time.LocalDateTime" },
+      { "name": "releaseReadinessSatisfied", "type": "Boolean" }
     ],
-    "responseFields": []
+    "responseFields": [
+      { "name": "published", "type": "Boolean" }
+    ]
   },
   {
     "tag": "command",
@@ -306,8 +309,31 @@
     "persist": true,
     "requestFields": [
       { "name": "taskId", "type": "java.util.UUID" },
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "externalTaskId", "type": "String", "nullable": true }
+      { "name": "contentId", "type": "java.util.UUID" }
+    ],
+    "responseFields": []
+  },
+  {
+    "tag": "domain_event",
+    "package": "publication.release.readiness",
+    "name": "CopyrightReviewPassed",
+    "desc": "copyright review passed for publication release readiness",
+    "aggregates": ["PublicationReleaseReadiness"],
+    "persist": true,
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
+    ],
+    "responseFields": []
+  },
+  {
+    "tag": "domain_event",
+    "package": "publication.release.readiness",
+    "name": "ManualReleaseConfirmed",
+    "desc": "manual release confirmed for publication release readiness",
+    "aggregates": ["PublicationReleaseReadiness"],
+    "persist": true,
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
     ],
     "responseFields": []
   },
@@ -347,30 +373,17 @@
   },
   {
     "tag": "command",
-    "package": "content.workflow",
-    "name": "ContinuePublicationAfterMediaSucceeded",
-    "desc": "continue publication after media processing succeeded",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "mediaProcessingTaskId", "type": "java.util.UUID" }
-    ],
-    "responseFields": []
-  },
-  {
-    "tag": "command",
     "package": "release.readiness",
     "name": "OpenPublicationReleaseReadiness",
     "desc": "open publication release readiness for gated content",
     "aggregates": ["PublicationReleaseReadiness"],
     "requestFields": [
       { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "mediaProcessingTaskId", "type": "java.util.UUID" },
-      { "name": "releaseWindowOpensAt", "type": "java.time.LocalDateTime" },
-      { "name": "releaseWindowClosesAt", "type": "java.time.LocalDateTime" }
+      { "name": "mediaProcessingTaskId", "type": "java.util.UUID" }
     ],
     "responseFields": [
-      { "name": "readinessId", "type": "java.util.UUID" }
+      { "name": "readinessId", "type": "java.util.UUID", "nullable": true },
+      { "name": "opened", "type": "Boolean" }
     ]
   },
   {
@@ -406,6 +419,33 @@
       { "name": "completedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": []
+  },
+  {
+    "tag": "command",
+    "package": "release.readiness",
+    "name": "TryContinuePublicationRelease",
+    "desc": "try continuing gated publication after release readiness is satisfied",
+    "aggregates": ["PublicationReleaseReadiness"],
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "continued", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "query",
+    "package": "release.readiness",
+    "name": "ListPublicationReleaseReadinessReadyToContinue",
+    "desc": "list gated publication readiness records ready to continue",
+    "aggregates": ["PublicationReleaseReadiness"],
+    "requestFields": [
+      { "name": "now", "type": "java.time.LocalDateTime" }
+    ],
+    "responseFields": [
+      { "name": "items", "type": "List<ReadyItem>" },
+      { "name": "items[].contentId", "type": "java.util.UUID" }
+    ]
   },
   {
     "tag": "api_payload",
