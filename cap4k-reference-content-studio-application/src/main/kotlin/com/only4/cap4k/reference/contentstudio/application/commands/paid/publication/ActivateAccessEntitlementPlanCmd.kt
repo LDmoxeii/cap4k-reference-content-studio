@@ -7,6 +7,7 @@ import com.only4.cap4k.reference.contentstudio.application.distributed.clients.p
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.paid_publication_task.SPaidPublicationTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.recordEntitlementPlanActivated
 import java.util.UUID
 import org.springframework.stereotype.Service
@@ -20,6 +21,12 @@ object ActivateAccessEntitlementPlanCmd {
             val task = loadTask(request.paidPublicationTaskId)
             if (task.entitlementPlanStatus == EntitlementPlanStatus.ACTIVATED) {
                 return Response(activated = false)
+            }
+            check(task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED) {
+                "Paid publication task ${task.id} is not published."
+            }
+            check(task.entitlementPlanStatus == EntitlementPlanStatus.CREATED) {
+                "Paid publication task ${task.id} has no created entitlement plan."
             }
 
             val response =
