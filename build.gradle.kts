@@ -1,6 +1,5 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import org.gradle.api.tasks.Sync
 import java.nio.file.Paths
 
 plugins {
@@ -119,17 +118,6 @@ cap4k {
     }
 }
 
-tasks.register("syncGeneratedSnapshots") {
-    group = "verification"
-    description = "Sync generated artifact snapshots into src-generated roots."
-    dependsOn(tasks.named("cap4kGenerateSources"))
-    dependsOn(
-        subprojects.map { project ->
-            project.tasks.named("syncGeneratedSnapshots")
-        }
-    )
-}
-
 tasks.register("normalizeAnalysisFlowIndex") {
     group = "verification"
     description = "Normalize committed analysis flow metadata."
@@ -172,16 +160,4 @@ tasks.register("normalizeAnalysisFlowIndex") {
 
 tasks.named("cap4kAnalysisGenerate") {
     finalizedBy(tasks.named("normalizeAnalysisFlowIndex"))
-}
-
-subprojects {
-    val generatedKotlinSourcesDir = layout.buildDirectory.dir("generated/cap4k/main/kotlin")
-    tasks.register<Sync>("syncGeneratedSnapshots") {
-        group = "verification"
-        description = "Sync generated artifact snapshots into src-generated/main/kotlin."
-        dependsOn(rootProject.tasks.named("cap4kGenerateSources"))
-        from(generatedKotlinSourcesDir)
-        into(layout.projectDirectory.dir("src-generated/main/kotlin"))
-        includeEmptyDirs = false
-    }
 }

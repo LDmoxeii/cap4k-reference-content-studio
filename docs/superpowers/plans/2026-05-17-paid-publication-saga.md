@@ -18,11 +18,12 @@ Generated input files:
 - Modify: `cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql`
 - Modify: `build.gradle.kts`
 
-Generated snapshot roots after `cap4kGenerate` and `syncGeneratedSnapshots`:
+Generation ownership evidence after `cap4kPlan` and `cap4kGenerate`:
 
-- Modify: `cap4k-reference-content-studio-domain/src-generated/main/kotlin/**`
-- Modify: `cap4k-reference-content-studio-application/src/main/kotlin/**` for generated command/query/client shells only when generation produces new shells
-- Modify: `cap4k-reference-content-studio-adapter/src-generated/main/kotlin/**`
+- Inspect: `build/cap4k/plan.json`
+- Modify: `cap4k-reference-content-studio-application/src/main/kotlin/**` for generator-owned design surfaces when generation updates checked-in files
+- Modify: `cap4k-reference-content-studio-domain/src/main/kotlin/**` for both checked-in generator-owned and handwritten code, with ownership decided by fresh `build/cap4k/plan.json`
+- Modify: `cap4k-reference-content-studio-adapter/src/main/kotlin/**` for both checked-in generator-owned and handwritten code, with ownership decided by fresh `build/cap4k/plan.json`
 
 Handwritten domain files:
 
@@ -58,7 +59,7 @@ Handwritten adapter/start/docs files:
 - Create: `cap4k-reference-content-studio-start/src/test/kotlin/com/only4/cap4k/reference/contentstudio/start/ContentStudioPaidPublicationSagaHttpSmokeTest.kt`
 - Create: `http/paid-publication.http`
 - Modify: `README.md`
-- Modify: `README.zh-CN.md`
+- Modify: `README.en.md`
 - Regenerate: `openapi/content-studio-openapi.json`
 - Regenerate: `analysis/flows/**`
 
@@ -68,15 +69,15 @@ Delete old release-readiness feature files:
 - Delete: `cap4k-reference-content-studio-start/src/test/kotlin/com/only4/cap4k/reference/contentstudio/start/ContentStudioAdvancedReleaseReadinessHttpSmokeTest.kt`
 - Delete: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/http/AdvancedReleaseReadinessController.kt`
 - Delete: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/application/queries/release/readiness/ListPublicationReleaseReadinessReadyToContinueQryHandler.kt`
-- Delete: `cap4k-reference-content-studio-adapter/src-generated/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/domain/repositories/PublicationReleaseReadinessRepository.kt`
+- Delete: `cap4k-reference-content-studio-adapter/src/main/kotlin/com/only4/cap4k/reference/contentstudio/adapter/domain/repositories/PublicationReleaseReadinessRepository.kt` if it still exists as a checked-in handwritten file
 - Delete: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/commands/release/readiness/*.kt`
 - Delete: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/queries/release/readiness/ListPublicationReleaseReadinessReadyToContinueQry.kt`
 - Delete: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/subscribers/domain/publication_release_readiness/*.kt`
 - Delete: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/jobs/PublicationReleaseContinuationJob.kt`
 - Delete: `cap4k-reference-content-studio-application/src/main/kotlin/com/only4/cap4k/reference/contentstudio/application/sagas/publication/PublicationReleaseSaga.kt`
 - Delete: `cap4k-reference-content-studio-domain/src/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/publication_release_readiness/**`
-- Delete: `cap4k-reference-content-studio-domain/src-generated/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/publication_release_readiness/**`
-- Delete: `cap4k-reference-content-studio-domain/src-generated/main/kotlin/com/only4/cap4k/reference/contentstudio/domain/_share/meta/publication_release_readiness/SPublicationReleaseReadiness.kt`
+- Delete: generator-owned `publication_release_readiness` domain surfaces only if they remain checked in under `src/main/kotlin/**`
+- Delete: handwritten compatibility helpers for `publication_release_readiness` only if they remain checked in under `src/main/kotlin/**`
 - Delete: `cap4k-reference-content-studio-domain/src/test/kotlin/com/only4/cap4k/reference/contentstudio/domain/aggregates/publication_release_readiness/PublicationReleaseReadinessBehaviorTest.kt`
 - Delete old `analysis/flows/*AdvancedReleaseReadinessCon*`
 
@@ -428,29 +429,31 @@ Add client design objects for fake external capabilities:
 Run:
 
 ```powershell
-.\gradlew.bat cap4kPlan cap4kGenerate syncGeneratedSnapshots
+.\gradlew.bat cap4kPlan cap4kGenerate
 ```
 
-Expected: all three tasks complete successfully.
+Expected: both tasks complete successfully.
 
 - [ ] **Step 5: Inspect generated ownership**
 
 Run:
 
 ```powershell
-rg -n "PaidPublicationTask|paid_publication_task|CreatePaidContentDraft|TryStartPaidPublication|ReserveCreatorPayoutHold|CreateAccessEntitlementPlan" design cap4k-reference-content-studio-domain/src-generated cap4k-reference-content-studio-adapter/src-generated
+rg -n "PaidPublicationTask|paid_publication_task|CreatePaidContentDraft|TryStartPaidPublication|ReserveCreatorPayoutHold|CreateAccessEntitlementPlan" design cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql build/cap4k/plan.json cap4k-reference-content-studio-application/src/main/kotlin
 ```
 
-Expected: paid publication generated artifacts exist. Old `PublicationReleaseReadiness` generated artifacts are expected to remain until Task 7.
+Expected: paid publication ownership evidence exists in design, schema, `build/cap4k/plan.json`, and application surfaces. Old `PublicationReleaseReadiness` references are expected to remain until Task 7.
 
 - [ ] **Step 6: Commit generated input changes**
 
 Run:
 
 ```powershell
-git add design/design.json build.gradle.kts cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql cap4k-reference-content-studio-*/src-generated
+git add design/design.json build.gradle.kts cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin
 git commit -m "feat: generate paid publication surfaces"
 ```
+
+Keep `build/cap4k/plan.json` as inspection-only evidence; do not stage it because `build/` stays ignored.
 
 ## Task 2: Implement PaidPublicationTask Domain Behavior
 
@@ -1201,15 +1204,15 @@ rg --files | rg "publication_release_readiness|release/readiness|PublicationRele
 
 Delete every returned old-feature file, excluding `docs/superpowers/specs/2026-05-17-paid-publication-saga-design.md`.
 
-- [ ] **Step 2: Delete old generated files**
+- [ ] **Step 2: Delete old checked-in release-readiness surfaces**
 
 Run:
 
 ```powershell
-rg --files cap4k-reference-content-studio-domain/src-generated cap4k-reference-content-studio-adapter/src-generated | rg "publication_release_readiness|PublicationReleaseReadiness"
+rg -n "publication_release_readiness|PublicationReleaseReadiness" design cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin http README.md README.en.md
 ```
 
-Delete every returned file.
+Use the matches to remove stale checked-in release-readiness surfaces and references.
 
 - [ ] **Step 3: Remove stale references**
 
@@ -1225,7 +1228,7 @@ Expected remaining references only in:
 docs/superpowers/specs/2026-05-17-paid-publication-saga-design.md
 ```
 
-If references appear in source, generated snapshots, HTTP files, README, OpenAPI, or analysis output, remove or regenerate them in this task.
+If references appear in source, checked-in generated surfaces, HTTP files, README, OpenAPI, or analysis output, remove or regenerate them in this task.
 
 - [ ] **Step 4: Compile all modules**
 
@@ -1251,7 +1254,7 @@ git commit -m "refactor: remove release readiness saga path"
 **Files:**
 
 - Modify: `README.md`
-- Modify: `README.zh-CN.md`
+- Modify: `README.en.md`
 - Create: `http/paid-publication.http`
 - Delete: `http/advanced-release-readiness.http`
 - Regenerate: `openapi/content-studio-openapi.json`
@@ -1259,7 +1262,7 @@ git commit -m "refactor: remove release readiness saga path"
 
 - [ ] **Step 1: Update README advanced section**
 
-Replace the gated release paragraph with:
+In `README.en.md`, replace the gated release paragraph with:
 
 ```markdown
 The advanced path is opt-in paid publication. It demonstrates cap4k Saga as a
@@ -1269,7 +1272,7 @@ activates the entitlement plan. If a later step fails, idempotent compensation
 commands release or cancel earlier side effects where business rules allow it.
 ```
 
-Add the same meaning in `README.zh-CN.md`:
+In `README.md`, use the corresponding Chinese wording:
 
 ```markdown
 高级路径是显式 opt-in 的付费内容发布。它演示的是补偿型 Saga，而不是等待型 Saga。
@@ -1333,7 +1336,7 @@ Expected: `analysis/flows/index.json` and flow files update. Old `AdvancedReleas
 Run:
 
 ```powershell
-git add README.md README.zh-CN.md http openapi/content-studio-openapi.json analysis/flows
+git add README.md README.en.md http openapi/content-studio-openapi.json analysis/flows
 git commit -m "docs: document paid publication saga path"
 ```
 
@@ -1358,11 +1361,12 @@ Expected: PASS.
 Run:
 
 ```powershell
-.\gradlew.bat cap4kPlan cap4kGenerate syncGeneratedSnapshots
-git diff --exit-code -- cap4k-reference-content-studio-domain/src-generated cap4k-reference-content-studio-application/src-generated cap4k-reference-content-studio-adapter/src-generated
+.\gradlew.bat cap4kPlan cap4kGenerate
+Test-Path build/cap4k/plan.json
+git diff --exit-code -- cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin
 ```
 
-Expected: Gradle tasks PASS and `git diff --exit-code` exits 0.
+Expected: Gradle tasks PASS, `Test-Path build/cap4k/plan.json` prints `True`, and `git diff --exit-code` exits 0 for the tracked generated sinks.
 
 - [ ] **Step 3: Run stale-reference checks**
 
@@ -1380,7 +1384,7 @@ Run:
 rg -n "PaidPublicationSaga|paid_publication_task|CreatePaidContentDraft|/advanced/contents/paid" .
 ```
 
-Expected: matches in source, tests, README, HTTP, schema, design, generated snapshots, and analysis/openapi evidence.
+Expected: matches in source, tests, README, HTTP, schema, design, checked-in generated surfaces, and analysis/openapi evidence.
 
 - [ ] **Step 4: Run final git checks**
 
