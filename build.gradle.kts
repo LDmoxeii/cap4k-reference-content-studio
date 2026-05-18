@@ -132,11 +132,12 @@ tasks.register("syncGeneratedSnapshots") {
 
 tasks.register("normalizeAnalysisFlowIndex") {
     group = "verification"
-    description = "Normalize committed analysis flow index metadata."
+    description = "Normalize committed analysis flow metadata."
     outputs.upToDateWhen { false }
 
     doLast {
-        val indexFile = layout.projectDirectory.file("analysis/flows/index.json").asFile
+        val analysisRoot = layout.projectDirectory.dir("analysis/flows").asFile
+        val indexFile = analysisRoot.resolve("index.json")
         if (!indexFile.isFile) {
             return@doLast
         }
@@ -158,6 +159,14 @@ tasks.register("normalizeAnalysisFlowIndex") {
                 ?: emptyList()
         root["inputDirs"] = inputDirs
         indexFile.writeText(JsonOutput.prettyPrint(JsonOutput.toJson(root)) + System.lineSeparator())
+
+        analysisRoot.walkTopDown()
+            .filter { file -> file.isFile && file.extension == "mmd" }
+            .forEach { file ->
+                val lines = file.readLines()
+                val normalizedLines = lines.dropLastWhile(String::isBlank)
+                file.writeText(normalizedLines.joinToString(System.lineSeparator()) + System.lineSeparator())
+            }
     }
 }
 
