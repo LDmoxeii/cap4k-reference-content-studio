@@ -23,15 +23,11 @@ object PublishContentCmd {
                 "Content ${request.contentId} was not found."
             }
             val mediaProcessingTask =
-                checkNotNull(
-                    Mediator.repositories.findFirst(
-                        SMediaProcessingTask.predicate { schema ->
-                            schema.contentId.eq(request.contentId)
-                        }
-                    )
-                ) {
-                "Media processing task for content ${request.contentId} was not found."
-            }
+                Mediator.repositories.findFirst(
+                    SMediaProcessingTask.predicate { schema ->
+                        schema.contentId.eq(request.contentId)
+                    }
+                ) ?: return Response(published = false)
             val publicationEligibilityDomainService =
                 Mediator.services.getService(PublicationEligibilityDomainService::class.java)
             val policyGateSatisfied =
@@ -42,11 +38,13 @@ object PublishContentCmd {
                     task = mediaProcessingTask,
                     policyGateSatisfied = policyGateSatisfied,
                 )
-            if (decision == PublicationEligibilityDecision.PolicyGateNotSatisfied) {
-                return Response(published = false)
-            }
-            check(decision == PublicationEligibilityDecision.Eligible) {
-                "Content ${request.contentId} is not eligible for publication: $decision."
+            when (decision) {
+                PublicationEligibilityDecision.Eligible -> Unit
+                PublicationEligibilityDecision.ContentNotApproved,
+                PublicationEligibilityDecision.MediaProcessingNotSucceeded,
+                PublicationEligibilityDecision.PolicyGateNotSatisfied -> return Response(published = false)
+                PublicationEligibilityDecision.TaskDoesNotBelongToContent ->
+                    error("Content ${request.contentId} is not eligible for publication: $decision.")
             }
             content.publish(request.publishedAt)
             Mediator.uow.save()
