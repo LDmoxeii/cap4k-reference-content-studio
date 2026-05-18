@@ -1,14 +1,13 @@
 package com.only4.cap4k.reference.contentstudio.application.commands.media.processing
 
+import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
-import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.media.processing.TriggerMediaProcessingCli
-import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.factory.MediaProcessingTaskFactory
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSubmitted
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
@@ -19,8 +18,8 @@ object StartMediaProcessingCmd {
     open class Handler : Command<Request, Response> {
 
         open override fun exec(request: Request): Response {
-            val content = checkNotNull(Mediator.repositories.findOne(SContent.predicateById(request.contentId))) {
-                "Content ${request.contentId} was not found."
+            check(request.mediaSourceKey.isNotBlank()) {
+                "Media source key must not be blank."
             }
             val task =
                 Mediator.repositories.findFirst(
@@ -46,8 +45,8 @@ object StartMediaProcessingCmd {
             val response =
                 Mediator.requests.send(
                     TriggerMediaProcessingCli.Request(
-                        contentId = content.id,
-                        mediaSourceKey = content.mediaSourceKey,
+                        contentId = request.contentId,
+                        mediaSourceKey = request.mediaSourceKey,
                     )
                 )
             check(response.accepted) {
@@ -64,7 +63,8 @@ object StartMediaProcessingCmd {
     }
 
     data class Request(
-        val contentId: UUID
+        val contentId: UUID,
+        val mediaSourceKey: String,
     ) : RequestParam<Response>
 
     data object Response

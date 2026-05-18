@@ -107,7 +107,8 @@ Saga 会预留创作者收益、创建访问权益计划、发布内容并激活
 会通过幂等补偿命令释放或取消前面已经完成且业务允许撤销的副作用。
 
 - `MediaProcessingResultSnapshot` 是手写 JSON-backed 值概念，通过 `media_processing_task.result_snapshot` 持久化。
-- `PublicationEligibilityDomainService` 返回可审计的发布资格结论。
+- `Content` 自己持有本地发布事实，并在“审核通过 + 媒体已就绪”这些事实凑齐时
+  发出继续发布的领域事件。
 - paid content 使用 `PaidPublicationTask` 记录跨步骤发布状态，并由
   `PaidPublicationSaga` 协调 payout hold、entitlement plan、内容发布、激活和失败补偿。
 - `codegen/templates/design/api_payload.kt.peb` 演示项目级模板覆盖：

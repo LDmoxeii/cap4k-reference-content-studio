@@ -7,6 +7,7 @@ import com.only4.cap4k.reference.contentstudio.application.commands.paid.publica
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.CancelEntitlementPlanIfCreatedCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.CreateAccessEntitlementPlanCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.MarkPaidPublicationFailedCmd
+import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.MarkPaidPublicationContentPublishedCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.ReleasePayoutHoldIfReservedCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.ReserveCreatorPayoutHoldCmd
@@ -18,6 +19,7 @@ object PaidPublicationSaga {
     const val PROCESS_RESERVE_PAYOUT_HOLD = "reserve-payout-hold"
     const val PROCESS_CREATE_ENTITLEMENT_PLAN = "create-entitlement-plan"
     const val PROCESS_PUBLISH_CONTENT = "publish-content"
+    const val PROCESS_MARK_CONTENT_PUBLISHED = "mark-content-published"
     const val PROCESS_ACTIVATE_ENTITLEMENT_PLAN = "activate-entitlement-plan"
     const val PROCESS_CANCEL_ENTITLEMENT_PLAN = "cancel-entitlement-plan-if-created"
     const val PROCESS_RELEASE_PAYOUT_HOLD = "release-payout-hold-if-reserved"
@@ -51,6 +53,10 @@ object PaidPublicationSaga {
             execProcess(
                 PROCESS_PUBLISH_CONTENT,
                 PublishPaidPublicationContentCmd.Request(request.paidPublicationTaskId),
+            )
+            execProcess(
+                PROCESS_MARK_CONTENT_PUBLISHED,
+                MarkPaidPublicationContentPublishedCmd.Request(request.paidPublicationTaskId),
             )
             execProcess(
                 PROCESS_ACTIVATE_ENTITLEMENT_PLAN,

@@ -96,7 +96,7 @@ class ContentStudioHappyPathHttpSmokeTest(
         )
 
         transactionTemplate.execute<StartMediaProcessingCmd.Response> {
-            Mediator.cmd.send(StartMediaProcessingCmd.Request(contentId))
+            Mediator.cmd.send(StartMediaProcessingCmd.Request(contentId, mediaSourceKey))
         }
 
         assertThat(mediaExternalTaskId(contentId)).isEqualTo(submittedExternalTaskId)

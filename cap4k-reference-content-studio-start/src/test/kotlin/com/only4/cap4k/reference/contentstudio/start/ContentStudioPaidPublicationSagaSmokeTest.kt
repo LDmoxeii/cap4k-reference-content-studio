@@ -58,6 +58,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
                 "reserve-payout-hold",
                 "create-entitlement-plan",
                 "publish-content",
+                "mark-content-published",
                 "activate-entitlement-plan",
             )
     }

@@ -59,7 +59,8 @@
     "desc": "start media processing task",
     "aggregates": ["MediaProcessingTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": []
   },
@@ -76,6 +77,20 @@
       { "name": "completedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": []
+  },
+  {
+    "tag": "command",
+    "package": "content.workflow",
+    "name": "RecordContentMediaReady",
+    "desc": "record content media readiness",
+    "aggregates": ["Content"],
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime" }
+    ],
+    "responseFields": [
+      { "name": "recorded", "type": "Boolean" }
+    ]
   },
   {
     "tag": "command",
@@ -289,6 +304,31 @@
   {
     "tag": "domain_event",
     "package": "content",
+    "name": "ContentMediaReady",
+    "desc": "content media ready",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime" }
+    ],
+    "responseFields": []
+  },
+  {
+    "tag": "domain_event",
+    "package": "content",
+    "name": "ContentPublicationReady",
+    "desc": "content publication ready",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
+    ],
+    "responseFields": []
+  },
+  {
+    "tag": "domain_event",
+    "package": "content",
     "name": "MediaProcessingRequested",
     "desc": "media processing requested",
     "aggregates": ["Content"],
@@ -389,12 +429,25 @@
     "package": "paid.publication",
     "name": "PublishPaidPublicationContent",
     "desc": "publish paid publication content",
-    "aggregates": ["PaidPublicationTask"],
+    "aggregates": ["Content"],
     "requestFields": [
       { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
     ],
     "responseFields": [
       { "name": "published", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "MarkPaidPublicationContentPublished",
+    "desc": "record paid publication content published",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "marked", "type": "Boolean" }
     ]
   },
   {

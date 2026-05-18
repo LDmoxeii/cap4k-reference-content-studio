@@ -9,6 +9,7 @@ create table if not exists content (
     reviewer_id uuid,
     reviewed_at timestamp,
     published_at timestamp,
+    media_ready_at timestamp,
     db_created_at timestamp not null,
     db_updated_at timestamp not null
 );

@@ -2,8 +2,11 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.content
 
 import com.only4.cap4k.reference.contentstudio.domain.installTestDomainEventSupervisor
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentMediaReadyDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublicationReadyDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.MediaProcessingRequestedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
@@ -48,13 +51,19 @@ class ContentBehaviorTest {
         assertEquals(reviewerId, content.reviewerId)
         assertEquals(approvedAt, content.reviewedAt)
 
-        val event = assertInstanceOf(
+        val reviewApprovedEvent = assertInstanceOf(
             ContentReviewApprovedDomainEvent::class.java,
-            domainEvents.attachedEvents.single(),
+            domainEvents.attachedEvents[0],
         )
-        assertEquals(content.id, event.contentId)
-        assertEquals(reviewerId, event.reviewerId)
-        assertEquals(approvedAt, event.reviewedAt)
+        assertEquals(content.id, reviewApprovedEvent.contentId)
+        assertEquals(reviewerId, reviewApprovedEvent.reviewerId)
+        assertEquals(approvedAt, reviewApprovedEvent.reviewedAt)
+        val mediaProcessingRequestedEvent = assertInstanceOf(
+            MediaProcessingRequestedDomainEvent::class.java,
+            domainEvents.attachedEvents[1],
+        )
+        assertEquals(content.id, mediaProcessingRequestedEvent.contentId)
+        assertEquals(content.mediaSourceKey, mediaProcessingRequestedEvent.mediaSourceKey)
     }
 
     @Test
@@ -78,8 +87,49 @@ class ContentBehaviorTest {
     }
 
     @Test
-    fun `publish marks content published and emits content published event`() {
+    fun `approve emits content publication ready when media was already ready`() {
+        val mediaReadyAt = LocalDateTime.of(2026, 5, 9, 9, 30)
+        val content = newContent(mediaReadyAt = mediaReadyAt)
+        val reviewerId = UUID.randomUUID()
+        val approvedAt = LocalDateTime.of(2026, 5, 9, 10, 0)
+
+        content.approve(reviewerId = reviewerId, approvedAt = approvedAt)
+
+        assertEquals(2, domainEvents.attachedEvents.size)
+        val readyEvent = assertInstanceOf(
+            ContentPublicationReadyDomainEvent::class.java,
+            domainEvents.attachedEvents[1],
+        )
+        assertEquals(content.id, readyEvent.contentId)
+    }
+
+    @Test
+    fun `record media ready emits content media ready and publication ready when review is approved`() {
         val content = newContent(reviewStatus = ReviewStatus.APPROVED)
+        val mediaReadyAt = LocalDateTime.of(2026, 5, 9, 10, 30)
+
+        content.recordMediaReady(mediaReadyAt)
+
+        assertEquals(mediaReadyAt, content.mediaReadyAt)
+        val mediaReadyEvent = assertInstanceOf(
+            ContentMediaReadyDomainEvent::class.java,
+            domainEvents.attachedEvents[0],
+        )
+        assertEquals(content.id, mediaReadyEvent.contentId)
+        assertEquals(mediaReadyAt, mediaReadyEvent.mediaReadyAt)
+        val readyEvent = assertInstanceOf(
+            ContentPublicationReadyDomainEvent::class.java,
+            domainEvents.attachedEvents[1],
+        )
+        assertEquals(content.id, readyEvent.contentId)
+    }
+
+    @Test
+    fun `publish marks content published and emits content published event`() {
+        val content = newContent(
+            reviewStatus = ReviewStatus.APPROVED,
+            mediaReadyAt = LocalDateTime.of(2026, 5, 9, 10, 30),
+        )
         val publishedAt = LocalDateTime.of(2026, 5, 9, 11, 0)
 
         content.publish(publishedAt = publishedAt)
@@ -101,6 +151,7 @@ class ContentBehaviorTest {
         val content = newContent(
             reviewStatus = ReviewStatus.APPROVED,
             contentStatus = ContentStatus.PUBLISHED,
+            mediaReadyAt = LocalDateTime.of(2026, 5, 9, 10, 30),
         ).apply {
             publishedAt = originalPublishedAt
         }
@@ -115,6 +166,7 @@ class ContentBehaviorTest {
     private fun newContent(
         reviewStatus: ReviewStatus = ReviewStatus.PENDING,
         contentStatus: ContentStatus = ContentStatus.DRAFT,
+        mediaReadyAt: LocalDateTime? = null,
     ): Content {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
         return Content(
@@ -128,6 +180,7 @@ class ContentBehaviorTest {
             reviewerId = null,
             reviewedAt = null,
             publishedAt = null,
+            mediaReadyAt = mediaReadyAt,
             dbCreatedAt = now,
             dbUpdatedAt = now,
         )

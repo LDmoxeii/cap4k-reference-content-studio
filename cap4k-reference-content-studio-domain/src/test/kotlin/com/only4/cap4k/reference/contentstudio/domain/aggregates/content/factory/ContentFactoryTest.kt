@@ -16,6 +16,7 @@ class ContentFactoryTest {
     fun `create builds content aggregate from payload`() {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
         val reviewerId = UUID.randomUUID()
+        val mediaReadyAt = now.plusMinutes(30)
         val payload =
             ContentFactory.Payload(
                 id = UUID.randomUUID(),
@@ -27,6 +28,7 @@ class ContentFactoryTest {
                 reviewerId = reviewerId,
                 reviewedAt = now,
                 publishedAt = now.plusHours(1),
+                mediaReadyAt = mediaReadyAt,
                 dbCreatedAt = now,
                 dbUpdatedAt = now.plusMinutes(5),
             )
@@ -43,6 +45,7 @@ class ContentFactoryTest {
         assertEquals(payload.reviewerId, content.reviewerId)
         assertEquals(payload.reviewedAt, content.reviewedAt)
         assertEquals(payload.publishedAt, content.publishedAt)
+        assertEquals(payload.mediaReadyAt, content.mediaReadyAt)
         assertEquals(payload.dbCreatedAt, content.dbCreatedAt)
         assertEquals(payload.dbUpdatedAt, content.dbUpdatedAt)
     }
