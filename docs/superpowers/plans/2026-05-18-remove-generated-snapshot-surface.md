@@ -437,9 +437,11 @@ git commit -m "feat: generate paid publication surfaces"
 with:
 
 ```powershell
-git add design/design.json build.gradle.kts cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql build/cap4k/plan.json cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin
+git add design/design.json build.gradle.kts cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin
 git commit -m "feat: generate paid publication surfaces"
 ```
+
+Keep `build/cap4k/plan.json` as inspection-only evidence; do not stage it because `build/` stays ignored.
 
 Replace:
 
@@ -464,7 +466,8 @@ with:
 
 ```powershell
 .\gradlew.bat cap4kPlan cap4kGenerate
-git diff --exit-code -- build/cap4k/plan.json
+Test-Path build/cap4k/plan.json
+git diff --exit-code -- cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin
 ```
 
 - [ ] **Step 3: Verify the historical plan no longer teaches the removed workflow**
@@ -528,5 +531,5 @@ Placeholder scan:
 
 Type and naming consistency:
 
-- the plan consistently uses `syncGeneratedSnapshots`, `cap4kGenerateSources`, `src-generated`, `README.en.md`, and `README.zh-CN.md`;
+- the plan consistently uses `syncGeneratedSnapshots`, `cap4kGenerateSources`, `src-generated`, `README.en.md`, and the `README.zh-CN.md` -> `README.md` rename/delete step;
 - no later task refers to a file or task name that earlier tasks do not define.

@@ -59,7 +59,7 @@ Handwritten adapter/start/docs files:
 - Create: `cap4k-reference-content-studio-start/src/test/kotlin/com/only4/cap4k/reference/contentstudio/start/ContentStudioPaidPublicationSagaHttpSmokeTest.kt`
 - Create: `http/paid-publication.http`
 - Modify: `README.md`
-- Modify: `README.zh-CN.md`
+- Modify: `README.en.md`
 - Regenerate: `openapi/content-studio-openapi.json`
 - Regenerate: `analysis/flows/**`
 
@@ -449,9 +449,11 @@ Expected: paid publication ownership evidence exists in design, schema, `build/c
 Run:
 
 ```powershell
-git add design/design.json build.gradle.kts cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql build/cap4k/plan.json cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin
+git add design/design.json build.gradle.kts cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin
 git commit -m "feat: generate paid publication surfaces"
 ```
+
+Keep `build/cap4k/plan.json` as inspection-only evidence; do not stage it because `build/` stays ignored.
 
 ## Task 2: Implement PaidPublicationTask Domain Behavior
 
@@ -1252,7 +1254,7 @@ git commit -m "refactor: remove release readiness saga path"
 **Files:**
 
 - Modify: `README.md`
-- Modify: `README.zh-CN.md`
+- Modify: `README.en.md`
 - Create: `http/paid-publication.http`
 - Delete: `http/advanced-release-readiness.http`
 - Regenerate: `openapi/content-studio-openapi.json`
@@ -1260,7 +1262,7 @@ git commit -m "refactor: remove release readiness saga path"
 
 - [ ] **Step 1: Update README advanced section**
 
-Replace the gated release paragraph with:
+In `README.en.md`, replace the gated release paragraph with:
 
 ```markdown
 The advanced path is opt-in paid publication. It demonstrates cap4k Saga as a
@@ -1270,7 +1272,7 @@ activates the entitlement plan. If a later step fails, idempotent compensation
 commands release or cancel earlier side effects where business rules allow it.
 ```
 
-Add the same meaning in `README.zh-CN.md`:
+In `README.md`, use the corresponding Chinese wording:
 
 ```markdown
 高级路径是显式 opt-in 的付费内容发布。它演示的是补偿型 Saga，而不是等待型 Saga。
@@ -1334,7 +1336,7 @@ Expected: `analysis/flows/index.json` and flow files update. Old `AdvancedReleas
 Run:
 
 ```powershell
-git add README.md README.zh-CN.md http openapi/content-studio-openapi.json analysis/flows
+git add README.md README.en.md http openapi/content-studio-openapi.json analysis/flows
 git commit -m "docs: document paid publication saga path"
 ```
 
@@ -1360,10 +1362,11 @@ Run:
 
 ```powershell
 .\gradlew.bat cap4kPlan cap4kGenerate
-git diff --exit-code -- build/cap4k/plan.json
+Test-Path build/cap4k/plan.json
+git diff --exit-code -- cap4k-reference-content-studio-application/src/main/kotlin cap4k-reference-content-studio-domain/src/main/kotlin cap4k-reference-content-studio-adapter/src/main/kotlin
 ```
 
-Expected: Gradle tasks PASS and `git diff --exit-code` exits 0.
+Expected: Gradle tasks PASS, `Test-Path build/cap4k/plan.json` prints `True`, and `git diff --exit-code` exits 0 for the tracked generated sinks.
 
 - [ ] **Step 3: Run stale-reference checks**
 
