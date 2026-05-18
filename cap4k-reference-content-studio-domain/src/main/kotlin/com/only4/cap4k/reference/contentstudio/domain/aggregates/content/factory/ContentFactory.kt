@@ -32,6 +32,7 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
             reviewerId = entityPayload.reviewerId,
             reviewedAt = entityPayload.reviewedAt,
             publishedAt = entityPayload.publishedAt,
+            mediaReadyAt = entityPayload.mediaReadyAt,
             dbCreatedAt = entityPayload.dbCreatedAt,
             dbUpdatedAt = entityPayload.dbUpdatedAt,
         )
@@ -64,6 +65,8 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
         val reviewedAt: LocalDateTime?,
 
         val publishedAt: LocalDateTime?,
+
+        val mediaReadyAt: LocalDateTime? = null,
 
         val dbCreatedAt: LocalDateTime,
 

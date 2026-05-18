@@ -117,7 +117,8 @@ activates the entitlement plan. If a later step fails, idempotent compensation
 commands release or cancel earlier side effects where business rules allow it.
 
 - `MediaProcessingResultSnapshot` is a handwritten JSON-backed value concept persisted through `media_processing_task.result_snapshot`.
-- `PublicationEligibilityDomainService` returns an auditable publication decision.
+- `Content` owns the local publication facts and emits continuation events when
+  approval and media-ready facts become sufficient to continue publication.
 - Paid content uses `PaidPublicationTask` to record cross-step publication state.
   `PaidPublicationSaga` coordinates payout hold reservation, entitlement plan creation,
   content publication, entitlement activation, and compensation on failure.

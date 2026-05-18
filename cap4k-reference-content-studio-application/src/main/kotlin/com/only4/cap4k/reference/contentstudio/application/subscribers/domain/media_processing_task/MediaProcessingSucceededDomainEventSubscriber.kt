@@ -1,12 +1,11 @@
 package com.only4.cap4k.reference.contentstudio.application.subscribers.domain.media_processing_task
 
 import com.only4.cap4k.ddd.core.Mediator
-import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd
-import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.TryStartPaidPublicationCmd
+import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.RecordContentMediaReadyCmd
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
-import java.time.LocalDateTime
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 /**
  * media processing succeeded
@@ -15,19 +14,12 @@ import org.springframework.stereotype.Service
 class MediaProcessingSucceededDomainEventSubscriber {
 
     @EventListener(MediaProcessingSucceededDomainEvent::class)
-    fun publishImmediateContent(event: MediaProcessingSucceededDomainEvent) {
+    fun recordContentMediaReady(event: MediaProcessingSucceededDomainEvent) {
         Mediator.cmd.send(
-            PublishContentCmd.Request(
+            RecordContentMediaReadyCmd.Request(
                 contentId = event.contentId,
-                publishedAt = LocalDateTime.now(),
-            )
-        )
-    }
-
-    @EventListener(MediaProcessingSucceededDomainEvent::class)
-    fun startPaidPublication(event: MediaProcessingSucceededDomainEvent) {
-        Mediator.cmd.send(
-            TryStartPaidPublicationCmd.Request(contentId = event.contentId)
+                mediaReadyAt = LocalDateTime.now(),
+            ),
         )
     }
 }

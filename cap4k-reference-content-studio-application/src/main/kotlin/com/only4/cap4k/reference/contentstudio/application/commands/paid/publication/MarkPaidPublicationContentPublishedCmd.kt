@@ -8,17 +8,15 @@ import com.only4.cap4k.reference.contentstudio.domain._share.meta.paid_publicati
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.isReadyForPaidPublication
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.publish
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
-import java.time.LocalDateTime
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.markPublished
 import java.util.UUID
 import org.springframework.stereotype.Service
 
-object PublishPaidPublicationContentCmd {
+object MarkPaidPublicationContentPublishedCmd {
 
     @Service
     class Handler : Command<Request, Response> {
@@ -26,7 +24,7 @@ object PublishPaidPublicationContentCmd {
         override fun exec(request: Request): Response {
             val task = loadTask(request.paidPublicationTaskId)
             if (task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED) {
-                return Response(published = false)
+                return Response(marked = false)
             }
             check(task.paidPublicationStatus == PaidPublicationStatus.RUNNING) {
                 "Paid publication task ${task.id} is not running."
@@ -38,22 +36,22 @@ object PublishPaidPublicationContentCmd {
                 "Paid publication task ${task.id} has no created entitlement plan."
             }
 
-            val now = LocalDateTime.now()
             val content = loadContent(task.contentId)
             check(content.releasePolicy == ReleasePolicy.PAID) {
                 "Paid publication task ${task.id} requires paid content, but content ${content.id} has release policy ${content.releasePolicy}."
             }
-            if (content.contentStatus == ContentStatus.PUBLISHED) {
-                return Response(published = false)
-            }
-            if (!content.isReadyForPaidPublication()) {
-                return Response(published = false)
+            if (content.contentStatus != ContentStatus.PUBLISHED) {
+                return Response(marked = false)
             }
 
-            content.publish(now)
+            task.markPublished(requireNotNull(content.publishedAt) {
+                "Content ${content.id} must have publishedAt when content status is PUBLISHED."
+            })
             Mediator.uow.save()
 
-            return Response(published = true)
+            return Response(
+                marked = true
+            )
         }
     }
 
@@ -62,7 +60,7 @@ object PublishPaidPublicationContentCmd {
     ) : RequestParam<Response>
 
     data class Response(
-        val published: Boolean
+        val marked: Boolean
     )
 
     private fun loadTask(paidPublicationTaskId: UUID): PaidPublicationTask =

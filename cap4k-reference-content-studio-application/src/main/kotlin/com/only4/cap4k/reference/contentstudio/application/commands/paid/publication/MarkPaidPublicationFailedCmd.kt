@@ -21,7 +21,10 @@ object MarkPaidPublicationFailedCmd {
 
         override fun exec(request: Request): Response {
             val task = loadTask(request.paidPublicationTaskId)
-            if (task.paidPublicationStatus == PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR) {
+            if (
+                task.paidPublicationStatus == PaidPublicationStatus.FAILED ||
+                task.paidPublicationStatus == PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR
+            ) {
                 return Response
             }
 

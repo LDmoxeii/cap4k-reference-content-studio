@@ -2,10 +2,14 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.content
 
 import com.only4.cap4k.ddd.core.domain.event.DomainEventSupervisorSupport.events
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentMediaReadyDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublicationReadyDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentSubmittedForReviewDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.MediaProcessingRequestedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.time.LocalDateTime
 import java.util.UUID
@@ -15,6 +19,7 @@ fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
         return
     }
 
+    val wasPublicationReady = isPublicationReady()
     reviewStatus = ReviewStatus.APPROVED
     this.reviewerId = reviewerId
     reviewedAt = approvedAt
@@ -26,6 +31,16 @@ fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
             reviewedAt = approvedAt,
         )
     }
+    if (mediaReadyAt == null) {
+        events().attach(this) {
+            MediaProcessingRequestedDomainEvent(
+                entity = this,
+                contentId = id,
+                mediaSourceKey = mediaSourceKey,
+            )
+        }
+    }
+    attachPublicationReadyIfNeeded(wasPublicationReady)
 }
 
 fun Content.onCreate() {
@@ -59,6 +74,13 @@ fun Content.publish(publishedAt: LocalDateTime) {
         return
     }
 
+    check(reviewStatus == ReviewStatus.APPROVED) {
+        "Cannot publish content before review is approved."
+    }
+    check(mediaReadyAt != null) {
+        "Cannot publish content before media is ready."
+    }
+
     contentStatus = ContentStatus.PUBLISHED
     this.publishedAt = publishedAt
     events().attach(this) {
@@ -66,6 +88,47 @@ fun Content.publish(publishedAt: LocalDateTime) {
             entity = this,
             contentId = id,
             publishedAt = publishedAt,
+        )
+    }
+}
+
+fun Content.recordMediaReady(mediaReadyAt: LocalDateTime) {
+    val wasPublicationReady = isPublicationReady()
+    this.mediaReadyAt?.let {
+        return
+    }
+
+    this.mediaReadyAt = mediaReadyAt
+    events().attach(this) {
+        ContentMediaReadyDomainEvent(
+            entity = this,
+            contentId = id,
+            mediaReadyAt = mediaReadyAt,
+        )
+    }
+    attachPublicationReadyIfNeeded(wasPublicationReady)
+}
+
+fun Content.isReadyForImmediatePublication(): Boolean =
+    releasePolicy == ReleasePolicy.IMMEDIATE && isPublicationReady()
+
+fun Content.isReadyForPaidPublication(): Boolean =
+    releasePolicy == ReleasePolicy.PAID && isPublicationReady()
+
+private fun Content.isPublicationReady(): Boolean =
+    reviewStatus == ReviewStatus.APPROVED &&
+        mediaReadyAt != null &&
+        contentStatus != ContentStatus.PUBLISHED
+
+private fun Content.attachPublicationReadyIfNeeded(wasPublicationReady: Boolean) {
+    if (wasPublicationReady || !isPublicationReady()) {
+        return
+    }
+
+    events().attach(this) {
+        ContentPublicationReadyDomainEvent(
+            entity = this,
+            contentId = id,
         )
     }
 }
