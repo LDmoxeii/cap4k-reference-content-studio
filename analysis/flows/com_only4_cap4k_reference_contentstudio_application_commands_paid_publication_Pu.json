@@ -1,8 +1,8 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd.Handler::exec",
   "entryType": "commandsendermethod",
-  "nodeCount": 5,
-  "edgeCount": 4,
+  "nodeCount": 6,
+  "edgeCount": 5,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd.Request",
@@ -15,6 +15,12 @@
       "name": "PublishPaidPublicationContentCmd.Handler::exec",
       "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd.Handler::exec",
       "type": "commandsendermethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentPublishedDomainEventSubscriber::on",
+      "name": "ContentPublishedDomainEventSubscriber::on",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentPublishedDomainEventSubscriber::on",
+      "type": "domaineventhandler"
     },
     {
       "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releasePolicy>",
@@ -55,6 +61,11 @@
       "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::publish",
       "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent",
       "type": "EntityMethodToDomainEvent"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentPublishedDomainEventSubscriber::on",
+      "type": "DomainEventToHandler"
     }
   ]
 }

@@ -102,7 +102,9 @@ Swagger / OpenAPI 仍然存在，但它们更像契约快照，而不是整条 h
 默认路径仍然是即时发布：媒体处理成功后，application 通过 `PublishContentCmd`
 发布内容。
 
-高级路径是显式 opt-in：
+高级路径是显式 opt-in 的付费内容发布。它演示的是补偿型 Saga，而不是等待型 Saga。
+Saga 会预留创作者收益、创建访问权益计划、发布内容并激活权益计划；如果后续步骤失败，
+会通过幂等补偿命令释放或取消前面已经完成且业务允许撤销的副作用。
 
 - `MediaProcessingResultSnapshot` 是手写 JSON-backed 值概念，通过 `media_processing_task.result_snapshot` 持久化。
 - `PublicationEligibilityDomainService` 返回可审计的发布资格结论。

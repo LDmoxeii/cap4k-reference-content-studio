@@ -1,6 +1,6 @@
 flowchart TD
-  N1[ContentController::create]
-  N2[CreateContentDraftCmd.Request]
+  N1[AdvancedPaidPublicationController::createPaid]
+  N2[CreatePaidContentDraftCmd.Request]
   N3[ContentDraftCreatedDomainEventSubscriber::on]
   N4[Content::&lt;get-id&gt;]
   N5[Content::onCreate]
@@ -10,4 +10,3 @@ flowchart TD
   N2 -->|CommandToEntityMethod| N5
   N5 -->|EntityMethodToDomainEvent| N6
   N6 -->|DomainEventToHandler| N3
-

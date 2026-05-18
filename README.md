@@ -110,7 +110,11 @@ the paid draft after you understand the default sequence.
 The default path still uses immediate publication: after media processing
 succeeds, the application publishes the content through `PublishContentCmd`.
 
-The advanced path is opt-in:
+The advanced path is opt-in paid publication. It demonstrates cap4k Saga as a
+compensation-oriented process, not as a waiting mechanism. The Saga reserves a
+creator payout hold, creates an access entitlement plan, publishes content, and
+activates the entitlement plan. If a later step fails, idempotent compensation
+commands release or cancel earlier side effects where business rules allow it.
 
 - `MediaProcessingResultSnapshot` is a handwritten JSON-backed value concept persisted through `media_processing_task.result_snapshot`.
 - `PublicationEligibilityDomainService` returns an auditable publication decision.

@@ -1,8 +1,8 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
   "entryType": "controllermethod",
-  "nodeCount": 2,
-  "edgeCount": 1,
+  "nodeCount": 10,
+  "edgeCount": 9,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
@@ -15,6 +15,54 @@
       "name": "ApproveContentReviewCmd.Request",
       "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ApproveContentReviewCmd.Request",
       "type": "command"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
+      "name": "StartMediaProcessingCmd.Request",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
+      "type": "command"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved",
+      "name": "ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved",
+      "type": "domaineventhandler"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-id>",
+      "name": "Content::<get-id>",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-id>",
+      "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-mediaSourceKey>",
+      "name": "Content::<get-mediaSourceKey>",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-mediaSourceKey>",
+      "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::approve",
+      "name": "Content::approve",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::approve",
+      "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent",
+      "name": "ContentReviewApprovedDomainEvent",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent",
+      "type": "domainevent"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSubmitted",
+      "name": "MediaProcessingTask::markSubmitted",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSubmitted",
+      "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::onCreate",
+      "name": "MediaProcessingTask::onCreate",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::onCreate",
+      "type": "entitymethod"
     }
   ],
   "edges": [
@@ -22,6 +70,46 @@
       "fromId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ApproveContentReviewCmd.Request",
       "type": "ControllerMethodToCommand"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.ApproveContentReviewCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::approve",
+      "type": "CommandToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-id>",
+      "type": "CommandToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-mediaSourceKey>",
+      "type": "CommandToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSubmitted",
+      "type": "CommandToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::onCreate",
+      "type": "CommandToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
+      "type": "DomainEventHandlerToCommand"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::approve",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent",
+      "type": "EntityMethodToDomainEvent"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved",
+      "type": "DomainEventToHandler"
     }
   ]
 }

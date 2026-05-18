@@ -1,19 +1,19 @@
 {
-  "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
+  "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedPaidPublicationController::createPaid",
   "entryType": "controllermethod",
   "nodeCount": 6,
   "edgeCount": 5,
   "nodes": [
     {
-      "id": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
-      "name": "ContentController::create",
-      "fullName": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
+      "id": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedPaidPublicationController::createPaid",
+      "name": "AdvancedPaidPublicationController::createPaid",
+      "fullName": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedPaidPublicationController::createPaid",
       "type": "controllermethod"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
-      "name": "CreateContentDraftCmd.Request",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
+      "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreatePaidContentDraftCmd.Request",
+      "name": "CreatePaidContentDraftCmd.Request",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreatePaidContentDraftCmd.Request",
       "type": "command"
     },
     {
@@ -43,17 +43,17 @@
   ],
   "edges": [
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.adapter.http.ContentController::create",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
+      "fromId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedPaidPublicationController::createPaid",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreatePaidContentDraftCmd.Request",
       "type": "ControllerMethodToCommand"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreatePaidContentDraftCmd.Request",
       "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-id>",
       "type": "CommandToEntityMethod"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreateContentDraftCmd.Request",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.CreatePaidContentDraftCmd.Request",
       "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::onCreate",
       "type": "CommandToEntityMethod"
     },
