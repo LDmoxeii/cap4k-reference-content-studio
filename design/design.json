@@ -46,8 +46,7 @@
     "aggregates": ["Content"],
     "requestFields": [
       { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime" },
-      { "name": "policyGateSatisfied", "type": "Boolean" }
+      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": [
       { "name": "published", "type": "Boolean" }

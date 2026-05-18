@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.adapter.application.distributed.clients.paid.publication.FakePaidPublicationCliState
+import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.ReserveCreatorPayoutHoldCmd
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
 import java.time.Duration
@@ -163,6 +164,52 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         assertThat(task?.publicationSagaId).isNull()
         assertThat(task?.payoutHoldStatus).isEqualTo(0)
         assertThat(task?.payoutHoldId).isNull()
+    }
+
+    @Test
+    @Order(5)
+    fun `generic publish command does not publish paid content directly`() {
+        val contentId = UUID.randomUUID()
+        val now = LocalDateTime.now()
+        jdbcTemplate.update(
+            """
+            insert into content (
+                id, title, body, media_source_key, review_status, content_status, release_policy,
+                reviewer_id, reviewed_at, published_at, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            contentId,
+            "Paid direct publish",
+            "Generic publish command must not bypass paid publication orchestration",
+            "media/paid-direct-${UUID.randomUUID()}.mp4",
+            1,
+            0,
+            2,
+            UUID.fromString("11111111-1111-1111-1111-111111111111"),
+            now,
+            null,
+            now,
+            now,
+        )
+        jdbcTemplate.update(
+            """
+            insert into media_processing_task (
+                id, content_id, external_task_id, processing_status, result_snapshot, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            UUID.randomUUID(),
+            contentId,
+            "paid-direct-$contentId",
+            2,
+            null,
+            now,
+            now,
+        )
+
+        val response = Mediator.cmd.send(PublishContentCmd.Request(contentId, now))
+
+        assertThat(response.published).isFalse()
+        assertThat(contentStatus(contentId)).isEqualTo(0)
     }
 
     private fun runPaidPublicationPath(waitForPublishedContent: Boolean = true): UUID {
@@ -348,6 +395,17 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             },
             contentId,
         ).firstOrNull()
+
+    private fun contentStatus(contentId: UUID): Int =
+        jdbcTemplate.queryForObject(
+            """
+            select content_status
+            from content
+            where id = ?
+            """.trimIndent(),
+            Int::class.java,
+            contentId,
+        )!!
 
     private fun jsonRequest(body: String): HttpEntity<String> =
         HttpEntity(
