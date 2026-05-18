@@ -22,8 +22,8 @@ Generation ownership evidence after `cap4kPlan` and `cap4kGenerate`:
 
 - Inspect: `build/cap4k/plan.json`
 - Modify: `cap4k-reference-content-studio-application/src/main/kotlin/**` for generator-owned design surfaces when generation updates checked-in files
-- Modify: `cap4k-reference-content-studio-domain/src/main/kotlin/**` only for handwritten behavior/factory/domain-service code
-- Modify: `cap4k-reference-content-studio-adapter/src/main/kotlin/**` only for handwritten handlers/controllers/adapters
+- Modify: `cap4k-reference-content-studio-domain/src/main/kotlin/**` for both checked-in generator-owned and handwritten code, with ownership decided by fresh `build/cap4k/plan.json`
+- Modify: `cap4k-reference-content-studio-adapter/src/main/kotlin/**` for both checked-in generator-owned and handwritten code, with ownership decided by fresh `build/cap4k/plan.json`
 
 Handwritten domain files:
 
@@ -1226,7 +1226,7 @@ Expected remaining references only in:
 docs/superpowers/specs/2026-05-17-paid-publication-saga-design.md
 ```
 
-If references appear in source, generated snapshots, HTTP files, README, OpenAPI, or analysis output, remove or regenerate them in this task.
+If references appear in source, checked-in generated surfaces, HTTP files, README, OpenAPI, or analysis output, remove or regenerate them in this task.
 
 - [ ] **Step 4: Compile all modules**
 
@@ -1381,7 +1381,7 @@ Run:
 rg -n "PaidPublicationSaga|paid_publication_task|CreatePaidContentDraft|/advanced/contents/paid" .
 ```
 
-Expected: matches in source, tests, README, HTTP, schema, design, generated snapshots, and analysis/openapi evidence.
+Expected: matches in source, tests, README, HTTP, schema, design, checked-in generated surfaces, and analysis/openapi evidence.
 
 - [ ] **Step 4: Run final git checks**
 
