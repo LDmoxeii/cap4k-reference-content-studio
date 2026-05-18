@@ -1196,7 +1196,7 @@ git commit -m "feat: wire paid publication saga path"
 Run:
 
 ```powershell
-rg --files | rg "publication_release_readiness|release/readiness|PublicationReleaseSaga|AdvancedReleaseReadiness|advanced-release-readiness|PublicationReleaseContinuationJob" 
+rg --files | rg "publication_release_readiness|release/readiness|PublicationReleaseSaga|AdvancedReleaseReadiness|advanced-release-readiness|PublicationReleaseContinuationJob"
 ```
 
 Delete every returned old-feature file, excluding `docs/superpowers/specs/2026-05-17-paid-publication-saga-design.md`.
