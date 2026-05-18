@@ -2,9 +2,12 @@ package com.only4.cap4k.reference.contentstudio.start
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.adapter.application.distributed.clients.paid.publication.FakePaidPublicationCliState
+import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.ReserveCreatorPayoutHoldCmd
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
 import java.time.Duration
+import java.time.LocalDateTime
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -72,16 +75,125 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         assertPublishedContent(contentId)
     }
 
+    @Test
+    @Order(3)
+    fun `paid publication waits for review approval when media succeeds during re-review`() {
+        fakePaidPublicationCliState.setFailActivation(false)
+
+        val contentId = createPaidContent(
+            title = "Paid re-review race",
+            body = "Media can finish while review is pending again",
+            mediaSourceKey = "media/paid-rereview-${UUID.randomUUID()}.mp4",
+        )
+
+        submitContentForReview(contentId)
+        approveContent(contentId)
+        val externalTaskId = waitForSubmittedMediaExternalTaskId(contentId)
+
+        submitContentForReview(contentId)
+        assertContentState(contentId, reviewStatus = "PENDING", contentStatus = "DRAFT")
+
+        sendMediaSucceededCallback(externalTaskId)
+        assertNoPaidPublicationTask(Duration.ofSeconds(2), contentId)
+        assertContentState(contentId, reviewStatus = "PENDING", contentStatus = "DRAFT")
+
+        approveContent(contentId)
+        assertPublishedContent(contentId)
+        waitForPaidPublicationTask(Duration.ofSeconds(10), contentId) { row ->
+            row.paidPublicationStatus == 2 && row.payoutHoldStatus == 1 && row.entitlementPlanStatus == 2
+        }
+    }
+
+    @Test
+    @Order(4)
+    fun `reserve creator payout hold no-ops when paid publication task is not saga running`() {
+        val contentId = UUID.randomUUID()
+        val taskId = UUID.randomUUID()
+        val now = LocalDateTime.now()
+        jdbcTemplate.update(
+            """
+            insert into content (
+                id, title, body, media_source_key, review_status, content_status, release_policy,
+                reviewer_id, reviewed_at, published_at, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            contentId,
+            "Paid pending task",
+            "Direct command guard coverage",
+            "media/pending-task.mp4",
+            1,
+            0,
+            2,
+            null,
+            now,
+            null,
+            now,
+            now,
+        )
+        jdbcTemplate.update(
+            """
+            insert into paid_publication_task (
+                id, content_id, paid_publication_status, publication_saga_id,
+                payout_hold_status, payout_hold_id, entitlement_plan_status, entitlement_plan_id,
+                started_at, published_at, completed_at, failed_at, failed_reason, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            taskId,
+            contentId,
+            0,
+            null,
+            0,
+            null,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            now,
+            now,
+        )
+
+        val response = Mediator.cmd.send(ReserveCreatorPayoutHoldCmd.Request(taskId))
+
+        assertThat(response.reserved).isFalse()
+        val task = paidPublicationTask(contentId)
+        assertThat(task?.paidPublicationStatus).isEqualTo(0)
+        assertThat(task?.publicationSagaId).isNull()
+        assertThat(task?.payoutHoldStatus).isEqualTo(0)
+        assertThat(task?.payoutHoldId).isNull()
+    }
+
     private fun runPaidPublicationPath(waitForPublishedContent: Boolean = true): UUID {
+        val contentId = createPaidContent(
+            title = "Paid HTTP path",
+            body = "Exercise the paid publication saga path",
+            mediaSourceKey = "media/paid-http-smoke-${UUID.randomUUID()}.mp4",
+        )
+
+        submitContentForReview(contentId)
+        approveContent(contentId)
+        val externalTaskId = waitForSubmittedMediaExternalTaskId(contentId)
+        sendMediaSucceededCallback(externalTaskId)
+
+        if (waitForPublishedContent) {
+            assertPublishedContent(contentId)
+        }
+
+        return contentId
+    }
+
+    private fun createPaidContent(title: String, body: String, mediaSourceKey: String): UUID {
         val createResponse =
             restTemplate.postForEntity(
                 "/advanced/contents/paid",
                 jsonRequest(
                     """
                     {
-                      "title": "Paid HTTP path",
-                      "body": "Exercise the paid publication saga path",
-                      "mediaSourceKey": "media/paid-http-smoke.mp4"
+                      "title": "$title",
+                      "body": "$body",
+                      "mediaSourceKey": "$mediaSourceKey"
                     }
                     """.trimIndent()
                 ),
@@ -89,8 +201,10 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             )
 
         assertThat(createResponse.statusCode).isEqualTo(HttpStatus.OK)
-        val contentId = UUID.fromString(json(createResponse.body).required("contentId").asText())
+        return UUID.fromString(json(createResponse.body).required("contentId").asText())
+    }
 
+    private fun submitContentForReview(contentId: UUID) {
         val submitResponse =
             restTemplate.postForEntity(
                 "/contents/$contentId/submit-review",
@@ -98,7 +212,9 @@ class ContentStudioPaidPublicationSagaSmokeTest(
                 String::class.java,
             )
         assertThat(submitResponse.statusCode).isEqualTo(HttpStatus.OK)
+    }
 
+    private fun approveContent(contentId: UUID) {
         val approveResponse =
             restTemplate.postForEntity(
                 "/contents/$contentId/approve",
@@ -112,7 +228,9 @@ class ContentStudioPaidPublicationSagaSmokeTest(
                 String::class.java,
             )
         assertThat(approveResponse.statusCode).isEqualTo(HttpStatus.OK)
+    }
 
+    private fun waitForSubmittedMediaExternalTaskId(contentId: UUID): String {
         val submittedTask = waitForJson(Duration.ofSeconds(5)) {
             val response = restTemplate.getForEntity("/media-processing/$contentId", String::class.java)
             assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
@@ -121,8 +239,10 @@ class ContentStudioPaidPublicationSagaSmokeTest(
                     root.path("task").path("processingStatus").asText() == "SUBMITTED"
             }
         }.required("task")
-        val externalTaskId = submittedTask.required("externalTaskId").asText()
+        return submittedTask.required("externalTaskId").asText()
+    }
 
+    private fun sendMediaSucceededCallback(externalTaskId: String) {
         val callbackResponse =
             restTemplate.postForEntity(
                 "/cap4k/integration-event/http/consume?event=${MediaProcessingCallbackIntegrationEvent.EVENT_NAME}&uuid=${UUID.randomUUID()}",
@@ -140,12 +260,6 @@ class ContentStudioPaidPublicationSagaSmokeTest(
                 String::class.java,
             )
         assertThat(callbackResponse.statusCode).isEqualTo(HttpStatus.OK)
-
-        if (waitForPublishedContent) {
-            assertPublishedContent(contentId)
-        }
-
-        return contentId
     }
 
     private fun assertPublishedContent(contentId: UUID) {
@@ -157,6 +271,26 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             }
         }
         assertThat(content.required("contentStatus").asText()).isEqualTo("PUBLISHED")
+    }
+
+    private fun assertContentState(contentId: UUID, reviewStatus: String, contentStatus: String) {
+        val response = restTemplate.getForEntity("/contents/$contentId", String::class.java)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+        val content = json(response.body)
+        assertThat(content.required("reviewStatus").asText()).isEqualTo(reviewStatus)
+        assertThat(content.required("contentStatus").asText()).isEqualTo(contentStatus)
+    }
+
+    private fun assertNoPaidPublicationTask(timeout: Duration, contentId: UUID) {
+        val deadlineNanos = System.nanoTime() + timeout.toNanos()
+        var latest: PaidPublicationTaskRow? = null
+        while (System.nanoTime() < deadlineNanos) {
+            latest = paidPublicationTask(contentId)
+            assertThat(latest)
+                .describedAs("paid publication task must not start while review is pending")
+                .isNull()
+            Thread.sleep(100)
+        }
     }
 
     private fun sagaProcessCodes(contentId: UUID): List<String> =
@@ -199,14 +333,16 @@ class ContentStudioPaidPublicationSagaSmokeTest(
     private fun paidPublicationTask(contentId: UUID): PaidPublicationTaskRow? =
         jdbcTemplate.query(
             """
-            select paid_publication_status, payout_hold_status, entitlement_plan_status
+            select paid_publication_status, publication_saga_id, payout_hold_status, payout_hold_id, entitlement_plan_status
             from paid_publication_task
             where content_id = ?
             """.trimIndent(),
             { rs, _ ->
                 PaidPublicationTaskRow(
                     paidPublicationStatus = rs.getInt("paid_publication_status"),
+                    publicationSagaId = rs.getString("publication_saga_id"),
                     payoutHoldStatus = rs.getInt("payout_hold_status"),
+                    payoutHoldId = rs.getString("payout_hold_id"),
                     entitlementPlanStatus = rs.getInt("entitlement_plan_status"),
                 )
             },
@@ -241,7 +377,9 @@ class ContentStudioPaidPublicationSagaSmokeTest(
 
     data class PaidPublicationTaskRow(
         val paidPublicationStatus: Int,
+        val publicationSagaId: String?,
         val payoutHoldStatus: Int,
+        val payoutHoldId: String?,
         val entitlementPlanStatus: Int,
     )
 }

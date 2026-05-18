@@ -6,6 +6,7 @@ import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.paid.publication.ReserveCreatorPayoutHoldCli
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.paid_publication_task.SPaidPublicationTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.recordPayoutHoldReserved
 import java.util.UUID
@@ -19,6 +20,9 @@ object ReserveCreatorPayoutHoldCmd {
         override fun exec(request: Request): Response {
             val task = loadTask(request.paidPublicationTaskId)
             if (task.payoutHoldStatus == PayoutHoldStatus.RESERVED || task.payoutHoldStatus == PayoutHoldStatus.RELEASED) {
+                return Response(reserved = false)
+            }
+            if (task.paidPublicationStatus != PaidPublicationStatus.RUNNING || task.publicationSagaId == null) {
                 return Response(reserved = false)
             }
 
