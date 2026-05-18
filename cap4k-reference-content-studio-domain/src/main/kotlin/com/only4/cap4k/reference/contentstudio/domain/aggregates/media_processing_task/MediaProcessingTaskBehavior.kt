@@ -56,7 +56,6 @@ fun MediaProcessingTask.markSucceeded(resultSnapshot: MediaProcessingResultSnaps
             entity = this,
             taskId = id,
             contentId = contentId,
-            externalTaskId = externalTaskId,
         )
     }
 }

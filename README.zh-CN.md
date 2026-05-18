@@ -94,27 +94,28 @@ Swagger / OpenAPI 仍然存在，但它们更像契约快照，而不是整条 h
 这条顺序和仓库里的本地 happy-path smoke 覆盖一致：
 审核通过会创建媒体处理任务，真正发布要等回调完成之后才发生。
 
-如果要运行显式 opt-in 的 gated release 路线，先理解默认顺序，再执行
-`http/advanced-release-readiness.http`。
+如果要运行显式 opt-in 的 paid publication 路线，先理解默认顺序，再通过
+`http/paid-publication.http` 创建 paid draft。
 
 ## 高级编写示例映射
 
 默认路径仍然是即时发布：媒体处理成功后，application 通过 `PublishContentCmd`
 发布内容。
 
-高级路径是显式 opt-in：
+高级路径是显式 opt-in 的付费内容发布。它演示的是补偿型 Saga，而不是等待型 Saga。
+Saga 会预留创作者收益、创建访问权益计划、发布内容并激活权益计划；如果后续步骤失败，
+会通过幂等补偿命令释放或取消前面已经完成且业务允许撤销的副作用。
 
 - `MediaProcessingResultSnapshot` 是手写 JSON-backed 值概念，通过 `media_processing_task.result_snapshot` 持久化。
 - `PublicationEligibilityDomainService` 返回可审计的发布资格结论。
-- gated content 使用 `PublicationReleaseReadiness` 记录跨时间等待状态，并由
-  `PublicationReleaseSaga` 通过 cap4k Saga runtime 恢复推进发布。
+- paid content 使用 `PaidPublicationTask` 记录跨步骤发布状态，并由
+  `PaidPublicationSaga` 协调 payout hold、entitlement plan、内容发布、激活和失败补偿。
 - `codegen/templates/design/api_payload.kt.peb` 演示项目级模板覆盖：
   生成的 API payload 能保持稳定 OpenAPI schema 名称，而不需要手改生成文件。
 
-这条 gated 路线是真实 Saga 示例，但它不是默认发布路径。默认路径仍然是媒体处理成功后
-直接发布；只有显式创建 gated content 时，才会在媒体处理成功后进入 Saga。Saga 会把
-`complete-release-readiness` 和 `publish-content` 作为子流程写入 `__saga_process`，
-等待版权复核、人工确认和发布时间窗这些未来事实满足后再恢复发布。
+这条 paid 路线是真实 Saga 示例，但它不是默认发布路径。默认路径仍然是媒体处理成功后
+直接发布；只有显式创建 paid content 时，才会在媒体处理成功后进入 paid publication Saga。
+Saga 会推进 paid publication 子步骤，并在下游 paid-publication 步骤失败时记录补偿。
 
 `MediaProcessingResultSnapshot` 仍然是手写结果快照，不应被理解成完整生成器能力。
 一等 value object 生成能力仍是 cap4k 后续迭代项。

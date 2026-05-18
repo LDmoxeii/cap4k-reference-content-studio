@@ -1,0 +1,18 @@
+@baseUrl = http://localhost:8080
+@contentId =
+
+### Create paid content draft.
+POST {{baseUrl}}/advanced/contents/paid
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Paid sample content",
+  "body": "Sample paid content body",
+  "mediaSourceKey": "sample-paid-media-source-key"
+}
+
+### Then run review.http submit and approve with the created contentId.
+### Then run query.http to copy task.externalTaskId.
+### Then run media-processing.http with the copied externalTaskId.
+### Re-run query.http after callback; paid publication Saga publishes the content.

@@ -23,27 +23,26 @@ object PublishContentCmd {
                 "Content ${request.contentId} was not found."
             }
             val mediaProcessingTask =
-                checkNotNull(
-                    Mediator.repositories.findFirst(
-                        SMediaProcessingTask.predicate { schema ->
-                            schema.contentId.eq(request.contentId)
-                        }
-                    )
-                ) {
-                "Media processing task for content ${request.contentId} was not found."
-            }
+                Mediator.repositories.findFirst(
+                    SMediaProcessingTask.predicate { schema ->
+                        schema.contentId.eq(request.contentId)
+                    }
+                ) ?: return Response(published = false)
             val publicationEligibilityDomainService =
                 Mediator.services.getService(PublicationEligibilityDomainService::class.java)
-            val releaseReadinessSatisfied =
-                content.releasePolicy == ReleasePolicy.IMMEDIATE || request.releaseReadinessSatisfied
             val decision =
                 publicationEligibilityDomainService.evaluate(
                     content = content,
                     task = mediaProcessingTask,
-                    releaseReadinessSatisfied = releaseReadinessSatisfied,
+                    policyGateSatisfied = content.releasePolicy == ReleasePolicy.IMMEDIATE,
                 )
-            check(decision == PublicationEligibilityDecision.Eligible) {
-                "Content ${request.contentId} is not eligible for publication: $decision."
+            when (decision) {
+                PublicationEligibilityDecision.Eligible -> Unit
+                PublicationEligibilityDecision.ContentNotApproved,
+                PublicationEligibilityDecision.MediaProcessingNotSucceeded,
+                PublicationEligibilityDecision.PolicyGateNotSatisfied -> return Response(published = false)
+                PublicationEligibilityDecision.TaskDoesNotBelongToContent ->
+                    error("Content ${request.contentId} is not eligible for publication: $decision.")
             }
             content.publish(request.publishedAt)
             Mediator.uow.save()
@@ -54,8 +53,7 @@ object PublishContentCmd {
 
     data class Request(
         val contentId: UUID,
-        val publishedAt: LocalDateTime,
-        val releaseReadinessSatisfied: Boolean = false
+        val publishedAt: LocalDateTime
     ) : RequestParam<Response>
 
     data class Response(

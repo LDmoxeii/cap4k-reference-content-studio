@@ -9,7 +9,7 @@ enum class ReleasePolicy(
 
     IMMEDIATE(0, "Immediate"),
 
-    GATED(1, "Gated");
+    PAID(2, "Paid");
 
     companion object {
         private val enumMap: Map<Int, ReleasePolicy> = entries.associateBy { it.value }

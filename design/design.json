@@ -48,7 +48,9 @@
       { "name": "contentId", "type": "java.util.UUID" },
       { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ],
-    "responseFields": []
+    "responseFields": [
+      { "name": "published", "type": "Boolean" }
+    ]
   },
   {
     "tag": "command",
@@ -72,6 +74,17 @@
       { "name": "assetSha256", "type": "String" },
       { "name": "assetLocation", "type": "String" },
       { "name": "completedAt", "type": "java.time.LocalDateTime" }
+    ],
+    "responseFields": []
+  },
+  {
+    "tag": "command",
+    "package": "media.processing",
+    "name": "RefreshMediaProcessingTaskStatus",
+    "desc": "refresh media processing task status from external media service",
+    "aggregates": ["MediaProcessingTask"],
+    "requestFields": [
+      { "name": "externalTaskId", "type": "String" }
     ],
     "responseFields": []
   },
@@ -295,8 +308,7 @@
     "persist": true,
     "requestFields": [
       { "name": "taskId", "type": "java.util.UUID" },
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "externalTaskId", "type": "String", "nullable": true }
+      { "name": "contentId", "type": "java.util.UUID" }
     ],
     "responseFields": []
   },
@@ -320,15 +332,13 @@
   {
     "tag": "command",
     "package": "content.workflow",
-    "name": "CreateGatedContentDraft",
-    "desc": "create gated content draft",
+    "name": "CreatePaidContentDraft",
+    "desc": "create paid content draft",
     "aggregates": ["Content"],
     "requestFields": [
       { "name": "title", "type": "String" },
       { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" },
-      { "name": "releaseWindowOpensAt", "type": "java.time.LocalDateTime" },
-      { "name": "releaseWindowClosesAt", "type": "java.time.LocalDateTime" }
+      { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": [
       { "name": "contentId", "type": "java.util.UUID" }
@@ -336,78 +346,185 @@
   },
   {
     "tag": "command",
-    "package": "content.workflow",
-    "name": "ContinuePublicationAfterMediaSucceeded",
-    "desc": "continue publication after media processing succeeded",
-    "aggregates": ["Content"],
+    "package": "paid.publication",
+    "name": "TryStartPaidPublication",
+    "desc": "try starting paid publication",
+    "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "mediaProcessingTaskId", "type": "java.util.UUID" }
-    ],
-    "responseFields": []
-  },
-  {
-    "tag": "command",
-    "package": "release.readiness",
-    "name": "OpenPublicationReleaseReadiness",
-    "desc": "open publication release readiness for gated content",
-    "aggregates": ["PublicationReleaseReadiness"],
-    "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "mediaProcessingTaskId", "type": "java.util.UUID" },
-      { "name": "releaseWindowOpensAt", "type": "java.time.LocalDateTime" },
-      { "name": "releaseWindowClosesAt", "type": "java.time.LocalDateTime" }
+      { "name": "contentId", "type": "java.util.UUID" }
     ],
     "responseFields": [
-      { "name": "readinessId", "type": "java.util.UUID" }
+      { "name": "taskId", "type": "java.util.UUID", "nullable": true },
+      { "name": "started", "type": "Boolean" }
     ]
   },
   {
     "tag": "command",
-    "package": "release.readiness",
-    "name": "PassCopyrightReview",
-    "desc": "pass copyright review for gated publication",
-    "aggregates": ["PublicationReleaseReadiness"],
+    "package": "paid.publication",
+    "name": "ReserveCreatorPayoutHold",
+    "desc": "reserve creator payout hold",
+    "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "reserved", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "CreateAccessEntitlementPlan",
+    "desc": "create access entitlement plan",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "created", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "PublishPaidPublicationContent",
+    "desc": "publish paid publication content",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "published", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "ActivateAccessEntitlementPlan",
+    "desc": "activate access entitlement plan",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "activated", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "CancelEntitlementPlanIfCreated",
+    "desc": "cancel entitlement plan if created",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" },
+      { "name": "reason", "type": "String" }
+    ],
+    "responseFields": [
+      { "name": "cancelled", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "ReleasePayoutHoldIfReserved",
+    "desc": "release payout hold if reserved",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" },
+      { "name": "reason", "type": "String" }
+    ],
+    "responseFields": [
+      { "name": "released", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "MarkPaidPublicationFailed",
+    "desc": "mark paid publication failed",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" },
+      { "name": "failedReason", "type": "String" }
     ],
     "responseFields": []
   },
   {
-    "tag": "command",
-    "package": "release.readiness",
-    "name": "ConfirmManualRelease",
-    "desc": "confirm manual release for gated publication",
-    "aggregates": ["PublicationReleaseReadiness"],
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "ReserveCreatorPayoutHold",
+    "desc": "reserve creator payout hold client",
+    "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
     ],
-    "responseFields": []
+    "responseFields": [
+      { "name": "payoutHoldId", "type": "String" }
+    ]
   },
   {
-    "tag": "command",
-    "package": "release.readiness",
-    "name": "CompletePublicationReleaseReadiness",
-    "desc": "complete release readiness and publish content",
-    "aggregates": ["PublicationReleaseReadiness"],
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "ReleaseCreatorPayoutHold",
+    "desc": "release creator payout hold client",
+    "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "completedAt", "type": "java.time.LocalDateTime" }
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
     ],
-    "responseFields": []
+    "responseFields": [
+      { "name": "released", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "CreateAccessEntitlementPlan",
+    "desc": "create access entitlement plan client",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "entitlementPlanId", "type": "String" }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "CancelAccessEntitlementPlan",
+    "desc": "cancel access entitlement plan client",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "cancelled", "type": "Boolean" }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "ActivateAccessEntitlementPlan",
+    "desc": "activate access entitlement plan client",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "activated", "type": "Boolean" }
+    ]
   },
   {
     "tag": "api_payload",
     "package": "content.workflow",
-    "name": "CreateGatedContentDraftPayload",
-    "desc": "create gated content draft http payload",
+    "name": "CreatePaidContentDraftPayload",
+    "desc": "create paid content draft http payload",
     "aggregates": [],
     "requestFields": [
       { "name": "title", "type": "String" },
       { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" },
-      { "name": "releaseWindowOpensAt", "type": "java.time.LocalDateTime" },
-      { "name": "releaseWindowClosesAt", "type": "java.time.LocalDateTime" }
+      { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": [
       { "name": "contentId", "type": "java.util.UUID" }

@@ -40,8 +40,6 @@ class ContentFactoryTest {
         assertEquals(payload.reviewStatus, content.reviewStatus)
         assertEquals(payload.contentStatus, content.contentStatus)
         assertEquals(ReleasePolicy.IMMEDIATE, content.releasePolicy)
-        assertEquals(null, content.releaseWindowOpensAt)
-        assertEquals(null, content.releaseWindowClosesAt)
         assertEquals(payload.reviewerId, content.reviewerId)
         assertEquals(payload.reviewedAt, content.reviewedAt)
         assertEquals(payload.publishedAt, content.publishedAt)

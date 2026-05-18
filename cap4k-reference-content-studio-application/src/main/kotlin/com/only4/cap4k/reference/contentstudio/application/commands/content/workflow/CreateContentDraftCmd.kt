@@ -28,8 +28,6 @@ object CreateContentDraftCmd {
                         reviewStatus = ReviewStatus.PENDING,
                         contentStatus = ContentStatus.DRAFT,
                         releasePolicy = ReleasePolicy.IMMEDIATE,
-                        releaseWindowOpensAt = null,
-                        releaseWindowClosesAt = null,
                         reviewerId = null,
                         reviewedAt = null,
                         publishedAt = null,

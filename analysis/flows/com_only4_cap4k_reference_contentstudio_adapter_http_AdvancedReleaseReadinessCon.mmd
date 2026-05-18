@@ -1,7 +1,0 @@
-flowchart TD
-  N1[AdvancedReleaseReadinessController::confirmManual]
-  N2[ConfirmManualReleaseCmd.Request]
-  N3[PublicationReleaseReadiness::confirmManualRelease]
-  N1 -->|ControllerMethodToCommand| N2
-  N2 -->|CommandToEntityMethod| N3
-

@@ -16,5 +16,4 @@ class MediaProcessingSucceededDomainEvent(
     val entity: MediaProcessingTask,
     val taskId: UUID,
     val contentId: UUID,
-    val externalTaskId: String?,
 )
