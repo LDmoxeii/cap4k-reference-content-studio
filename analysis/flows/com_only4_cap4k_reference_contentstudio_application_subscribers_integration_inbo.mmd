@@ -9,37 +9,39 @@ flowchart TD
   N8[MediaProcessingCallbackIntegrationEvent]
   N9[Content::&lt;get-contentStatus&gt;]
   N10[Content::&lt;get-releasePolicy&gt;]
-  N11[Content::publish]
-  N12[ContentPublishedDomainEvent]
-  N13[MediaProcessingTask::&lt;get-externalTaskId&gt;]
-  N14[MediaProcessingTask::&lt;get-id&gt;]
-  N15[MediaProcessingTask::&lt;get-processingStatus&gt;]
-  N16[MediaProcessingTask::markSucceeded]
-  N17[MediaProcessingSucceededDomainEvent]
-  N18[PaidPublicationTask::&lt;get-id&gt;]
-  N19[PaidPublicationTask::&lt;get-publicationSagaId&gt;]
-  N20[PaidPublicationTask::onCreate]
-  N21[PaidPublicationTask::recordSagaStarted]
+  N11[Content::&lt;get-reviewStatus&gt;]
+  N12[Content::publish]
+  N13[ContentPublishedDomainEvent]
+  N14[MediaProcessingTask::&lt;get-externalTaskId&gt;]
+  N15[MediaProcessingTask::&lt;get-id&gt;]
+  N16[MediaProcessingTask::&lt;get-processingStatus&gt;]
+  N17[MediaProcessingTask::markSucceeded]
+  N18[MediaProcessingSucceededDomainEvent]
+  N19[PaidPublicationTask::&lt;get-id&gt;]
+  N20[PaidPublicationTask::&lt;get-publicationSagaId&gt;]
+  N21[PaidPublicationTask::onCreate]
+  N22[PaidPublicationTask::recordSagaStarted]
   N1 -->|CommandToEntityMethod| N10
-  N1 -->|CommandToEntityMethod| N11
-  N2 -->|CommandToEntityMethod| N13
+  N1 -->|CommandToEntityMethod| N12
   N2 -->|CommandToEntityMethod| N14
   N2 -->|CommandToEntityMethod| N15
   N2 -->|CommandToEntityMethod| N16
+  N2 -->|CommandToEntityMethod| N17
   N3 -->|CommandToEntityMethod| N9
   N3 -->|CommandToEntityMethod| N10
-  N3 -->|CommandToEntityMethod| N15
-  N3 -->|CommandToEntityMethod| N18
+  N3 -->|CommandToEntityMethod| N11
+  N3 -->|CommandToEntityMethod| N16
   N3 -->|CommandToEntityMethod| N19
   N3 -->|CommandToEntityMethod| N20
   N3 -->|CommandToEntityMethod| N21
+  N3 -->|CommandToEntityMethod| N22
   N5 -->|DomainEventHandlerToCommand| N1
   N6 -->|DomainEventHandlerToCommand| N3
   N7 -->|IntegrationEventHandlerToCommand| N2
   N8 -->|IntegrationEventToHandler| N7
-  N11 -->|EntityMethodToDomainEvent| N12
-  N12 -->|DomainEventToHandler| N4
-  N16 -->|EntityMethodToDomainEvent| N17
-  N17 -->|DomainEventToHandler| N5
-  N17 -->|DomainEventToHandler| N6
+  N12 -->|EntityMethodToDomainEvent| N13
+  N13 -->|DomainEventToHandler| N4
+  N17 -->|EntityMethodToDomainEvent| N18
+  N18 -->|DomainEventToHandler| N5
+  N18 -->|DomainEventToHandler| N6
 

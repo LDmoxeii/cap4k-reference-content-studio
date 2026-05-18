@@ -5,18 +5,16 @@
         "cap4k-reference-content-studio-domain/build/cap4k-code-analysis"
     ],
     "entryTypes": [
-        "commandsendermethod",
         "controllermethod",
         "integrationevent"
     ],
     "entryTypeCounts": {
-        "commandsendermethod": 1,
         "controllermethod": 4,
         "integrationevent": 1
     },
-    "nodeCount": 188,
-    "edgeCount": 81,
-    "flowCount": 6,
+    "nodeCount": 189,
+    "edgeCount": 91,
+    "flowCount": 5,
     "flows": [
         {
             "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.AdvancedPaidPublicationController::createPaid",
@@ -37,8 +35,8 @@
         {
             "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
             "entryType": "controllermethod",
-            "nodeCount": 10,
-            "edgeCount": 9,
+            "nodeCount": 25,
+            "edgeCount": 26,
             "json": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_approve.json",
             "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_approve.mmd"
         },
@@ -51,18 +49,10 @@
             "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_submitRevi.mmd"
         },
         {
-            "entryId": "com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd.Handler::exec",
-            "entryType": "commandsendermethod",
-            "nodeCount": 6,
-            "edgeCount": 5,
-            "json": "com_only4_cap4k_reference_contentstudio_application_commands_paid_publication_Pu.json",
-            "mermaid": "com_only4_cap4k_reference_contentstudio_application_commands_paid_publication_Pu.mmd"
-        },
-        {
             "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
             "entryType": "integrationevent",
-            "nodeCount": 21,
-            "edgeCount": 22,
+            "nodeCount": 22,
+            "edgeCount": 23,
             "json": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_inbo.json",
             "mermaid": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_inbo.mmd"
         }

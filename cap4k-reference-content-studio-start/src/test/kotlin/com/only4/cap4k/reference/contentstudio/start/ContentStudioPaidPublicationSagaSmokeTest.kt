@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.adapter.application.distributed.clients.paid.publication.FakePaidPublicationCliState
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd
+import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.ReserveCreatorPayoutHoldCmd
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -168,6 +170,80 @@ class ContentStudioPaidPublicationSagaSmokeTest(
 
     @Test
     @Order(5)
+    fun `paid publication command rejects task that points at immediate content`() {
+        val contentId = UUID.randomUUID()
+        val taskId = UUID.randomUUID()
+        val now = LocalDateTime.now()
+        jdbcTemplate.update(
+            """
+            insert into content (
+                id, title, body, media_source_key, review_status, content_status, release_policy,
+                reviewer_id, reviewed_at, published_at, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            contentId,
+            "Immediate content with paid task",
+            "Broken invariant should not publish",
+            "media/immediate-paid-task-${UUID.randomUUID()}.mp4",
+            1,
+            0,
+            0,
+            UUID.fromString("11111111-1111-1111-1111-111111111111"),
+            now,
+            null,
+            now,
+            now,
+        )
+        jdbcTemplate.update(
+            """
+            insert into media_processing_task (
+                id, content_id, external_task_id, processing_status, result_snapshot, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            UUID.randomUUID(),
+            contentId,
+            "immediate-paid-task-$contentId",
+            2,
+            null,
+            now,
+            now,
+        )
+        jdbcTemplate.update(
+            """
+            insert into paid_publication_task (
+                id, content_id, paid_publication_status, publication_saga_id,
+                payout_hold_status, payout_hold_id, entitlement_plan_status, entitlement_plan_id,
+                started_at, published_at, completed_at, failed_at, failed_reason, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            taskId,
+            contentId,
+            1,
+            UUID.randomUUID().toString(),
+            1,
+            "hold-$taskId",
+            1,
+            "plan-$taskId",
+            now,
+            null,
+            null,
+            null,
+            null,
+            now,
+            now,
+        )
+
+        assertThatThrownBy {
+            Mediator.cmd.send(PublishPaidPublicationContentCmd.Request(taskId))
+        }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("requires paid content")
+
+        assertThat(contentStatus(contentId)).isEqualTo(0)
+    }
+
+    @Test
+    @Order(6)
     fun `generic publish command does not publish paid content directly`() {
         val contentId = UUID.randomUUID()
         val now = LocalDateTime.now()

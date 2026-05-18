@@ -7,6 +7,7 @@ import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SConte
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.paid_publication_task.SPaidPublicationTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.publish
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTask
@@ -42,6 +43,9 @@ object PublishPaidPublicationContentCmd {
 
             val now = LocalDateTime.now()
             val content = loadContent(task.contentId)
+            check(content.releasePolicy == ReleasePolicy.PAID) {
+                "Paid publication task ${task.id} requires paid content, but content ${content.id} has release policy ${content.releasePolicy}."
+            }
             val mediaProcessingTask = loadMediaProcessingTask(task.contentId) ?: return Response(published = false)
             val publicationEligibilityDomainService =
                 Mediator.services.getService(PublicationEligibilityDomainService::class.java)

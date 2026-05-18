@@ -1,21 +1,53 @@
 flowchart TD
   N1[ReviewController::approve]
   N2[ApproveContentReviewCmd.Request]
-  N3[StartMediaProcessingCmd.Request]
-  N4[ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved]
-  N5[Content::&lt;get-id&gt;]
-  N6[Content::&lt;get-mediaSourceKey&gt;]
-  N7[Content::approve]
-  N8[ContentReviewApprovedDomainEvent]
-  N9[MediaProcessingTask::markSubmitted]
-  N10[MediaProcessingTask::onCreate]
+  N3[PublishContentCmd.Request]
+  N4[StartMediaProcessingCmd.Request]
+  N5[TryStartPaidPublicationCmd.Request]
+  N6[ContentPublishedDomainEventSubscriber::on]
+  N7[ContentReviewApprovedDomainEventSubscriber::onContentReviewApproved]
+  N8[ContentReviewApprovedDomainEventSubscriber::recoverImmediatePublication]
+  N9[ContentReviewApprovedDomainEventSubscriber::tryStartPaidPublication]
+  N10[Content::&lt;get-contentStatus&gt;]
+  N11[Content::&lt;get-id&gt;]
+  N12[Content::&lt;get-mediaSourceKey&gt;]
+  N13[Content::&lt;get-releasePolicy&gt;]
+  N14[Content::&lt;get-reviewStatus&gt;]
+  N15[Content::approve]
+  N16[Content::publish]
+  N17[ContentPublishedDomainEvent]
+  N18[ContentReviewApprovedDomainEvent]
+  N19[MediaProcessingTask::&lt;get-processingStatus&gt;]
+  N20[MediaProcessingTask::markSubmitted]
+  N21[MediaProcessingTask::onCreate]
+  N22[PaidPublicationTask::&lt;get-id&gt;]
+  N23[PaidPublicationTask::&lt;get-publicationSagaId&gt;]
+  N24[PaidPublicationTask::onCreate]
+  N25[PaidPublicationTask::recordSagaStarted]
   N1 -->|ControllerMethodToCommand| N2
-  N2 -->|CommandToEntityMethod| N7
-  N3 -->|CommandToEntityMethod| N5
-  N3 -->|CommandToEntityMethod| N6
-  N3 -->|CommandToEntityMethod| N9
-  N3 -->|CommandToEntityMethod| N10
-  N4 -->|DomainEventHandlerToCommand| N3
-  N7 -->|EntityMethodToDomainEvent| N8
-  N8 -->|DomainEventToHandler| N4
+  N2 -->|CommandToEntityMethod| N15
+  N3 -->|CommandToEntityMethod| N13
+  N3 -->|CommandToEntityMethod| N16
+  N4 -->|CommandToEntityMethod| N11
+  N4 -->|CommandToEntityMethod| N12
+  N4 -->|CommandToEntityMethod| N19
+  N4 -->|CommandToEntityMethod| N20
+  N4 -->|CommandToEntityMethod| N21
+  N5 -->|CommandToEntityMethod| N10
+  N5 -->|CommandToEntityMethod| N13
+  N5 -->|CommandToEntityMethod| N14
+  N5 -->|CommandToEntityMethod| N19
+  N5 -->|CommandToEntityMethod| N22
+  N5 -->|CommandToEntityMethod| N23
+  N5 -->|CommandToEntityMethod| N24
+  N5 -->|CommandToEntityMethod| N25
+  N7 -->|DomainEventHandlerToCommand| N4
+  N8 -->|DomainEventHandlerToCommand| N3
+  N9 -->|DomainEventHandlerToCommand| N5
+  N15 -->|EntityMethodToDomainEvent| N18
+  N16 -->|EntityMethodToDomainEvent| N17
+  N17 -->|DomainEventToHandler| N6
+  N18 -->|DomainEventToHandler| N7
+  N18 -->|DomainEventToHandler| N8
+  N18 -->|DomainEventToHandler| N9
 

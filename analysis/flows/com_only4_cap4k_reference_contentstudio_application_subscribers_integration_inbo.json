@@ -1,8 +1,8 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
   "entryType": "integrationevent",
-  "nodeCount": 21,
-  "edgeCount": 22,
+  "nodeCount": 22,
+  "edgeCount": 23,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd.Request",
@@ -62,6 +62,12 @@
       "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releasePolicy>",
       "name": "Content::<get-releasePolicy>",
       "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releasePolicy>",
+      "type": "entitymethod"
+    },
+    {
+      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-reviewStatus>",
+      "name": "Content::<get-reviewStatus>",
+      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-reviewStatus>",
       "type": "entitymethod"
     },
     {
@@ -170,6 +176,11 @@
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.TryStartPaidPublicationCmd.Request",
       "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-releasePolicy>",
+      "type": "CommandToEntityMethod"
+    },
+    {
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.TryStartPaidPublicationCmd.Request",
+      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content::<get-reviewStatus>",
       "type": "CommandToEntityMethod"
     },
     {
