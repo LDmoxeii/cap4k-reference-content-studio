@@ -21,15 +21,15 @@ reading the full `cap4k` repository first.
 
 - Start with the domain behavior and factory tests if you want to understand the business rules.
 - Use the smoke tests if you want to understand the runnable end-to-end path.
-- Ignore generated snapshots on first read; return to `src-generated` after the handwritten flow is clear.
+- Start with `design/design.json`, the database schema, and fresh `build/cap4k/plan.json`, then read the real implementation under `src/main/kotlin`; do not treat `src-generated` as the reading entry point.
 
 ## What Is In This Repo
 
 The repository is organized as four Gradle modules:
 
-- `cap4k-reference-content-studio-domain`: domain model plus committed generated domain snapshots
-- `cap4k-reference-content-studio-application`: application commands and queries
-- `cap4k-reference-content-studio-adapter`: HTTP controllers, query adapters, persistence adapters
+- `cap4k-reference-content-studio-domain`: domain model, factories, domain services, and domain behavior tests
+- `cap4k-reference-content-studio-application`: application commands, queries, subscribers, Saga, and jobs
+- `cap4k-reference-content-studio-adapter`: HTTP controllers, query adapters, persistence adapters, and external-client adapters
 - `cap4k-reference-content-studio-start`: the Spring Boot runtime you actually start locally
 
 For local operation, treat this as a small reference application with a single
@@ -64,8 +64,8 @@ The app starts on `http://localhost:8080`.
 
 - Run the app:
   - `./gradlew :cap4k-reference-content-studio-start:bootRun`
-- Regenerate artifacts:
-  - `./gradlew cap4kPlan cap4kGenerate syncGeneratedSnapshots`
+- Regenerate and inspect ownership:
+  - `./gradlew cap4kPlan cap4kGenerate`
 - Generate analysis reports:
   - `./gradlew cap4kAnalysisPlan cap4kAnalysisGenerate`
 
@@ -195,16 +195,20 @@ These artifacts are not part of the main happy-path operator workflow. They are
 kept as a reference surface for inspecting controller, subscriber, job, and
 application flow structure.
 
-## What `src-generated` Means
+## How To Inspect Generation Ownership
 
-`src-generated/main/kotlin` directories are committed generated snapshots. They
-exist as reference evidence for what `cap4k` generated for this example.
+This repository no longer commits a `src-generated` snapshot tree.
+If you need to inspect whether generator-owned surfaces still match the declared inputs, read these in order:
 
-They are not the primary handwritten source roots, and they are not where you
-should start when trying to understand the runtime flow. The handwritten code
-lives under the normal `src/main/kotlin` directories. When generator output is
-refreshed, `syncGeneratedSnapshots` copies fresh artifacts into `src-generated`
-for review and snapshot tracking.
+- `design/design.json`
+- `cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql`
+- `build/cap4k/plan.json`
+
+In this repository:
+
+- `design/design.json` and schema describe what generation should consume;
+- `build/cap4k/plan.json` shows which files the current generator run plans to write, which generator owns them, and which conflict policy applies;
+- the checked-in command/query/client/payload/subscriber surfaces still live under each module's `src/main/kotlin`.
 
 ## Version One Scope
 
@@ -214,7 +218,7 @@ Version one is intentionally narrow. It covers the local reference workflow only
 - one in-memory H2 runtime
 - manual operation through `.http` files
 - callback simulation through the HTTP integration endpoint
-- committed generation and OpenAPI snapshots for inspection
+- committed OpenAPI snapshots and analysis outputs for inspection
 
 Version one does not try to cover:
 

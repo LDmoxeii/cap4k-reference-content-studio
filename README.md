@@ -21,15 +21,15 @@ domain / application / adapter 分层之上：
 
 - 如果你想先理解业务规则，先看 domain 行为测试和 factory 测试。
 - 如果你想先理解整条可运行主链路，先看 smoke tests。
-- 第一次阅读时先忽略 `src-generated`；等手写流程看明白后，再回头看生成快照。
+- 第一次阅读时先看 `design/design.json`、数据库 schema、`build/cap4k/plan.json`，再对照 `src/main/kotlin` 下的真实实现文件；不要把 `src-generated` 当成阅读入口。
 
 ## 仓库内容
 
 这个仓库分成 4 个 Gradle 模块：
 
-- `cap4k-reference-content-studio-domain`：领域模型，以及提交进仓的生成领域快照
-- `cap4k-reference-content-studio-application`：应用层命令、查询和订阅器
-- `cap4k-reference-content-studio-adapter`：HTTP 控制器、查询适配、持久化适配
+- `cap4k-reference-content-studio-domain`：领域模型、factory、domain service 和领域行为测试
+- `cap4k-reference-content-studio-application`：应用层命令、查询、订阅器、Saga 和 job
+- `cap4k-reference-content-studio-adapter`：HTTP 控制器、查询适配、持久化适配、外部客户端适配
 - `cap4k-reference-content-studio-start`：你本地实际启动的 Spring Boot 运行时
 
 本地运行时可以把它当作一个只有单个 Spring Boot 进程、单个内存 H2 数据库的参考应用。
@@ -63,8 +63,8 @@ Windows 上：
 
 - 运行应用：
   - `./gradlew :cap4k-reference-content-studio-start:bootRun`
-- 重新生成产物：
-  - `./gradlew cap4kPlan cap4kGenerate syncGeneratedSnapshots`
+- 重新生成与检查 ownership：
+  - `./gradlew cap4kPlan cap4kGenerate`
 - 生成分析报告：
   - `./gradlew cap4kAnalysisPlan cap4kAnalysisGenerate`
 
@@ -176,15 +176,20 @@ Windows 上：
 这些产物不是主 happy-path 操作面的一部分，而是作为参考证据面，用来检查
 controller、subscriber、job 以及 application 流程的结构。
 
-## `src-generated` 的含义
+## 如何检查生成 ownership
 
-`src-generated/main/kotlin` 目录是提交进仓的生成快照。
-它们用于保留生成结果的参考证据。
+这个仓库不再提交 `src-generated` 快照目录。
+如果你要检查 generator 是否严格按照输入合同和 ownership 输出，请优先看：
 
-它们不是主要的手写源码根目录，也不是你理解运行时流程时该先看的地方。
-真正的手写代码仍然在正常的 `src/main/kotlin` 下。
-当生成器输出刷新时，`syncGeneratedSnapshots` 会把最新产物复制到
-`src-generated`，用于审阅和快照跟踪。
+- `design/design.json`
+- `cap4k-reference-content-studio-start/src/main/resources/db/schema/content-studio-schema.sql`
+- `build/cap4k/plan.json`
+
+其中：
+
+- `design/design.json` 和 schema 决定 generator 应该消费什么事实；
+- `build/cap4k/plan.json` 决定当前 generator 计划写哪些文件、使用哪个 generator、采用什么冲突策略；
+- 真正提交进仓的 command/query/client/payload/subscriber surface 仍然在各模块自己的 `src/main/kotlin` 下。
 
 ## v1 范围
 
@@ -194,7 +199,7 @@ v1 的范围刻意收得很窄，只覆盖本地参考流程：
 - 一个内存 H2 运行时
 - 通过 `.http` 文件手动操作
 - 通过 HTTP 集成回调模拟媒体处理完成
-- 保留提交进仓的生成快照和 OpenAPI 快照供检查
+- 保留 OpenAPI 快照和分析产物供检查
 
 v1 不覆盖这些内容：
 
