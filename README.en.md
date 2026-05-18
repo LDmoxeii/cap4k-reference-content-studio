@@ -21,7 +21,7 @@ reading the full `cap4k` repository first.
 
 - Start with the domain behavior and factory tests if you want to understand the business rules.
 - Use the smoke tests if you want to understand the runnable end-to-end path.
-- Start with `design/design.json`, the database schema, and fresh `build/cap4k/plan.json`, then read the real implementation under `src/main/kotlin`; do not treat `src-generated` as the reading entry point.
+- Start with `design/design.json`, the database schema, and fresh `build/cap4k/plan.json`, then read the real implementation under `src/main/kotlin`; do not approach this repository through old generated-snapshot reading habits.
 
 ## What Is In This Repo
 
@@ -197,7 +197,7 @@ application flow structure.
 
 ## How To Inspect Generation Ownership
 
-This repository no longer commits a `src-generated` snapshot tree.
+This repository no longer commits a generated snapshot tree.
 If you need to inspect whether generator-owned surfaces still match the declared inputs, read these in order:
 
 - `design/design.json`

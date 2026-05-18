@@ -21,7 +21,7 @@ domain / application / adapter 分层之上：
 
 - 如果你想先理解业务规则，先看 domain 行为测试和 factory 测试。
 - 如果你想先理解整条可运行主链路，先看 smoke tests。
-- 第一次阅读时先看 `design/design.json`、数据库 schema、`build/cap4k/plan.json`，再对照 `src/main/kotlin` 下的真实实现文件；不要把 `src-generated` 当成阅读入口。
+- 第一次阅读时先看 `design/design.json`、数据库 schema、`build/cap4k/plan.json`，再对照 `src/main/kotlin` 下的真实实现文件；不要从历史生成快照的阅读习惯进入这个仓库。
 
 ## 仓库内容
 
@@ -178,7 +178,7 @@ controller、subscriber、job 以及 application 流程的结构。
 
 ## 如何检查生成 ownership
 
-这个仓库不再提交 `src-generated` 快照目录。
+这个仓库不再提交历史生成快照目录。
 如果你要检查 generator 是否严格按照输入合同和 ownership 输出，请优先看：
 
 - `design/design.json`
