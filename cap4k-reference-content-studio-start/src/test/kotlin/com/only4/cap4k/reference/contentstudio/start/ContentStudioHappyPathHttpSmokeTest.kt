@@ -2,8 +2,11 @@ package com.only4.cap4k.reference.contentstudio.start
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.only4.cap4k.ddd.core.Mediator
+import com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
 import java.time.Duration
+import java.time.LocalDateTime
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,11 +16,15 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.transaction.support.TransactionTemplate
 
 @ContentStudioSpringBootTest
 class ContentStudioHappyPathHttpSmokeTest(
     @param:Autowired private val restTemplate: TestRestTemplate,
     @param:Autowired private val objectMapper: ObjectMapper,
+    @param:Autowired private val jdbcTemplate: JdbcTemplate,
+    @param:Autowired private val transactionTemplate: TransactionTemplate,
 ) {
 
     @Test
@@ -77,6 +84,24 @@ class ContentStudioHappyPathHttpSmokeTest(
         assertPublishedContent(contentId)
     }
 
+    @Test
+    fun `start command no-ops for already submitted media processing task`() {
+        val contentId = UUID.randomUUID()
+        val mediaSourceKey = "media/submitted-idempotency-${UUID.randomUUID()}.mp4"
+        val submittedExternalTaskId = "submitted-before-reapproval-$contentId"
+        insertContentWithSubmittedMediaTask(
+            contentId = contentId,
+            mediaSourceKey = mediaSourceKey,
+            externalTaskId = submittedExternalTaskId,
+        )
+
+        transactionTemplate.execute<StartMediaProcessingCmd.Response> {
+            Mediator.cmd.send(StartMediaProcessingCmd.Request(contentId))
+        }
+
+        assertThat(mediaExternalTaskId(contentId)).isEqualTo(submittedExternalTaskId)
+    }
+
     private fun createImmediateContent(title: String, body: String, mediaSourceKey: String): String {
         val createResponse =
             restTemplate.postForEntity(
@@ -134,6 +159,56 @@ class ContentStudioHappyPathHttpSmokeTest(
         }.required("task")
         return submittedTask.required("externalTaskId").asText()
     }
+
+    private fun insertContentWithSubmittedMediaTask(contentId: UUID, mediaSourceKey: String, externalTaskId: String) {
+        val taskId = UUID.randomUUID()
+        val now = LocalDateTime.now()
+        jdbcTemplate.update(
+            """
+            insert into content (
+                id, title, body, media_source_key, review_status, content_status, release_policy,
+                reviewer_id, reviewed_at, published_at, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            contentId,
+            "Submitted media idempotency",
+            "Start command must not restart an already submitted external job",
+            mediaSourceKey,
+            1,
+            0,
+            0,
+            UUID.fromString("11111111-1111-1111-1111-111111111111"),
+            now,
+            null,
+            now,
+            now,
+        )
+        jdbcTemplate.update(
+            """
+            insert into media_processing_task (
+                id, content_id, external_task_id, processing_status, result_snapshot, db_created_at, db_updated_at
+            ) values (?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent(),
+            taskId,
+            contentId,
+            externalTaskId,
+            1,
+            null,
+            now,
+            now,
+        )
+    }
+
+    private fun mediaExternalTaskId(contentId: UUID): String? =
+        jdbcTemplate.queryForObject(
+            """
+            select external_task_id
+            from media_processing_task
+            where content_id = ?
+            """.trimIndent(),
+            String::class.java,
+            contentId,
+        )
 
     private fun sendMediaSucceededCallback(externalTaskId: String) {
         val callbackPayload =

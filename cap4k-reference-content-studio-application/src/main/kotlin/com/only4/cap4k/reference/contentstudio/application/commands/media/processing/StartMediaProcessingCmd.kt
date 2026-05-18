@@ -37,7 +37,10 @@ object StartMediaProcessingCmd {
                         dbUpdatedAt = LocalDateTime.now(),
                     )
                 )
-            if (task.processingStatus == MediaProcessingStatus.SUCCEEDED) {
+            if (
+                task.processingStatus == MediaProcessingStatus.SUBMITTED ||
+                task.processingStatus == MediaProcessingStatus.SUCCEEDED
+            ) {
                 return Response
             }
             val response =
