@@ -20,12 +20,24 @@ import org.springframework.stereotype.Service
 )
 class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
 
-    override fun create(entityPayload: Payload): Content =
-        Content(
+    override fun create(entityPayload: Payload): Content {
+        val title = entityPayload.title.trim()
+        val body = entityPayload.body.trim()
+        val mediaSourceKey = entityPayload.mediaSourceKey.trim()
+
+        require(title.isNotBlank()) { "Title is required" }
+        require(title.length <= TITLE_MAX_LENGTH) { "Title must be 200 characters or fewer" }
+        require(body.isNotBlank()) { "Body is required" }
+        require(mediaSourceKey.isNotBlank()) { "Media source key is required" }
+        require(mediaSourceKey.length <= MEDIA_SOURCE_KEY_MAX_LENGTH) {
+            "Media source key must be 200 characters or fewer"
+        }
+
+        return Content(
             id = entityPayload.id,
-            title = entityPayload.title,
-            body = entityPayload.body,
-            mediaSourceKey = entityPayload.mediaSourceKey,
+            title = title,
+            body = body,
+            mediaSourceKey = mediaSourceKey,
             reviewStatus = entityPayload.reviewStatus,
             contentStatus = entityPayload.contentStatus,
             releasePolicy = entityPayload.releasePolicy,
@@ -36,6 +48,12 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
             dbCreatedAt = entityPayload.dbCreatedAt,
             dbUpdatedAt = entityPayload.dbUpdatedAt,
         )
+    }
+
+    private companion object {
+        const val TITLE_MAX_LENGTH = 200
+        const val MEDIA_SOURCE_KEY_MAX_LENGTH = 200
+    }
 
     @Aggregate(
         aggregate = "Content",

@@ -8,6 +8,13 @@ import com.only4.cap4k.reference.contentstudio.application.commands.content.work
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.ReserveCreatorPayoutHoldCmd
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.UUID
@@ -48,11 +55,22 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         val contentId = runPaidPublicationPath()
 
         val task = waitForPaidPublicationTask(Duration.ofSeconds(10), contentId) { row ->
-            row.paidPublicationStatus == 2 && row.payoutHoldStatus == 1 && row.entitlementPlanStatus == 2
+            row.paidPublicationStatus == PaidPublicationStatus.PUBLISHED.ordinal &&
+                row.payoutHoldStatus == PayoutHoldStatus.RESERVED.ordinal &&
+                row.entitlementPlanStatus == EntitlementPlanStatus.ACTIVATED.ordinal
         }
-        assertThat(task.paidPublicationStatus).isEqualTo(2)
-        assertThat(task.payoutHoldStatus).isEqualTo(1)
-        assertThat(task.entitlementPlanStatus).isEqualTo(2)
+        assertThat(task.paidPublicationStatus).isEqualTo(PaidPublicationStatus.PUBLISHED.ordinal)
+        assertThat(task.payoutHoldStatus).isEqualTo(PayoutHoldStatus.RESERVED.ordinal)
+        assertThat(task.entitlementPlanStatus).isEqualTo(EntitlementPlanStatus.ACTIVATED.ordinal)
+
+        val paidResponse = restTemplate.getForEntity("/paid-publication/$contentId", String::class.java)
+        assertThat(paidResponse.statusCode).isEqualTo(HttpStatus.OK)
+        val paid = json(paidResponse.body)
+        assertThat(paid.required("paidPublicationStatus").asText()).isEqualTo("PUBLISHED")
+        assertThat(paid.required("payoutHoldStatus").asText()).isEqualTo("RESERVED")
+        assertThat(paid.required("entitlementPlanStatus").asText()).isEqualTo("ACTIVATED")
+        assertThat(paid.required("completedAt").isNull).isFalse()
+
         assertThat(sagaProcessCodes(contentId))
             .contains(
                 "reserve-payout-hold",
@@ -71,11 +89,11 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         val contentId = runPaidPublicationPath(waitForPublishedContent = false)
 
         val task = waitForPaidPublicationTask(Duration.ofSeconds(10), contentId) { row ->
-            row.paidPublicationStatus == 4
+            row.paidPublicationStatus == PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR.ordinal
         }
-        assertThat(task.paidPublicationStatus).isEqualTo(4)
-        assertThat(task.payoutHoldStatus).isEqualTo(2)
-        assertThat(task.entitlementPlanStatus).isEqualTo(3)
+        assertThat(task.paidPublicationStatus).isEqualTo(PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR.ordinal)
+        assertThat(task.payoutHoldStatus).isEqualTo(PayoutHoldStatus.RELEASED.ordinal)
+        assertThat(task.entitlementPlanStatus).isEqualTo(EntitlementPlanStatus.CANCELLED.ordinal)
         assertPublishedContent(contentId)
     }
 
@@ -104,7 +122,9 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         approveContent(contentId)
         assertPublishedContent(contentId)
         waitForPaidPublicationTask(Duration.ofSeconds(10), contentId) { row ->
-            row.paidPublicationStatus == 2 && row.payoutHoldStatus == 1 && row.entitlementPlanStatus == 2
+            row.paidPublicationStatus == PaidPublicationStatus.PUBLISHED.ordinal &&
+                row.payoutHoldStatus == PayoutHoldStatus.RESERVED.ordinal &&
+                row.entitlementPlanStatus == EntitlementPlanStatus.ACTIVATED.ordinal
         }
     }
 
@@ -125,9 +145,9 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             "Paid pending task",
             "Direct command guard coverage",
             "media/pending-task.mp4",
-            1,
-            0,
-            2,
+            ReviewStatus.APPROVED.ordinal,
+            ContentStatus.DRAFT.ordinal,
+            ReleasePolicy.PAID.ordinal,
             null,
             now,
             null,
@@ -144,11 +164,11 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             """.trimIndent(),
             taskId,
             contentId,
-            0,
+            PaidPublicationStatus.PENDING.ordinal,
             null,
-            0,
+            PayoutHoldStatus.NONE.ordinal,
             null,
-            0,
+            EntitlementPlanStatus.NONE.ordinal,
             null,
             null,
             null,
@@ -163,9 +183,9 @@ class ContentStudioPaidPublicationSagaSmokeTest(
 
         assertThat(response.reserved).isFalse()
         val task = paidPublicationTask(contentId)
-        assertThat(task?.paidPublicationStatus).isEqualTo(0)
+        assertThat(task?.paidPublicationStatus).isEqualTo(PaidPublicationStatus.PENDING.ordinal)
         assertThat(task?.publicationSagaId).isNull()
-        assertThat(task?.payoutHoldStatus).isEqualTo(0)
+        assertThat(task?.payoutHoldStatus).isEqualTo(PayoutHoldStatus.NONE.ordinal)
         assertThat(task?.payoutHoldId).isNull()
     }
 
@@ -186,9 +206,9 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             "Immediate content with paid task",
             "Broken invariant should not publish",
             "media/immediate-paid-task-${UUID.randomUUID()}.mp4",
-            1,
-            0,
-            0,
+            ReviewStatus.APPROVED.ordinal,
+            ContentStatus.DRAFT.ordinal,
+            ReleasePolicy.IMMEDIATE.ordinal,
             UUID.fromString("11111111-1111-1111-1111-111111111111"),
             now,
             null,
@@ -204,7 +224,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             UUID.randomUUID(),
             contentId,
             "immediate-paid-task-$contentId",
-            2,
+            MediaProcessingStatus.SUCCEEDED.ordinal,
             null,
             now,
             now,
@@ -219,11 +239,11 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             """.trimIndent(),
             taskId,
             contentId,
-            1,
+            PaidPublicationStatus.RUNNING.ordinal,
             UUID.randomUUID().toString(),
-            1,
+            PayoutHoldStatus.RESERVED.ordinal,
             "hold-$taskId",
-            1,
+            EntitlementPlanStatus.CREATED.ordinal,
             "plan-$taskId",
             now,
             null,
@@ -240,7 +260,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             .isInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("requires paid content")
 
-        assertThat(contentStatus(contentId)).isEqualTo(0)
+        assertThat(contentStatus(contentId)).isEqualTo(ContentStatus.DRAFT.ordinal)
     }
 
     @Test
@@ -259,9 +279,9 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             "Paid direct publish",
             "Generic publish command must not bypass paid publication orchestration",
             "media/paid-direct-${UUID.randomUUID()}.mp4",
-            1,
-            0,
-            2,
+            ReviewStatus.APPROVED.ordinal,
+            ContentStatus.DRAFT.ordinal,
+            ReleasePolicy.PAID.ordinal,
             UUID.fromString("11111111-1111-1111-1111-111111111111"),
             now,
             null,
@@ -277,7 +297,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             UUID.randomUUID(),
             contentId,
             "paid-direct-$contentId",
-            2,
+            MediaProcessingStatus.SUCCEEDED.ordinal,
             null,
             now,
             now,
@@ -286,7 +306,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         val response = Mediator.cmd.send(PublishContentCmd.Request(contentId, now))
 
         assertThat(response.published).isFalse()
-        assertThat(contentStatus(contentId)).isEqualTo(0)
+        assertThat(contentStatus(contentId)).isEqualTo(ContentStatus.DRAFT.ordinal)
     }
 
     private fun runPaidPublicationPath(waitForPublishedContent: Boolean = true): UUID {

@@ -16,5 +16,6 @@ import java.util.UUID
 class ContentPublishedDomainEvent(
     val entity: Content,
     val contentId: UUID,
+    val releasePolicy: String,
     val publishedAt: LocalDateTime,
 )

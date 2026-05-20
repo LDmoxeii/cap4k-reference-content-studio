@@ -19,6 +19,7 @@ reading the full `cap4k` repository first.
 
 ## How To Read This Repo
 
+- If you want to read this reference project from the cap4k modeling perspective, start with [docs/modeling.md](docs/modeling.md).
 - Start with the domain behavior and factory tests if you want to understand the business rules.
 - Use the smoke tests if you want to understand the runnable end-to-end path.
 - Start with `design/design.json`, the database schema, and fresh `build/cap4k/plan.json`, then read the real implementation under `src/main/kotlin`; do not approach this repository through old generated-snapshot reading habits.

@@ -114,6 +114,25 @@ class MediaProcessingTaskBehaviorTest {
     }
 
     @Test
+    fun `mark processing succeeded rejects different content even when task is already succeeded`() {
+        val task = newTask(
+            externalTaskId = "external-123",
+            processingStatus = MediaProcessingStatus.SUCCEEDED,
+        )
+        val snapshot = newResultSnapshot(
+            task = task,
+            contentId = UUID.fromString("00000000-0000-0000-0000-000000000505"),
+        )
+
+        assertThrows(IllegalStateException::class.java) {
+            task.markSucceeded(snapshot)
+        }
+
+        assertEquals(MediaProcessingStatus.SUCCEEDED, task.processingStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
     fun `mark submitted rejects regressing a succeeded task`() {
         val task = newTask(
             externalTaskId = "external-123",
@@ -160,6 +179,26 @@ class MediaProcessingTaskBehaviorTest {
     }
 
     @Test
+    fun `mark processing succeeded rejects result for a different content`() {
+        val task = newTask(
+            externalTaskId = "external-123",
+            processingStatus = MediaProcessingStatus.SUBMITTED,
+        )
+        val snapshot = newResultSnapshot(
+            task = task,
+            contentId = UUID.fromString("00000000-0000-0000-0000-000000000404"),
+        )
+
+        assertThrows(IllegalStateException::class.java) {
+            task.markSucceeded(snapshot)
+        }
+
+        assertEquals(MediaProcessingStatus.SUBMITTED, task.processingStatus)
+        assertEquals(null, task.resultSnapshot)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
     fun `media processing succeeded event is durable`() {
         val annotation = MediaProcessingSucceededDomainEvent::class.java.getAnnotation(DomainEvent::class.java)
 
@@ -183,11 +222,13 @@ class MediaProcessingTaskBehaviorTest {
 
     private fun newResultSnapshot(
         task: MediaProcessingTask,
+        contentId: UUID = task.contentId,
         externalTaskId: String = task.externalTaskId ?: "external-123",
     ): MediaProcessingResultSnapshot {
         val now = LocalDateTime.of(2026, 5, 11, 10, 15, 30)
         return MediaProcessingResultSnapshot.create(
             mediaProcessingTaskId = task.id,
+            contentId = contentId,
             externalTaskId = externalTaskId,
             resultStatus = MediaProcessingResultStatus.SUCCEEDED,
             assetSha256 = "a".repeat(64),

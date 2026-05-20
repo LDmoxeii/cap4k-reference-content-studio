@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.UUID
@@ -49,6 +53,8 @@ class ContentStudioHappyPathHttpSmokeTest(
         }
         assertThat(content.required("reviewStatus").asText()).isEqualTo("APPROVED")
         assertThat(content.required("contentStatus").asText()).isEqualTo("PUBLISHED")
+        assertThat(content.required("releasePolicy").asText()).isEqualTo("IMMEDIATE")
+        assertThat(content.required("mediaReadyAt").isNull).isFalse()
         assertThat(content.required("publishedAt").isNull).isFalse()
 
         val succeededTask = waitForJson(Duration.ofSeconds(5)) {
@@ -174,9 +180,9 @@ class ContentStudioHappyPathHttpSmokeTest(
             "Submitted media idempotency",
             "Start command must not restart an already submitted external job",
             mediaSourceKey,
-            1,
-            0,
-            0,
+            ReviewStatus.APPROVED.ordinal,
+            ContentStatus.DRAFT.ordinal,
+            ReleasePolicy.IMMEDIATE.ordinal,
             UUID.fromString("11111111-1111-1111-1111-111111111111"),
             now,
             null,
@@ -192,7 +198,7 @@ class ContentStudioHappyPathHttpSmokeTest(
             taskId,
             contentId,
             externalTaskId,
-            1,
+            MediaProcessingStatus.SUBMITTED.ordinal,
             null,
             now,
             now,
@@ -215,7 +221,7 @@ class ContentStudioHappyPathHttpSmokeTest(
             """
             {
               "externalTaskId": "$externalTaskId",
-              "status": "SUCCEEDED",
+              "status": "COMPLETED",
               "assetSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "assetLocation": "s3://content-studio/assets/$externalTaskId.mp4",
               "completedAt": "2026-05-11T10:15:30"

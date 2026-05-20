@@ -9,6 +9,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publicatio
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.recordEntitlementPlanActivated
+import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.stereotype.Service
 
@@ -19,14 +20,8 @@ object ActivateAccessEntitlementPlanCmd {
 
         override fun exec(request: Request): Response {
             val task = loadTask(request.paidPublicationTaskId)
-            if (task.entitlementPlanStatus == EntitlementPlanStatus.ACTIVATED) {
-                return Response(activated = false)
-            }
-            check(task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED) {
-                "Paid publication task ${task.id} is not published."
-            }
-            check(task.entitlementPlanStatus == EntitlementPlanStatus.CREATED) {
-                "Paid publication task ${task.id} has no created entitlement plan."
+            validateLoadedTaskForActivation(task)?.let {
+                return it
             }
 
             val response =
@@ -38,7 +33,7 @@ object ActivateAccessEntitlementPlanCmd {
             check(response.activated) {
                 "Entitlement plan activation was not accepted for paid publication task ${task.id}."
             }
-            task.recordEntitlementPlanActivated()
+            task.recordEntitlementPlanActivated(LocalDateTime.now())
             Mediator.uow.save()
 
             return Response(activated = true)
@@ -52,6 +47,22 @@ object ActivateAccessEntitlementPlanCmd {
     data class Response(
         val activated: Boolean
     )
+
+    internal fun validateLoadedTaskForActivation(task: PaidPublicationTask): Response? {
+        check(task.paidPublicationStatus == PaidPublicationStatus.PUBLISHED) {
+            "Paid publication task ${task.id} is not published."
+        }
+        if (task.entitlementPlanStatus == EntitlementPlanStatus.ACTIVATED) {
+            check(task.completedAt != null) {
+                "Paid publication task ${task.id} has activated entitlement plan without completed time."
+            }
+            return Response(activated = false)
+        }
+        check(task.entitlementPlanStatus == EntitlementPlanStatus.CREATED) {
+            "Paid publication task ${task.id} has no created entitlement plan."
+        }
+        return null
+    }
 
     private fun loadTask(paidPublicationTaskId: UUID): PaidPublicationTask =
         checkNotNull(Mediator.repositories.findOne(SPaidPublicationTask.predicateById(paidPublicationTaskId))) {

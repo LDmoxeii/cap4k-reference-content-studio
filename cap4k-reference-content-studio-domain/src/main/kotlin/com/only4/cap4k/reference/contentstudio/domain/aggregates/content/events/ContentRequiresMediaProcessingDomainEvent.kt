@@ -6,16 +6,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import java.util.UUID
 
 /**
- * media processing requested
+ * content requires media processing
  */
 @DomainEvent(persist = true)
 @Aggregate(
     aggregate = "Content",
-    name = "MediaProcessingRequestedDomainEvent",
+    name = "ContentRequiresMediaProcessingDomainEvent",
     type = Aggregate.TYPE_DOMAIN_EVENT,
-    description = "media processing requested"
+    description = "content requires media processing"
 )
-class MediaProcessingRequestedDomainEvent(
+class ContentRequiresMediaProcessingDomainEvent(
     val entity: Content,
     val contentId: UUID,
     val mediaSourceKey: String

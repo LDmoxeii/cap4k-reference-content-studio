@@ -20,8 +20,10 @@ object GetContentDetailPayload {
         val mediaSourceKey: String,
         val reviewStatus: String,
         val contentStatus: String,
+        val releasePolicy: String?,
         val reviewerId: UUID?,
         val reviewedAt: LocalDateTime?,
+        val mediaReadyAt: LocalDateTime?,
         val publishedAt: LocalDateTime?
     )
 

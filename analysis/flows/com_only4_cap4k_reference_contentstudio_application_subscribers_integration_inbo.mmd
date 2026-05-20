@@ -1,46 +1,30 @@
 flowchart TD
-  N1[PublishContentCmd.Request]
+  N1[RecordContentMediaReadyCmd.Request]
   N2[MarkMediaProcessingSucceededCmd.Request]
-  N3[TryStartPaidPublicationCmd.Request]
-  N4[ContentPublishedDomainEventSubscriber::on]
-  N5[MediaProcessingSucceededDomainEventSubscriber::publishImmediateContent]
-  N6[MediaProcessingSucceededDomainEventSubscriber::startPaidPublication]
-  N7[MediaProcessingCallbackIntegrationEventSubscriber::markMediaProcessingSucceeded]
-  N8[MediaProcessingCallbackIntegrationEvent]
-  N9[Content::&lt;get-contentStatus&gt;]
-  N10[Content::&lt;get-releasePolicy&gt;]
-  N11[Content::&lt;get-reviewStatus&gt;]
-  N12[Content::publish]
-  N13[ContentPublishedDomainEvent]
-  N14[MediaProcessingTask::&lt;get-externalTaskId&gt;]
-  N15[MediaProcessingTask::&lt;get-id&gt;]
-  N16[MediaProcessingTask::&lt;get-processingStatus&gt;]
-  N17[MediaProcessingTask::markSucceeded]
-  N18[MediaProcessingSucceededDomainEvent]
-  N19[PaidPublicationTask::&lt;get-id&gt;]
-  N20[PaidPublicationTask::&lt;get-publicationSagaId&gt;]
-  N21[PaidPublicationTask::onCreate]
-  N22[PaidPublicationTask::recordSagaStarted]
-  N1 -->|CommandToEntityMethod| N10
-  N1 -->|CommandToEntityMethod| N12
+  N3[ContentMediaReadyDomainEventSubscriber::on]
+  N4[MediaProcessingSucceededDomainEventSubscriber::recordContentMediaReady]
+  N5[MediaProcessingCallbackIntegrationEventSubscriber::markMediaProcessingSucceeded]
+  N6[MediaProcessingCallbackIntegrationEvent]
+  N7[Content::&lt;get-mediaReadyAt&gt;]
+  N8[Content::recordMediaReady]
+  N9[ContentMediaReadyDomainEvent]
+  N10[MediaProcessingTask::&lt;get-contentId&gt;]
+  N11[MediaProcessingTask::&lt;get-externalTaskId&gt;]
+  N12[MediaProcessingTask::&lt;get-id&gt;]
+  N13[MediaProcessingTask::&lt;get-processingStatus&gt;]
+  N14[MediaProcessingTask::markSucceeded]
+  N15[MediaProcessingSucceededDomainEvent]
+  N1 -->|CommandToEntityMethod| N7
+  N1 -->|CommandToEntityMethod| N8
+  N2 -->|CommandToEntityMethod| N10
+  N2 -->|CommandToEntityMethod| N11
+  N2 -->|CommandToEntityMethod| N12
+  N2 -->|CommandToEntityMethod| N13
   N2 -->|CommandToEntityMethod| N14
-  N2 -->|CommandToEntityMethod| N15
-  N2 -->|CommandToEntityMethod| N16
-  N2 -->|CommandToEntityMethod| N17
-  N3 -->|CommandToEntityMethod| N9
-  N3 -->|CommandToEntityMethod| N10
-  N3 -->|CommandToEntityMethod| N11
-  N3 -->|CommandToEntityMethod| N16
-  N3 -->|CommandToEntityMethod| N19
-  N3 -->|CommandToEntityMethod| N20
-  N3 -->|CommandToEntityMethod| N21
-  N3 -->|CommandToEntityMethod| N22
-  N5 -->|DomainEventHandlerToCommand| N1
-  N6 -->|DomainEventHandlerToCommand| N3
-  N7 -->|IntegrationEventHandlerToCommand| N2
-  N8 -->|IntegrationEventToHandler| N7
-  N12 -->|EntityMethodToDomainEvent| N13
-  N13 -->|DomainEventToHandler| N4
-  N17 -->|EntityMethodToDomainEvent| N18
-  N18 -->|DomainEventToHandler| N5
-  N18 -->|DomainEventToHandler| N6
+  N4 -->|DomainEventHandlerToCommand| N1
+  N5 -->|IntegrationEventHandlerToCommand| N2
+  N6 -->|IntegrationEventToHandler| N5
+  N8 -->|EntityMethodToDomainEvent| N9
+  N9 -->|DomainEventToHandler| N3
+  N14 -->|EntityMethodToDomainEvent| N15
+  N15 -->|DomainEventToHandler| N4

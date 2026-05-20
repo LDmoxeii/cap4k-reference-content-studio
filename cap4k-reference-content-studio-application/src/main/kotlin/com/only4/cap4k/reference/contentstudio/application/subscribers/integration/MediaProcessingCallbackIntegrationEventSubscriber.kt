@@ -14,21 +14,25 @@ class MediaProcessingCallbackIntegrationEventSubscriber {
 
     @EventListener(MediaProcessingCallbackIntegrationEvent::class)
     fun markMediaProcessingSucceeded(event: MediaProcessingCallbackIntegrationEvent) {
-        if (event.status.uppercase() != SUCCEEDED_STATUS) {
+        if (event.status.uppercase() !in SUCCESS_STATUSES) {
             return
         }
 
         Mediator.cmd.send(
             MarkMediaProcessingSucceededCmd.Request(
                 externalTaskId = event.externalTaskId,
-                assetSha256 = event.assetSha256,
-                assetLocation = event.assetLocation,
+                assetSha256 = requireNotNull(event.assetSha256) {
+                    "Successful media processing callback must include assetSha256."
+                },
+                assetLocation = requireNotNull(event.assetLocation) {
+                    "Successful media processing callback must include assetLocation."
+                },
                 completedAt = event.completedAt,
             )
         )
     }
 
     companion object {
-        private const val SUCCEEDED_STATUS = "SUCCEEDED"
+        private val SUCCESS_STATUSES = setOf("SUCCEEDED", "COMPLETED")
     }
 }

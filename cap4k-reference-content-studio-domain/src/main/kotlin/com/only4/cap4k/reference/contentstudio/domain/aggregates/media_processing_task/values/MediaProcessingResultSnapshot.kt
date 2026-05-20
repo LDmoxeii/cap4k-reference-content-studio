@@ -13,6 +13,7 @@ import java.util.UUID
 )
 data class MediaProcessingResultSnapshot(
     val mediaProcessingTaskId: UUID,
+    val contentId: UUID,
     val externalTaskId: String,
     val resultStatus: MediaProcessingResultStatus,
     val assetSha256: String,
@@ -22,6 +23,7 @@ data class MediaProcessingResultSnapshot(
     val dbUpdatedAt: LocalDateTime,
     val id: String = computeHash(
         mediaProcessingTaskId = mediaProcessingTaskId,
+        contentId = contentId,
         externalTaskId = externalTaskId,
         resultStatus = resultStatus,
         assetSha256 = assetSha256,
@@ -41,6 +43,7 @@ data class MediaProcessingResultSnapshot(
 
         fun create(
             mediaProcessingTaskId: UUID,
+            contentId: UUID,
             externalTaskId: String,
             resultStatus: MediaProcessingResultStatus,
             assetSha256: String,
@@ -50,6 +53,7 @@ data class MediaProcessingResultSnapshot(
         ): MediaProcessingResultSnapshot {
             return MediaProcessingResultSnapshot(
                 mediaProcessingTaskId = mediaProcessingTaskId,
+                contentId = contentId,
                 externalTaskId = externalTaskId.trim(),
                 resultStatus = resultStatus,
                 assetSha256 = assetSha256.lowercase(),
@@ -62,6 +66,7 @@ data class MediaProcessingResultSnapshot(
 
         fun computeHash(
             mediaProcessingTaskId: UUID,
+            contentId: UUID,
             externalTaskId: String,
             resultStatus: MediaProcessingResultStatus,
             assetSha256: String,
@@ -69,6 +74,7 @@ data class MediaProcessingResultSnapshot(
         ): String {
             val raw = listOf(
                 mediaProcessingTaskId.toString(),
+                contentId.toString(),
                 externalTaskId.trim(),
                 resultStatus.name,
                 assetSha256.lowercase(),

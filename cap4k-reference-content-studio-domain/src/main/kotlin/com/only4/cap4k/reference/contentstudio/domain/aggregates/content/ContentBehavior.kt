@@ -5,9 +5,9 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentMediaReadyDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublicationReadyDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentRequiresMediaProcessingDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentSubmittedForReviewDomainEvent
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.MediaProcessingRequestedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
@@ -33,7 +33,7 @@ fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
     }
     if (mediaReadyAt == null) {
         events().attach(this) {
-            MediaProcessingRequestedDomainEvent(
+            ContentRequiresMediaProcessingDomainEvent(
                 entity = this,
                 contentId = id,
                 mediaSourceKey = mediaSourceKey,
@@ -87,6 +87,7 @@ fun Content.publish(publishedAt: LocalDateTime) {
         ContentPublishedDomainEvent(
             entity = this,
             contentId = id,
+            releasePolicy = releasePolicy.name,
             publishedAt = publishedAt,
         )
     }
