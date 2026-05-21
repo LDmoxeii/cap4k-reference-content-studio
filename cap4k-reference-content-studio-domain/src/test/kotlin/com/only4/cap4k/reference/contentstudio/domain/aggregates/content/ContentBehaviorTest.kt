@@ -5,8 +5,8 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentMediaReadyDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublicationReadyDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentRequiresMediaProcessingDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.MediaProcessingRequestedDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
@@ -58,12 +58,12 @@ class ContentBehaviorTest {
         assertEquals(content.id, reviewApprovedEvent.contentId)
         assertEquals(reviewerId, reviewApprovedEvent.reviewerId)
         assertEquals(approvedAt, reviewApprovedEvent.reviewedAt)
-        val mediaProcessingRequestedEvent = assertInstanceOf(
-            MediaProcessingRequestedDomainEvent::class.java,
+        val mediaRequirementEvent = assertInstanceOf(
+            ContentRequiresMediaProcessingDomainEvent::class.java,
             domainEvents.attachedEvents[1],
         )
-        assertEquals(content.id, mediaProcessingRequestedEvent.contentId)
-        assertEquals(content.mediaSourceKey, mediaProcessingRequestedEvent.mediaSourceKey)
+        assertEquals(content.id, mediaRequirementEvent.contentId)
+        assertEquals(content.mediaSourceKey, mediaRequirementEvent.mediaSourceKey)
     }
 
     @Test
@@ -142,6 +142,7 @@ class ContentBehaviorTest {
             domainEvents.attachedEvents.single(),
         )
         assertEquals(content.id, event.contentId)
+        assertEquals(ReleasePolicy.IMMEDIATE.name, event.releasePolicy)
         assertEquals(publishedAt, event.publishedAt)
     }
 

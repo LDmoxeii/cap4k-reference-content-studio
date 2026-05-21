@@ -7,17 +7,17 @@ import java.time.LocalDateTime
  * media processing callback from external media service
  */
 @IntegrationEvent(
-    value = "cap4k.reference.contentstudio.media-processing.succeeded",
+    value = "cap4k.reference.contentstudio.media-processing.completed",
     subscriber = "\${spring.application.name:}"
 )
 data class MediaProcessingCallbackIntegrationEvent(
     val externalTaskId: String,
     val status: String,
-    val assetSha256: String,
-    val assetLocation: String,
+    val assetSha256: String?,
+    val assetLocation: String?,
     val completedAt: LocalDateTime
 ) {
     companion object {
-        const val EVENT_NAME = "cap4k.reference.contentstudio.media-processing.succeeded"
+        const val EVENT_NAME = "cap4k.reference.contentstudio.media-processing.completed"
     }
 }

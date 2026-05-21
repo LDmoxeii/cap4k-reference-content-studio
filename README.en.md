@@ -19,6 +19,7 @@ reading the full `cap4k` repository first.
 
 ## How To Read This Repo
 
+- If you want to read this reference project from the cap4k modeling perspective, start with [docs/modeling.md](docs/modeling.md).
 - Start with the domain behavior and factory tests if you want to understand the business rules.
 - Use the smoke tests if you want to understand the runnable end-to-end path.
 - Start with `design/design.json`, the database schema, and fresh `build/cap4k/plan.json`, then read the real implementation under `src/main/kotlin`; do not approach this repository through old generated-snapshot reading habits.
@@ -39,7 +40,7 @@ Spring Boot process and an in-memory H2 database.
 
 1. Use JDK 17.
 2. Clone the repository and run Gradle directly. This repo consumes `cap4k`
-   `0.6.0` from Maven Central, so no separate `cap4k` checkout or
+   `0.7.0` from Maven Central, so no separate `cap4k` checkout or
    local artifact bootstrap step is required.
 3. The public Gradle plugin id used for cap4k pipeline tasks is
    `io.github.ldmoxeii.cap4k.pipeline`.

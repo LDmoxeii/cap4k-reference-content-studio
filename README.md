@@ -19,6 +19,7 @@ domain / application / adapter 分层之上：
 
 ## 如何阅读这个仓库
 
+- 如果你想按 cap4k 建模视角阅读这个参考项目，先看 [docs/modeling.md](docs/modeling.md)。
 - 如果你想先理解业务规则，先看 domain 行为测试和 factory 测试。
 - 如果你想先理解整条可运行主链路，先看 smoke tests。
 - 第一次阅读时先看 `design/design.json`、数据库 schema、`build/cap4k/plan.json`，再对照 `src/main/kotlin` 下的真实实现文件；不要从历史生成快照的阅读习惯进入这个仓库。
@@ -38,7 +39,7 @@ domain / application / adapter 分层之上：
 
 1. 使用 JDK 17。
 2. 克隆仓库后直接运行 Gradle 即可。这个仓库从 Maven Central 消费
-   `cap4k 0.6.0`，不再需要单独检出 `cap4k` 仓库，也不需要先执行
+   `cap4k 0.7.0`，不再需要单独检出 `cap4k` 仓库，也不需要先执行
    本地工件引导发布步骤。
 3. cap4k pipeline 相关任务使用的公开 Gradle plugin id 是
    `io.github.ldmoxeii.cap4k.pipeline`。

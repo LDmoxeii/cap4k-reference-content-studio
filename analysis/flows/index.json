@@ -12,8 +12,8 @@
         "controllermethod": 4,
         "integrationevent": 1
     },
-    "nodeCount": 189,
-    "edgeCount": 91,
+    "nodeCount": 205,
+    "edgeCount": 101,
     "flowCount": 5,
     "flows": [
         {
@@ -35,8 +35,8 @@
         {
             "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
             "entryType": "controllermethod",
-            "nodeCount": 25,
-            "edgeCount": 26,
+            "nodeCount": 10,
+            "edgeCount": 9,
             "json": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_approve.json",
             "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_approve.mmd"
         },
@@ -51,8 +51,8 @@
         {
             "entryId": "com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent",
             "entryType": "integrationevent",
-            "nodeCount": 22,
-            "edgeCount": 23,
+            "nodeCount": 15,
+            "edgeCount": 14,
             "json": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_inbo.json",
             "mermaid": "com_only4_cap4k_reference_contentstudio_application_subscribers_integration_inbo.mmd"
         }

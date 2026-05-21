@@ -13,6 +13,7 @@ import java.util.UUID
 
 class MediaProcessingResultSnapshotTest {
     private val taskId = UUID.fromString("00000000-0000-0000-0000-000000000101")
+    private val contentId = UUID.fromString("00000000-0000-0000-0000-000000000202")
     private val completedAt = LocalDateTime.parse("2026-05-11T10:15:30")
 
     @Test
@@ -25,6 +26,7 @@ class MediaProcessingResultSnapshotTest {
 
         assertFalse(snapshot.id.isBlank())
         assertEquals(taskId, snapshot.mediaProcessingTaskId)
+        assertEquals(contentId, snapshot.contentId)
         assertEquals("external-123", snapshot.externalTaskId)
         assertEquals(MediaProcessingResultStatus.SUCCEEDED, snapshot.resultStatus)
         assertEquals("a".repeat(64), snapshot.assetSha256)
@@ -66,15 +68,33 @@ class MediaProcessingResultSnapshotTest {
         }
     }
 
+    @Test
+    fun `blank asset location is rejected`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            snapshot(assetLocation = "   ")
+        }
+    }
+
+    @Test
+    fun `content id contributes to snapshot identity`() {
+        val first = snapshot(contentId = UUID.fromString("00000000-0000-0000-0000-000000000301"))
+        val second = snapshot(contentId = UUID.fromString("00000000-0000-0000-0000-000000000302"))
+
+        assertFalse(first.id == second.id)
+    }
+
     private fun snapshot(
+        contentId: UUID = this.contentId,
         externalTaskId: String = "external-123",
         assetSha256: String = "a".repeat(64),
+        assetLocation: String = "s3://content-studio/assets/external-123.mp4",
     ) = MediaProcessingResultSnapshot.create(
         mediaProcessingTaskId = taskId,
+        contentId = contentId,
         externalTaskId = externalTaskId,
         resultStatus = MediaProcessingResultStatus.SUCCEEDED,
         assetSha256 = assetSha256,
-        assetLocation = "s3://content-studio/assets/external-123.mp4",
+        assetLocation = assetLocation,
         completedAt = completedAt,
         now = completedAt,
     )

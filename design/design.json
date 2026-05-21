@@ -119,9 +119,33 @@
       { "name": "mediaSourceKey", "type": "String" },
       { "name": "reviewStatus", "type": "String" },
       { "name": "contentStatus", "type": "String" },
+      { "name": "releasePolicy", "type": "String", "nullable": true },
       { "name": "reviewerId", "type": "java.util.UUID", "nullable": true },
       { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime", "nullable": true },
       { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
+    ]
+  },
+  {
+    "tag": "query",
+    "package": "content.read",
+    "name": "GetPaidPublicationStatus",
+    "desc": "get paid publication status",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "taskId", "type": "java.util.UUID", "nullable": true },
+      { "name": "paidPublicationStatus", "type": "String", "nullable": true },
+      { "name": "payoutHoldStatus", "type": "String", "nullable": true },
+      { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
+      { "name": "startedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "failedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "failedReason", "type": "String", "nullable": true }
     ]
   },
   {
@@ -196,9 +220,33 @@
       { "name": "mediaSourceKey", "type": "String" },
       { "name": "reviewStatus", "type": "String" },
       { "name": "contentStatus", "type": "String" },
+      { "name": "releasePolicy", "type": "String", "nullable": true },
       { "name": "reviewerId", "type": "java.util.UUID", "nullable": true },
       { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime", "nullable": true },
       { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
+    ]
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.read",
+    "name": "GetPaidPublicationStatusPayload",
+    "desc": "get paid publication status http payload",
+    "aggregates": [],
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" }
+    ],
+    "responseFields": [
+      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "taskId", "type": "java.util.UUID", "nullable": true },
+      { "name": "paidPublicationStatus", "type": "String", "nullable": true },
+      { "name": "payoutHoldStatus", "type": "String", "nullable": true },
+      { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
+      { "name": "startedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "failedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "failedReason", "type": "String", "nullable": true }
     ]
   },
   {
@@ -297,6 +345,7 @@
     "persist": true,
     "requestFields": [
       { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "releasePolicy", "type": "String" },
       { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": []
@@ -329,8 +378,8 @@
   {
     "tag": "domain_event",
     "package": "content",
-    "name": "MediaProcessingRequested",
-    "desc": "media processing requested",
+    "name": "ContentRequiresMediaProcessing",
+    "desc": "content requires media processing",
     "aggregates": ["Content"],
     "persist": true,
     "requestFields": [
@@ -359,13 +408,28 @@
     "desc": "media processing callback from external media service",
     "aggregates": ["MediaProcessingTask"],
     "role": "inbound",
-    "eventName": "cap4k.reference.contentstudio.media-processing.succeeded",
+    "eventName": "cap4k.reference.contentstudio.media-processing.completed",
     "requestFields": [
       { "name": "externalTaskId", "type": "String" },
       { "name": "status", "type": "String" },
-      { "name": "assetSha256", "type": "String" },
-      { "name": "assetLocation", "type": "String" },
+      { "name": "assetSha256", "type": "String", "nullable": true },
+      { "name": "assetLocation", "type": "String", "nullable": true },
       { "name": "completedAt", "type": "java.time.LocalDateTime" }
+    ],
+    "responseFields": []
+  },
+  {
+    "tag": "integration_event",
+    "package": "content",
+    "name": "ContentPublished",
+    "desc": "content published integration event",
+    "aggregates": ["Content"],
+    "role": "outbound",
+    "eventName": "cap4k.reference.contentstudio.content.published",
+    "requestFields": [
+      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "releasePolicy", "type": "String" },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": []
   },

@@ -31,8 +31,10 @@ class GetContentDetailQryHandler : Query<GetContentDetailQry.Request, GetContent
             mediaSourceKey = content.mediaSourceKey,
             reviewStatus = content.reviewStatus.name,
             contentStatus = content.contentStatus.name,
+            releasePolicy = content.releasePolicy.name,
             reviewerId = content.reviewerId,
             reviewedAt = content.reviewedAt,
+            mediaReadyAt = content.mediaReadyAt,
             publishedAt = content.publishedAt
         )
     }

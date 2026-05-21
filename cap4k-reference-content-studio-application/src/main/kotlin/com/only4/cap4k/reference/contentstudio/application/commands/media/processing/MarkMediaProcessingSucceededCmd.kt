@@ -39,6 +39,7 @@ object MarkMediaProcessingSucceededCmd {
 
             val resultSnapshot = MediaProcessingResultSnapshot.create(
                 mediaProcessingTaskId = task.id,
+                contentId = task.contentId,
                 externalTaskId = request.externalTaskId,
                 resultStatus = MediaProcessingResultStatus.SUCCEEDED,
                 assetSha256 = request.assetSha256,

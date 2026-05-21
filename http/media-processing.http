@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:8080
-@event = cap4k.reference.contentstudio.media-processing.succeeded
+@event = cap4k.reference.contentstudio.media-processing.completed
 @uuid = 22222222-2222-2222-2222-222222222222
 @contentId =
 @externalTaskId =

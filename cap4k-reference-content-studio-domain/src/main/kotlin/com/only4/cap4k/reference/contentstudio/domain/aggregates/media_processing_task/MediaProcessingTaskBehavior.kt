@@ -29,14 +29,6 @@ fun MediaProcessingTask.markSubmitted(externalTaskId: String) {
 }
 
 fun MediaProcessingTask.markSucceeded(resultSnapshot: MediaProcessingResultSnapshot) {
-    if (processingStatus == MediaProcessingStatus.SUCCEEDED) {
-        return
-    }
-
-    check(processingStatus == MediaProcessingStatus.SUBMITTED) {
-        "Cannot mark a media processing task as succeeded before it has been submitted."
-    }
-
     check(!externalTaskId.isNullOrBlank()) {
         "Cannot mark a media processing task as succeeded without an external task id."
     }
@@ -45,8 +37,20 @@ fun MediaProcessingTask.markSucceeded(resultSnapshot: MediaProcessingResultSnaps
         "Media processing result snapshot does not belong to this task."
     }
 
+    check(resultSnapshot.contentId == contentId) {
+        "Media processing result snapshot content id does not match this task."
+    }
+
     check(resultSnapshot.externalTaskId == externalTaskId) {
         "Media processing result snapshot external task id does not match this task."
+    }
+
+    if (processingStatus == MediaProcessingStatus.SUCCEEDED) {
+        return
+    }
+
+    check(processingStatus == MediaProcessingStatus.SUBMITTED) {
+        "Cannot mark a media processing task as succeeded before it has been submitted."
     }
 
     processingStatus = MediaProcessingStatus.SUCCEEDED

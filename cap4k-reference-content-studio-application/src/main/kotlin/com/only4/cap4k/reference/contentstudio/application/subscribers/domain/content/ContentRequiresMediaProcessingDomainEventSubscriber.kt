@@ -2,18 +2,18 @@ package com.only4.cap4k.reference.contentstudio.application.subscribers.domain.c
 
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.MediaProcessingRequestedDomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentRequiresMediaProcessingDomainEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 
 /**
- * media processing requested
+ * content requires media processing
  */
 @Service
-class MediaProcessingRequestedDomainEventSubscriber {
+class ContentRequiresMediaProcessingDomainEventSubscriber {
 
-    @EventListener(MediaProcessingRequestedDomainEvent::class)
-    fun on(event: MediaProcessingRequestedDomainEvent) {
+    @EventListener(ContentRequiresMediaProcessingDomainEvent::class)
+    fun on(event: ContentRequiresMediaProcessingDomainEvent) {
         Mediator.cmd.send(
             StartMediaProcessingCmd.Request(
                 contentId = event.contentId,
