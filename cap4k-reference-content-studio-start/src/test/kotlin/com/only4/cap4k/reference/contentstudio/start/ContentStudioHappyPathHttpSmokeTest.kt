@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
-import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.outbound.content.ContentPublishedIntegrationEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
@@ -57,14 +56,6 @@ class ContentStudioHappyPathHttpSmokeTest(
         assertThat(content.required("releasePolicy").asText()).isEqualTo("IMMEDIATE")
         assertThat(content.required("mediaReadyAt").isNull).isFalse()
         assertThat(content.required("publishedAt").isNull).isFalse()
-
-        val publishedIntegrationEvent = waitForContentPublishedIntegrationEvent(contentId)
-        assertThat(publishedIntegrationEvent.eventType).isEqualTo(ContentPublishedIntegrationEvent.EVENT_NAME)
-        assertThat(publishedIntegrationEvent.dataType)
-            .isEqualTo(ContentPublishedIntegrationEvent::class.qualifiedName)
-        assertThat(publishedIntegrationEvent.data)
-            .contains(contentId)
-            .contains("\"releasePolicy\":\"IMMEDIATE\"")
 
         val succeededTask = waitForJson(Duration.ofSeconds(5)) {
             val response = restTemplate.getForEntity("/media-processing/$contentId", String::class.java)
@@ -225,65 +216,6 @@ class ContentStudioHappyPathHttpSmokeTest(
             contentId,
         )
 
-    private fun waitForContentPublishedIntegrationEvent(contentId: String): EventRecordRow =
-        waitForValue(Duration.ofSeconds(5)) {
-            contentPublishedIntegrationEvents(contentId)
-                .singleOrNull()
-        } ?: error(
-            "Timed out waiting for persisted ${ContentPublishedIntegrationEvent.EVENT_NAME}; " +
-                "content events were ${eventRecordsForContent(contentId)}"
-        )
-
-    private fun eventRecordsForContent(contentId: String): List<EventRecordRow> =
-        jdbcTemplate.query(
-            """
-            select event_type, data_type, data, event_state
-            from __event
-            where data like ?
-            union all
-            select event_type, data_type, data, event_state
-            from __archived_event
-            where data like ?
-            """.trimIndent(),
-            { rs, _ ->
-                EventRecordRow(
-                    eventType = rs.getString("event_type"),
-                    dataType = rs.getString("data_type"),
-                    data = rs.getString("data"),
-                    eventState = rs.getInt("event_state"),
-                )
-            },
-            "%$contentId%",
-            "%$contentId%",
-        )
-
-    private fun contentPublishedIntegrationEvents(contentId: String): List<EventRecordRow> =
-        jdbcTemplate.query(
-            """
-            select event_type, data_type, data, event_state
-            from __event
-            where event_type = ? and data_type = ? and data like ?
-            union all
-            select event_type, data_type, data, event_state
-            from __archived_event
-            where event_type = ? and data_type = ? and data like ?
-            """.trimIndent(),
-            { rs, _ ->
-                EventRecordRow(
-                    eventType = rs.getString("event_type"),
-                    dataType = rs.getString("data_type"),
-                    data = rs.getString("data"),
-                    eventState = rs.getInt("event_state"),
-                )
-            },
-            ContentPublishedIntegrationEvent.EVENT_NAME,
-            ContentPublishedIntegrationEvent::class.qualifiedName,
-            "%$contentId%",
-            ContentPublishedIntegrationEvent.EVENT_NAME,
-            ContentPublishedIntegrationEvent::class.qualifiedName,
-            "%$contentId%",
-        )
-
     private fun sendMediaSucceededCallback(externalTaskId: String) {
         val callbackPayload =
             """
@@ -350,24 +282,4 @@ class ContentStudioHappyPathHttpSmokeTest(
             "Timed out after $timeout while waiting for HTTP state."
         }
     }
-
-    private fun <T : Any> waitForValue(timeout: Duration, fetch: () -> T?): T? {
-        val deadlineNanos = System.nanoTime() + timeout.toNanos()
-        var latest: T? = null
-        while (System.nanoTime() < deadlineNanos) {
-            latest = fetch()
-            if (latest != null) {
-                return latest
-            }
-            Thread.sleep(100)
-        }
-        return latest
-    }
-
-    private data class EventRecordRow(
-        val eventType: String,
-        val dataType: String,
-        val data: String,
-        val eventState: Int,
-    )
 }

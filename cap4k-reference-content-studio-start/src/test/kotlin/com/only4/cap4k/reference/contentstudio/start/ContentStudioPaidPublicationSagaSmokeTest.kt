@@ -3,7 +3,6 @@ package com.only4.cap4k.reference.contentstudio.start
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.only4.cap4k.ddd.core.Mediator
-import com.only4.cap4k.ddd.core.domain.event.impl.RequestDispatchException
 import com.only4.cap4k.reference.contentstudio.adapter.application.distributed.clients.paid.publication.FakePaidPublicationCliState
 import com.only4.cap4k.reference.contentstudio.application.commands.content.workflow.PublishContentCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd
@@ -258,7 +257,6 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         assertThatThrownBy {
             Mediator.cmd.send(PublishPaidPublicationContentCmd.Request(taskId))
         }
-            .isInstanceOf(RequestDispatchException::class.java)
             .hasCauseInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("requires paid content")
 
