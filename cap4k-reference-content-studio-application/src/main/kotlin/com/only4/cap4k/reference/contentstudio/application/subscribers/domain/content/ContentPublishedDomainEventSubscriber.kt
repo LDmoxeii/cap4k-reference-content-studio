@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 class ContentPublishedDomainEventSubscriber {
 
     @EventListener(ContentPublishedDomainEvent::class)
-    fun on(event: ContentPublishedDomainEvent) {
+    fun publishContentIntegrationEvent(event: ContentPublishedDomainEvent) {
         Mediator.events.attach(
             ContentPublishedIntegrationEvent(
                 contentId = event.contentId,

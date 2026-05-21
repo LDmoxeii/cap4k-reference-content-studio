@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service
 class ContentDraftCreatedDomainEventSubscriber {
 
     @EventListener(ContentDraftCreatedDomainEvent::class)
-    fun on(event: ContentDraftCreatedDomainEvent) {
+    fun observeDraftCreation(event: ContentDraftCreatedDomainEvent) {
     }
 }

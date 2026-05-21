@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service
 class ContentMediaReadyDomainEventSubscriber {
 
     @EventListener(ContentMediaReadyDomainEvent::class)
-    fun on(event: ContentMediaReadyDomainEvent) {
+    fun observeMediaReadiness(event: ContentMediaReadyDomainEvent) {
     }
 }

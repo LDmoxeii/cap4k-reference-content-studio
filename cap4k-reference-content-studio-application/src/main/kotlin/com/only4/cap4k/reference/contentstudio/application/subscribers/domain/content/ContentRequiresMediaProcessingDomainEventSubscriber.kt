@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 class ContentRequiresMediaProcessingDomainEventSubscriber {
 
     @EventListener(ContentRequiresMediaProcessingDomainEvent::class)
-    fun on(event: ContentRequiresMediaProcessingDomainEvent) {
+    fun startMediaProcessing(event: ContentRequiresMediaProcessingDomainEvent) {
         Mediator.cmd.send(
             StartMediaProcessingCmd.Request(
                 contentId = event.contentId,

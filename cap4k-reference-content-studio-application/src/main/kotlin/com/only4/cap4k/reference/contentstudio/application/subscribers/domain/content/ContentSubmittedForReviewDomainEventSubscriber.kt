@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service
 class ContentSubmittedForReviewDomainEventSubscriber {
 
     @EventListener(ContentSubmittedForReviewDomainEvent::class)
-    fun on(event: ContentSubmittedForReviewDomainEvent) {
+    fun observeReviewSubmission(event: ContentSubmittedForReviewDomainEvent) {
     }
 }
