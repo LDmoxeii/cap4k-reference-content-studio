@@ -81,8 +81,7 @@ The default flow is immediate publication after review and media readiness.
     `ContentPublishedIntegrationEvent` through the runtime publication API.
 
 The outbound integration event is actually wired through
-`IntegrationEventSupervisor.instance.attach(...)`, not just declared as a
-contract-only event.
+`Mediator.events.attach(...)`, not just declared as a contract-only event.
 
 ## Advanced Paid Publication Flow
 

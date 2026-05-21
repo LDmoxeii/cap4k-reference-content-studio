@@ -39,7 +39,7 @@ domain / application / adapter 分层之上：
 
 1. 使用 JDK 17。
 2. 克隆仓库后直接运行 Gradle 即可。这个仓库从 Maven Central 消费
-   `cap4k 0.6.0`，不再需要单独检出 `cap4k` 仓库，也不需要先执行
+   `cap4k 0.7.0`，不再需要单独检出 `cap4k` 仓库，也不需要先执行
    本地工件引导发布步骤。
 3. cap4k pipeline 相关任务使用的公开 Gradle plugin id 是
    `io.github.ldmoxeii.cap4k.pipeline`。
