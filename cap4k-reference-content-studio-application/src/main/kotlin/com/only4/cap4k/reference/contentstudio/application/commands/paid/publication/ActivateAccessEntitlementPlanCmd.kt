@@ -30,8 +30,8 @@ object ActivateAccessEntitlementPlanCmd {
                         paidPublicationTaskId = task.id,
                     )
                 )
-            check(response.activated) {
-                "Entitlement plan activation was not accepted for paid publication task ${task.id}."
+            if (!response.activated) {
+                return Response(activated = false)
             }
             task.recordEntitlementPlanActivated(LocalDateTime.now())
             Mediator.uow.save()

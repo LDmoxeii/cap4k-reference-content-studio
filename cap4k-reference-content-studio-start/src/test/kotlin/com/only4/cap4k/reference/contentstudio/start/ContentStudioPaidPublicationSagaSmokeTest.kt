@@ -89,12 +89,27 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         val contentId = runPaidPublicationPath(waitForPublishedContent = false)
 
         val task = waitForPaidPublicationTask(Duration.ofSeconds(10), contentId) { row ->
-            row.paidPublicationStatus == PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR.ordinal
+            row.paidPublicationStatus == PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR.ordinal &&
+                row.payoutHoldStatus == PayoutHoldStatus.RELEASED.ordinal &&
+                row.entitlementPlanStatus == EntitlementPlanStatus.CANCELLED.ordinal
         }
         assertThat(task.paidPublicationStatus).isEqualTo(PaidPublicationStatus.REQUIRES_OPERATOR_REPAIR.ordinal)
         assertThat(task.payoutHoldStatus).isEqualTo(PayoutHoldStatus.RELEASED.ordinal)
         assertThat(task.entitlementPlanStatus).isEqualTo(EntitlementPlanStatus.CANCELLED.ordinal)
         assertPublishedContent(contentId)
+        assertThat(waitForSagaCompensationSummary(Duration.ofSeconds(10), contentId))
+            .contains(
+                SagaCompensationRow(
+                    processCode = "create-entitlement-plan",
+                    compensationCode = "cancel-entitlement-plan-if-created",
+                    compensationState = 2,
+                ),
+                SagaCompensationRow(
+                    processCode = "reserve-payout-hold",
+                    compensationCode = "release-payout-hold-if-reserved",
+                    compensationState = 2,
+                ),
+            )
     }
 
     @Test
@@ -451,6 +466,54 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             contentId,
         )
 
+    private fun sagaCompensationSummary(contentId: UUID): List<SagaCompensationRow> =
+        jdbcTemplate.query(
+            """
+            select process.process_code, process.compensation_code, process.compensation_state
+            from __saga_process process
+            join __saga saga on saga.id = process.saga_id
+            join paid_publication_task task on task.publication_saga_id = saga.saga_uuid
+            where task.content_id = ?
+            order by process.id
+            """.trimIndent(),
+            { rs, _ ->
+                SagaCompensationRow(
+                    processCode = rs.getString("process_code"),
+                    compensationCode = rs.getString("compensation_code"),
+                    compensationState = rs.getInt("compensation_state"),
+                )
+            },
+            contentId,
+        )
+
+    private fun waitForSagaCompensationSummary(
+        timeout: Duration,
+        contentId: UUID,
+    ): List<SagaCompensationRow> {
+        val expectedRows = setOf(
+            SagaCompensationRow(
+                processCode = "create-entitlement-plan",
+                compensationCode = "cancel-entitlement-plan-if-created",
+                compensationState = 2,
+            ),
+            SagaCompensationRow(
+                processCode = "reserve-payout-hold",
+                compensationCode = "release-payout-hold-if-reserved",
+                compensationState = 2,
+            ),
+        )
+        val deadlineNanos = System.nanoTime() + timeout.toNanos()
+        var latest = emptyList<SagaCompensationRow>()
+        while (System.nanoTime() < deadlineNanos) {
+            latest = sagaCompensationSummary(contentId)
+            if (latest.containsAll(expectedRows)) {
+                return latest
+            }
+            Thread.sleep(100)
+        }
+        return latest
+    }
+
     private fun waitForPaidPublicationTask(
         timeout: Duration,
         contentId: UUID,
@@ -536,5 +599,11 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         val payoutHoldStatus: Int,
         val payoutHoldId: String?,
         val entitlementPlanStatus: Int,
+    )
+
+    data class SagaCompensationRow(
+        val processCode: String,
+        val compensationCode: String,
+        val compensationState: Int,
     )
 }

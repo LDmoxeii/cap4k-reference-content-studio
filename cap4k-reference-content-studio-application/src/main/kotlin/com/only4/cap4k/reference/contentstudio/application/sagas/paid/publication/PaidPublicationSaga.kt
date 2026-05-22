@@ -28,100 +28,65 @@ object PaidPublicationSaga {
     @Service
     class Handler : SagaHandler<Request, Response> {
 
-        override fun exec(request: Request): Response =
-            try {
-                runForward(request)
-                Response(published = true)
-            } catch (primary: Throwable) {
-                val compensationFailures = compensateBestEffort(request, primary)
-                if (compensationFailures.isNotEmpty()) {
-                    compensationFailures.forEach(primary::addSuppressed)
-                    throw primary
-                }
-                Response(published = false)
-            }
+        override fun exec(request: Request): Response {
+            runForward(request)
+            return Response(published = true)
+        }
 
         private fun runForward(request: Request) {
-            execProcess(
+            execCompensableProcess(
                 PROCESS_RESERVE_PAYOUT_HOLD,
                 ReserveCreatorPayoutHoldCmd.Request(request.paidPublicationTaskId),
-            )
-            execProcess(
+                PROCESS_RELEASE_PAYOUT_HOLD,
+            ) {
+                ReleasePayoutHoldIfReservedCmd.Request(
+                    paidPublicationTaskId = request.paidPublicationTaskId,
+                    reason = "Paid publication saga compensation requested after payout hold reservation.",
+                )
+            }
+            execCompensableProcess(
                 PROCESS_CREATE_ENTITLEMENT_PLAN,
                 CreateAccessEntitlementPlanCmd.Request(request.paidPublicationTaskId),
-            )
-            execProcess(
+                PROCESS_CANCEL_ENTITLEMENT_PLAN,
+            ) {
+                CancelEntitlementPlanIfCreatedCmd.Request(
+                    paidPublicationTaskId = request.paidPublicationTaskId,
+                    reason = "Paid publication saga compensation requested after entitlement plan creation.",
+                )
+            }
+            val publish = execProcess(
                 PROCESS_PUBLISH_CONTENT,
                 PublishPaidPublicationContentCmd.Request(request.paidPublicationTaskId),
             )
-            execProcess(
+            if (!publish.published) {
+                requestCompensation(
+                    code = "PAID_PUBLICATION_REJECTED",
+                    reason = "Paid publication content was not published.",
+                )
+            }
+            execCompensableProcess(
                 PROCESS_MARK_CONTENT_PUBLISHED,
                 MarkPaidPublicationContentPublishedCmd.Request(request.paidPublicationTaskId),
-            )
-            execProcess(
+                PROCESS_MARK_PUBLICATION_FAILED,
+            ) {
+                MarkPaidPublicationFailedCmd.Request(
+                    paidPublicationTaskId = request.paidPublicationTaskId,
+                    failedReason = "Paid publication saga compensation requested after content publication was marked.",
+                )
+            }
+            val activation = execProcess(
                 PROCESS_ACTIVATE_ENTITLEMENT_PLAN,
                 ActivateAccessEntitlementPlanCmd.Request(request.paidPublicationTaskId),
             )
-        }
-
-        private fun compensateBestEffort(request: Request, primary: Throwable): List<Throwable> {
-            val compensationFailures = mutableListOf<Throwable>()
-            val reason = primary.message ?: "Paid publication saga failed."
-
-            runCompensation(compensationFailures) {
-                execProcess(
-                    PROCESS_CANCEL_ENTITLEMENT_PLAN,
-                    CancelEntitlementPlanIfCreatedCmd.Request(
-                        paidPublicationTaskId = request.paidPublicationTaskId,
-                        reason = reason,
-                    ),
+            if (!activation.activated) {
+                requestCompensation(
+                    code = "ENTITLEMENT_ACTIVATION_REJECTED",
+                    reason = "Entitlement plan was not activated.",
                 )
             }
-            runCompensation(compensationFailures) {
-                execProcess(
-                    PROCESS_RELEASE_PAYOUT_HOLD,
-                    ReleasePayoutHoldIfReservedCmd.Request(
-                        paidPublicationTaskId = request.paidPublicationTaskId,
-                        reason = reason,
-                    ),
-                )
-            }
-            runCompensation(compensationFailures) {
-                execProcess(
-                    PROCESS_MARK_PUBLICATION_FAILED,
-                    MarkPaidPublicationFailedCmd.Request(
-                        paidPublicationTaskId = request.paidPublicationTaskId,
-                        failedReason = buildFailureReason(primary, compensationFailures),
-                    ),
-                )
-            }
-
-            return compensationFailures
-        }
-
-        private fun runCompensation(compensationFailures: MutableList<Throwable>, block: () -> Unit) {
-            try {
-                block()
-            } catch (failure: Throwable) {
-                compensationFailures += failure
-            }
-        }
-
-        private fun buildFailureReason(primary: Throwable, compensationFailures: List<Throwable>): String {
-            val primaryMessage = primary.message ?: primary.javaClass.simpleName
-            if (compensationFailures.isEmpty()) {
-                return "Paid publication saga failed: $primaryMessage"
-            }
-
-            val compensationMessages = compensationFailures.joinToString("; ") { failure ->
-                failure.message ?: failure.javaClass.simpleName
-            }
-            return "Paid publication saga failed: $primaryMessage. Compensation failures: $compensationMessages"
         }
     }
 
-    // Current cap4k Saga process caching makes automatic forward retry unsafe after compensation.
-    // cap4k issue #58 tracks first-class compensation runtime support.
     @Retry(
         retryTimes = 1,
         retryIntervals = [1],

@@ -11,7 +11,9 @@ class ActivateAccessEntitlementPlanCliHandler(
 
     override fun exec(request: ActivateAccessEntitlementPlanCli.Request): ActivateAccessEntitlementPlanCli.Response {
         if (state.shouldFailActivation()) {
-            throw IllegalStateException("Fake entitlement activation failed.")
+            return ActivateAccessEntitlementPlanCli.Response(
+                activated = false
+            )
         }
         return ActivateAccessEntitlementPlanCli.Response(
             activated = true
