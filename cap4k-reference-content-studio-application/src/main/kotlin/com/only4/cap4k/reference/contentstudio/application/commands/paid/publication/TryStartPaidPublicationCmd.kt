@@ -26,7 +26,8 @@ object TryStartPaidPublicationCmd {
                 Mediator.repositories.findFirst(
                     SPaidPublicationTask.predicate { schema ->
                         schema.contentId.eq(request.contentId)
-                    }
+                    },
+                    persist = true
                 )
 
             val eligibilityService =

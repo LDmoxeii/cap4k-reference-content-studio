@@ -71,7 +71,7 @@ object PublishPaidPublicationContentCmd {
         }
 
     private fun loadContent(contentId: UUID): Content =
-        checkNotNull(Mediator.repositories.findOne(SContent.predicateById(contentId))) {
+        checkNotNull(Mediator.repositories.findOne(SContent.predicateById(contentId), persist = true)) {
             "Content $contentId was not found."
         }
 }

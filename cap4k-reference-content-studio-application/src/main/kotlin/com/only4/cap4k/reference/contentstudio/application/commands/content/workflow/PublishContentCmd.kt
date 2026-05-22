@@ -17,7 +17,7 @@ object PublishContentCmd {
     open class Handler : Command<Request, Response> {
 
         open override fun exec(request: Request): Response {
-            val content = checkNotNull(Mediator.repositories.findOne(SContent.predicateById(request.contentId))) {
+            val content = checkNotNull(Mediator.repositories.findOne(SContent.predicateById(request.contentId), persist = true)) {
                 "Content ${request.contentId} was not found."
             }
             if (content.releasePolicy != ReleasePolicy.IMMEDIATE) {

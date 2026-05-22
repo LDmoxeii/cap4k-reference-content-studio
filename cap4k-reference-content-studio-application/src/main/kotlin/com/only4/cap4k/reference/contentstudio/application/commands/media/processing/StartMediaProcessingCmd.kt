@@ -25,7 +25,8 @@ object StartMediaProcessingCmd {
                 Mediator.repositories.findFirst(
                     SMediaProcessingTask.predicate { schema ->
                         schema.contentId.eq(request.contentId)
-                    }
+                    },
+                    persist = true
                 ) ?: Mediator.factories.create(
                     MediaProcessingTaskFactory.Payload(
                         id = UUID.randomUUID(),

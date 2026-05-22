@@ -25,7 +25,8 @@ object MarkMediaProcessingSucceededCmd {
                     Mediator.repositories.findFirst(
                         SMediaProcessingTask.predicate { schema ->
                             schema.externalTaskId.eq(request.externalTaskId)
-                        }
+                        },
+                        persist = true
                     )
             ) {
                 "Media processing task for external task id ${request.externalTaskId} was not found."

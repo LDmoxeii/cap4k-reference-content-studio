@@ -65,7 +65,7 @@ object ActivateAccessEntitlementPlanCmd {
     }
 
     private fun loadTask(paidPublicationTaskId: UUID): PaidPublicationTask =
-        checkNotNull(Mediator.repositories.findOne(SPaidPublicationTask.predicateById(paidPublicationTaskId))) {
+        checkNotNull(Mediator.repositories.findOne(SPaidPublicationTask.predicateById(paidPublicationTaskId), persist = true)) {
             "Paid publication task $paidPublicationTaskId was not found."
         }
 }
