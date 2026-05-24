@@ -8,6 +8,7 @@ import com.only4.cap4k.reference.contentstudio.application.subscribers.integrati
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import java.time.Duration
 import java.time.LocalDateTime
@@ -92,7 +93,7 @@ class ContentStudioHappyPathHttpSmokeTest(
 
     @Test
     fun `start command no-ops for already submitted media processing task`() {
-        val contentId = UUID.randomUUID()
+        val contentId = UUID.fromString(ContentId.new().toString())
         val mediaSourceKey = "media/submitted-idempotency-${UUID.randomUUID()}.mp4"
         val submittedExternalTaskId = "submitted-before-reapproval-$contentId"
         insertContentWithSubmittedMediaTask(
@@ -102,7 +103,7 @@ class ContentStudioHappyPathHttpSmokeTest(
         )
 
         transactionTemplate.execute<StartMediaProcessingCmd.Response> {
-            Mediator.cmd.send(StartMediaProcessingCmd.Request(contentId, mediaSourceKey))
+            Mediator.cmd.send(StartMediaProcessingCmd.Request(ContentId.parse(contentId.toString()), mediaSourceKey))
         }
 
         assertThat(mediaExternalTaskId(contentId)).isEqualTo(submittedExternalTaskId)
@@ -139,13 +140,14 @@ class ContentStudioHappyPathHttpSmokeTest(
     }
 
     private fun approveContent(contentId: String) {
+        val reviewerId = ContentId.new().toString()
         val approveResponse =
             restTemplate.postForEntity(
                 "/contents/$contentId/approve",
                 jsonRequest(
                     """
                     {
-                      "reviewerId": "11111111-1111-1111-1111-111111111111"
+                      "reviewerId": "$reviewerId"
                     }
                     """.trimIndent()
                 ),
@@ -183,7 +185,7 @@ class ContentStudioHappyPathHttpSmokeTest(
             ReviewStatus.APPROVED.ordinal,
             ContentStatus.DRAFT.ordinal,
             ReleasePolicy.IMMEDIATE.ordinal,
-            UUID.fromString("11111111-1111-1111-1111-111111111111"),
+            UUID.fromString(ContentId.new().toString()),
             now,
             null,
             now,

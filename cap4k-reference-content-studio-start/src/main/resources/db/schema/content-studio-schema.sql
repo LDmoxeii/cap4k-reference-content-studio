@@ -45,3 +45,15 @@ create table if not exists paid_publication_task (
     constraint uq_paid_publication_task_content_id unique (content_id),
     constraint fk_paid_publication_task_content foreign key (content_id) references content(id)
 );
+
+comment on table content is '@AggregateRoot=true;';
+comment on column content.id is '@Id;';
+comment on column content.reviewer_id is '@RefId=ReviewerId;';
+
+comment on table media_processing_task is '@AggregateRoot=true;';
+comment on column media_processing_task.id is '@Id;';
+comment on column media_processing_task.content_id is '@RefAggregate=Content;';
+
+comment on table paid_publication_task is '@AggregateRoot=true;';
+comment on column paid_publication_task.id is '@Id;';
+comment on column paid_publication_task.content_id is '@RefAggregate=Content;';

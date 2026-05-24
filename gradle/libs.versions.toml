@@ -5,7 +5,7 @@ spring-dependency-management = "1.1.7"
 springdoc = "2.8.13"
 swagger-annotations = "2.2.36"
 junit = "5.13.1"
-cap4k-ddd = "0.9.0"
+cap4k-ddd = "0.5.0-dev"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -31,4 +31,4 @@ kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotl
 kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
-cap4k-pipeline = { id = "io.github.ldmoxeii.cap4k.pipeline", version.ref = "cap4k-ddd" }
+cap4k-pipeline = { id = "com.only4.cap4k.plugin.pipeline", version.ref = "cap4k-ddd" }

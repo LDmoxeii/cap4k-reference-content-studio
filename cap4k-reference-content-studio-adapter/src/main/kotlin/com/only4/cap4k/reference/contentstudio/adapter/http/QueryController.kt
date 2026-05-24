@@ -7,7 +7,10 @@ import com.only4.cap4k.reference.contentstudio.adapter.portal.api.payload.conten
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetContentDetailQry
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetMediaProcessingStatusQry
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetPaidPublicationStatusQry
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class QueryController {
 
     @GetMapping("/contents/{contentId}")
-    fun getContent(@PathVariable contentId: UUID): GetContentDetailPayload.Response {
+    fun getContent(@PathVariable contentId: ContentId): GetContentDetailPayload.Response {
         val response = Mediator.qry.send(GetContentDetailQry.Request(contentId = contentId))
 
         return GetContentDetailPayload.Response(
@@ -35,7 +38,7 @@ class QueryController {
     }
 
     @GetMapping("/media-processing/{contentId}")
-    fun getMediaProcessing(@PathVariable contentId: UUID): GetMediaProcessingStatusPayload.Response {
+    fun getMediaProcessing(@PathVariable contentId: ContentId): GetMediaProcessingStatusPayload.Response {
         val response = Mediator.qry.send(GetMediaProcessingStatusQry.Request(contentId = contentId))
 
         return GetMediaProcessingStatusPayload.Response(
@@ -52,7 +55,7 @@ class QueryController {
     }
 
     @GetMapping("/paid-publication/{contentId}")
-    fun getPaidPublication(@PathVariable contentId: UUID): GetPaidPublicationStatusPayload.Response {
+    fun getPaidPublication(@PathVariable contentId: ContentId): GetPaidPublicationStatusPayload.Response {
         val response = Mediator.qry.send(GetPaidPublicationStatusQry.Request(contentId = contentId))
 
         return GetPaidPublicationStatusPayload.Response(

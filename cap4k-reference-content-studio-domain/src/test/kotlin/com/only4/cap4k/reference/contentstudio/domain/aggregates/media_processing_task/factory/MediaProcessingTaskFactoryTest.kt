@@ -2,7 +2,8 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processi
 
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -15,8 +16,8 @@ class MediaProcessingTaskFactoryTest {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
         val payload =
             MediaProcessingTaskFactory.Payload(
-                id = UUID.randomUUID(),
-                contentId = UUID.randomUUID(),
+                id = MediaProcessingTaskId.new(),
+                contentId = ContentId.new(),
                 externalTaskId = "external-123",
                 processingStatus = MediaProcessingStatus.SUBMITTED,
                 dbCreatedAt = now,

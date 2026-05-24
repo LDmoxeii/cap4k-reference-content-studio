@@ -15,7 +15,8 @@ import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 
 class ContentBehaviorTest {
     private lateinit var domainEvents: com.only4.cap4k.reference.contentstudio.domain.TestDomainEventSupervisor
@@ -42,7 +43,7 @@ class ContentBehaviorTest {
     @Test
     fun `approve marks review approved and emits content approved event`() {
         val content = newContent()
-        val reviewerId = UUID.randomUUID()
+        val reviewerId = ReviewerId.parse(ContentId.new().toString())
         val approvedAt = LocalDateTime.of(2026, 5, 9, 10, 0)
 
         content.approve(reviewerId = reviewerId, approvedAt = approvedAt)
@@ -68,7 +69,7 @@ class ContentBehaviorTest {
 
     @Test
     fun `approve is a no-op when content is already approved`() {
-        val originalReviewerId = UUID.randomUUID()
+        val originalReviewerId = ReviewerId.parse(ContentId.new().toString())
         val originalApprovedAt = LocalDateTime.of(2026, 5, 9, 10, 0)
         val content = newContent(reviewStatus = ReviewStatus.APPROVED).apply {
             reviewerId = originalReviewerId
@@ -76,7 +77,7 @@ class ContentBehaviorTest {
         }
 
         content.approve(
-            reviewerId = UUID.randomUUID(),
+            reviewerId = ReviewerId.parse(ContentId.new().toString()),
             approvedAt = LocalDateTime.of(2026, 5, 9, 11, 0),
         )
 
@@ -90,7 +91,7 @@ class ContentBehaviorTest {
     fun `approve emits content publication ready when media was already ready`() {
         val mediaReadyAt = LocalDateTime.of(2026, 5, 9, 9, 30)
         val content = newContent(mediaReadyAt = mediaReadyAt)
-        val reviewerId = UUID.randomUUID()
+        val reviewerId = ReviewerId.parse(ContentId.new().toString())
         val approvedAt = LocalDateTime.of(2026, 5, 9, 10, 0)
 
         content.approve(reviewerId = reviewerId, approvedAt = approvedAt)
@@ -171,7 +172,7 @@ class ContentBehaviorTest {
     ): Content {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
         return Content(
-            id = UUID.randomUUID(),
+            id = ContentId.new(),
             title = "Draft title",
             body = "Draft body",
             mediaSourceKey = "media/source-key",

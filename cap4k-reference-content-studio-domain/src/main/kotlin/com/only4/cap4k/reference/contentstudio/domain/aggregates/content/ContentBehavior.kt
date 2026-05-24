@@ -11,10 +11,10 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import java.time.LocalDateTime
-import java.util.UUID
 
-fun Content.approve(reviewerId: UUID, approvedAt: LocalDateTime) {
+fun Content.approve(reviewerId: ReviewerId, approvedAt: LocalDateTime) {
     if (reviewStatus == ReviewStatus.APPROVED) {
         return
     }

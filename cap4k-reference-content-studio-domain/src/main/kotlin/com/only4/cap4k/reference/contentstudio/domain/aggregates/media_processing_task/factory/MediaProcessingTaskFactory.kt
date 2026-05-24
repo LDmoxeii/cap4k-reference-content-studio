@@ -3,9 +3,10 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processi
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
-import java.util.UUID
 import org.springframework.stereotype.Service
 
 @Service
@@ -36,9 +37,9 @@ class MediaProcessingTaskFactory : AggregateFactory<MediaProcessingTaskFactory.P
 
     data class Payload(
 
-        val id: UUID,
+        val id: MediaProcessingTaskId,
 
-        val contentId: UUID,
+        val contentId: ContentId,
 
         val externalTaskId: String?,
 

@@ -1,6 +1,9 @@
 package com.only4.cap4k.reference.contentstudio.domain.services.paid.publication
 
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
@@ -9,7 +12,6 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publicatio
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
 import java.time.LocalDateTime
-import java.util.UUID
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -46,14 +48,14 @@ class PaidPublicationEligibilityServiceTest {
     private fun content(releasePolicy: ReleasePolicy): Content {
         val now = LocalDateTime.of(2026, 5, 17, 9, 0)
         return Content(
-            id = UUID.randomUUID(),
+            id = ContentId.new(),
             title = "Publication ready content",
             body = "Approved content with media ready",
             mediaSourceKey = "media/ready-content.mp4",
             reviewStatus = ReviewStatus.APPROVED,
             contentStatus = ContentStatus.DRAFT,
             releasePolicy = releasePolicy,
-            reviewerId = UUID.randomUUID(),
+            reviewerId = ReviewerId.parse(ContentId.new().toString()),
             reviewedAt = now.plusMinutes(30),
             publishedAt = null,
             mediaReadyAt = now.plusHours(1),
@@ -65,8 +67,8 @@ class PaidPublicationEligibilityServiceTest {
     private fun runningTask(): PaidPublicationTask {
         val now = LocalDateTime.of(2026, 5, 17, 9, 0)
         return PaidPublicationTask(
-            id = UUID.randomUUID(),
-            contentId = UUID.randomUUID(),
+            id = PaidPublicationTaskId.new(),
+            contentId = ContentId.new(),
             paidPublicationStatus = PaidPublicationStatus.RUNNING,
             publicationSagaId = "saga-123",
             payoutHoldStatus = PayoutHoldStatus.NONE,

@@ -9,7 +9,10 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publicatio
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.recordPayoutHoldReserved
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.springframework.stereotype.Service
 
 object ReserveCreatorPayoutHoldCmd {
@@ -40,14 +43,14 @@ object ReserveCreatorPayoutHoldCmd {
     }
 
     data class Request(
-        val paidPublicationTaskId: UUID
+        val paidPublicationTaskId: PaidPublicationTaskId
     ) : RequestParam<Response>
 
     data class Response(
         val reserved: Boolean
     )
 
-    private fun loadTask(paidPublicationTaskId: UUID): PaidPublicationTask =
+    private fun loadTask(paidPublicationTaskId: PaidPublicationTaskId): PaidPublicationTask =
         checkNotNull(Mediator.repositories.findOne(SPaidPublicationTask.predicateById(paidPublicationTaskId), persist = true)) {
             "Paid publication task $paidPublicationTaskId was not found."
         }

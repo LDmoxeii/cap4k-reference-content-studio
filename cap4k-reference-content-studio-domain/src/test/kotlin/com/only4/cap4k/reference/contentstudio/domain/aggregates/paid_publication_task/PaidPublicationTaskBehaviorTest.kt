@@ -1,11 +1,12 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task
 
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.factory.PaidPublicationTaskFactory
 import java.time.LocalDateTime
-import java.util.UUID
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -295,8 +296,8 @@ class PaidPublicationTaskBehaviorTest {
     @Test
     fun `factory creates pending task with empty external state`() {
         val now = LocalDateTime.of(2026, 5, 17, 9, 30)
-        val id = UUID.randomUUID()
-        val contentId = UUID.randomUUID()
+        val id = PaidPublicationTaskId.new()
+        val contentId = ContentId.new()
 
         val task = PaidPublicationTaskFactory().create(
             PaidPublicationTaskFactory.Payload(
@@ -393,8 +394,8 @@ class PaidPublicationTaskBehaviorTest {
     ): PaidPublicationTask {
         val now = LocalDateTime.of(2026, 5, 17, 9, 0)
         return PaidPublicationTask(
-            id = UUID.randomUUID(),
-            contentId = UUID.randomUUID(),
+            id = PaidPublicationTaskId.new(),
+            contentId = ContentId.new(),
             paidPublicationStatus = paidPublicationStatus,
             publicationSagaId = publicationSagaId,
             payoutHoldStatus = payoutHoldStatus,

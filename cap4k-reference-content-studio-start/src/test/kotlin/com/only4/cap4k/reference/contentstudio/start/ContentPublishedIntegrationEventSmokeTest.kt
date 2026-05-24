@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.inbound.media.processing.MediaProcessingCallbackIntegrationEvent
 import com.only4.cap4k.reference.contentstudio.application.subscribers.integration.outbound.content.ContentPublishedIntegrationEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import java.time.Duration
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
@@ -65,13 +66,14 @@ class ContentPublishedIntegrationEventSmokeTest(
             ).statusCode
         ).isEqualTo(HttpStatus.OK)
 
+        val reviewerId = ContentId.new().toString()
         assertThat(
             restTemplate.postForEntity(
                 "/contents/$contentId/approve",
                 jsonRequest(
                     """
                     {
-                      "reviewerId": "11111111-1111-1111-1111-111111111111"
+                      "reviewerId": "$reviewerId"
                     }
                     """.trimIndent()
                 ),

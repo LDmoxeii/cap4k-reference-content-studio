@@ -3,6 +3,7 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processi
 import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.TestDomainEventSupervisor
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultStatus
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 
 class MediaProcessingTaskBehaviorTest {
     private lateinit var domainEvents: TestDomainEventSupervisor
@@ -121,7 +122,7 @@ class MediaProcessingTaskBehaviorTest {
         )
         val snapshot = newResultSnapshot(
             task = task,
-            contentId = UUID.fromString("00000000-0000-0000-0000-000000000505"),
+            contentId = ContentId.new(),
         )
 
         assertThrows(IllegalStateException::class.java) {
@@ -186,7 +187,7 @@ class MediaProcessingTaskBehaviorTest {
         )
         val snapshot = newResultSnapshot(
             task = task,
-            contentId = UUID.fromString("00000000-0000-0000-0000-000000000404"),
+            contentId = ContentId.new(),
         )
 
         assertThrows(IllegalStateException::class.java) {
@@ -211,8 +212,8 @@ class MediaProcessingTaskBehaviorTest {
     ): MediaProcessingTask {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
         return MediaProcessingTask(
-            id = UUID.randomUUID(),
-            contentId = UUID.randomUUID(),
+            id = MediaProcessingTaskId.new(),
+            contentId = ContentId.new(),
             externalTaskId = externalTaskId,
             processingStatus = processingStatus,
             dbCreatedAt = now,
@@ -222,7 +223,7 @@ class MediaProcessingTaskBehaviorTest {
 
     private fun newResultSnapshot(
         task: MediaProcessingTask,
-        contentId: UUID = task.contentId,
+        contentId: ContentId = task.contentId,
         externalTaskId: String = task.externalTaskId ?: "external-123",
     ): MediaProcessingResultSnapshot {
         val now = LocalDateTime.of(2026, 5, 11, 10, 15, 30)

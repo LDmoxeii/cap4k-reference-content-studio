@@ -4,11 +4,12 @@ import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import java.time.LocalDateTime
-import java.util.UUID
 import org.springframework.stereotype.Service
 
 @Service
@@ -64,7 +65,7 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
 
     data class Payload(
 
-        val id: UUID,
+        val id: ContentId,
 
         val title: String,
 
@@ -78,7 +79,7 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
 
         val releasePolicy: ReleasePolicy = ReleasePolicy.IMMEDIATE,
 
-        val reviewerId: UUID?,
+        val reviewerId: ReviewerId?,
 
         val reviewedAt: LocalDateTime?,
 

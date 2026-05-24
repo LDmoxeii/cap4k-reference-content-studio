@@ -1,9 +1,10 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values
 
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import java.security.MessageDigest
 import java.time.LocalDateTime
-import java.util.UUID
 
 @Aggregate(
     aggregate = "MediaProcessingTask",
@@ -12,8 +13,8 @@ import java.util.UUID
     description = "Media processing result snapshot"
 )
 data class MediaProcessingResultSnapshot(
-    val mediaProcessingTaskId: UUID,
-    val contentId: UUID,
+    val mediaProcessingTaskId: MediaProcessingTaskId,
+    val contentId: ContentId,
     val externalTaskId: String,
     val resultStatus: MediaProcessingResultStatus,
     val assetSha256: String,
@@ -42,8 +43,8 @@ data class MediaProcessingResultSnapshot(
         private val assetSha256Pattern = Regex("[a-fA-F0-9]{64}")
 
         fun create(
-            mediaProcessingTaskId: UUID,
-            contentId: UUID,
+            mediaProcessingTaskId: MediaProcessingTaskId,
+            contentId: ContentId,
             externalTaskId: String,
             resultStatus: MediaProcessingResultStatus,
             assetSha256: String,
@@ -65,8 +66,8 @@ data class MediaProcessingResultSnapshot(
         }
 
         fun computeHash(
-            mediaProcessingTaskId: UUID,
-            contentId: UUID,
+            mediaProcessingTaskId: MediaProcessingTaskId,
+            contentId: ContentId,
             externalTaskId: String,
             resultStatus: MediaProcessingResultStatus,
             assetSha256: String,

@@ -1,7 +1,10 @@
 package com.only4.cap4k.reference.contentstudio.application.queries.media.processing
 
 import com.only4.cap4k.ddd.core.application.RequestParam
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 
 object ListSubmittedMediaProcessingTasksForPollingQry {
 
@@ -11,7 +14,7 @@ object ListSubmittedMediaProcessingTasksForPollingQry {
         val items: List<TaskItem>
     ) {
         data class TaskItem(
-            val contentId: UUID,
+            val contentId: ContentId,
             val externalTaskId: String
         )
     }

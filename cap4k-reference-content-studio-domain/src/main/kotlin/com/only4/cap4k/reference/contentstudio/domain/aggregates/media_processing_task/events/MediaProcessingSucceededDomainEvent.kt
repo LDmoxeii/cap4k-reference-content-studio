@@ -2,8 +2,9 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processi
 
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
 import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 
 @DomainEvent(persist = true)
 @Aggregate(
@@ -14,6 +15,6 @@ import java.util.UUID
 )
 class MediaProcessingSucceededDomainEvent(
     val entity: MediaProcessingTask,
-    val taskId: UUID,
-    val contentId: UUID,
+    val taskId: MediaProcessingTaskId,
+    val contentId: ContentId,
 )
