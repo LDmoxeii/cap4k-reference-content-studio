@@ -11,7 +11,7 @@
       { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -21,7 +21,7 @@
     "desc": "submit content draft for review",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": []
   },
@@ -32,8 +32,8 @@
     "desc": "approve content review",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "reviewerId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "reviewerId", "type": "ReviewerId" },
       { "name": "reviewedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": []
@@ -45,7 +45,7 @@
     "desc": "publish approved content",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": [
@@ -59,7 +59,7 @@
     "desc": "start media processing task",
     "aggregates": ["MediaProcessingTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": []
@@ -85,7 +85,7 @@
     "desc": "record content media readiness",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "mediaReadyAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": [
@@ -110,17 +110,17 @@
     "desc": "get content detail",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "title", "type": "String" },
       { "name": "body", "type": "String" },
       { "name": "mediaSourceKey", "type": "String" },
       { "name": "reviewStatus", "type": "String" },
       { "name": "contentStatus", "type": "String" },
       { "name": "releasePolicy", "type": "String", "nullable": true },
-      { "name": "reviewerId", "type": "java.util.UUID", "nullable": true },
+      { "name": "reviewerId", "type": "ReviewerId", "nullable": true },
       { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
       { "name": "mediaReadyAt", "type": "java.time.LocalDateTime", "nullable": true },
       { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
@@ -133,11 +133,11 @@
     "desc": "get paid publication status",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "taskId", "type": "java.util.UUID", "nullable": true },
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true },
       { "name": "paidPublicationStatus", "type": "String", "nullable": true },
       { "name": "payoutHoldStatus", "type": "String", "nullable": true },
       { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
@@ -155,12 +155,12 @@
     "desc": "get media processing status",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "task", "type": "TaskSnapshot", "nullable": true },
-      { "name": "task.taskId", "type": "java.util.UUID" },
+      { "name": "task.taskId", "type": "MediaProcessingTaskId" },
       { "name": "task.externalTaskId", "type": "String", "nullable": true },
       { "name": "task.processingStatus", "type": "String" }
     ]
@@ -174,7 +174,7 @@
     "requestFields": [],
     "responseFields": [
       { "name": "items", "type": "List<TaskItem>" },
-      { "name": "items[].contentId", "type": "java.util.UUID" },
+      { "name": "items[].contentId", "type": "ContentId" },
       { "name": "items[].externalTaskId", "type": "String" }
     ]
   },
@@ -190,7 +190,7 @@
       { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -200,7 +200,7 @@
     "desc": "approve content review http payload",
     "aggregates": [],
     "requestFields": [
-      { "name": "reviewerId", "type": "java.util.UUID" }
+      { "name": "reviewerId", "type": "ReviewerId" }
     ],
     "responseFields": []
   },
@@ -211,17 +211,17 @@
     "desc": "get content detail http payload",
     "aggregates": [],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "title", "type": "String" },
       { "name": "body", "type": "String" },
       { "name": "mediaSourceKey", "type": "String" },
       { "name": "reviewStatus", "type": "String" },
       { "name": "contentStatus", "type": "String" },
       { "name": "releasePolicy", "type": "String", "nullable": true },
-      { "name": "reviewerId", "type": "java.util.UUID", "nullable": true },
+      { "name": "reviewerId", "type": "ReviewerId", "nullable": true },
       { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
       { "name": "mediaReadyAt", "type": "java.time.LocalDateTime", "nullable": true },
       { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
@@ -234,11 +234,11 @@
     "desc": "get paid publication status http payload",
     "aggregates": [],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "taskId", "type": "java.util.UUID", "nullable": true },
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true },
       { "name": "paidPublicationStatus", "type": "String", "nullable": true },
       { "name": "payoutHoldStatus", "type": "String", "nullable": true },
       { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
@@ -256,12 +256,12 @@
     "desc": "get media processing status http payload",
     "aggregates": [],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "task", "type": "Task", "nullable": true },
-      { "name": "task.taskId", "type": "java.util.UUID" },
+      { "name": "task.taskId", "type": "MediaProcessingTaskId" },
       { "name": "task.externalTaskId", "type": "String", "nullable": true },
       { "name": "task.processingStatus", "type": "String" }
     ]
@@ -273,7 +273,7 @@
     "desc": "trigger media processing cli task",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": [
@@ -305,7 +305,7 @@
     "aggregates": ["Content"],
     "persist": true,
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": []
@@ -318,7 +318,7 @@
     "aggregates": ["Content"],
     "persist": true,
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": []
   },
@@ -330,8 +330,8 @@
     "aggregates": ["Content"],
     "persist": true,
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
-      { "name": "reviewerId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "reviewerId", "type": "ReviewerId" },
       { "name": "reviewedAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": []
@@ -344,7 +344,7 @@
     "aggregates": ["Content"],
     "persist": true,
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "releasePolicy", "type": "String" },
       { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ],
@@ -358,7 +358,7 @@
     "aggregates": ["Content"],
     "persist": true,
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "mediaReadyAt", "type": "java.time.LocalDateTime" }
     ],
     "responseFields": []
@@ -371,7 +371,7 @@
     "aggregates": ["Content"],
     "persist": true,
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": []
   },
@@ -383,7 +383,7 @@
     "aggregates": ["Content"],
     "persist": true,
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": []
@@ -396,8 +396,8 @@
     "aggregates": ["MediaProcessingTask"],
     "persist": true,
     "requestFields": [
-      { "name": "taskId", "type": "java.util.UUID" },
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "taskId", "type": "MediaProcessingTaskId" },
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": []
   },
@@ -427,7 +427,7 @@
     "role": "outbound",
     "eventName": "cap4k.reference.contentstudio.content.published",
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" },
+      { "name": "contentId", "type": "ContentId" },
       { "name": "releasePolicy", "type": "String" },
       { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ],
@@ -445,7 +445,7 @@
       { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -455,10 +455,10 @@
     "desc": "try starting paid publication",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "responseFields": [
-      { "name": "taskId", "type": "java.util.UUID", "nullable": true },
+      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true },
       { "name": "started", "type": "Boolean" }
     ]
   },
@@ -469,7 +469,7 @@
     "desc": "reserve creator payout hold",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "reserved", "type": "Boolean" }
@@ -482,7 +482,7 @@
     "desc": "create access entitlement plan",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "created", "type": "Boolean" }
@@ -495,7 +495,7 @@
     "desc": "publish paid publication content",
     "aggregates": ["Content"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "published", "type": "Boolean" }
@@ -508,7 +508,7 @@
     "desc": "record paid publication content published",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "marked", "type": "Boolean" }
@@ -521,7 +521,7 @@
     "desc": "activate access entitlement plan",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "activated", "type": "Boolean" }
@@ -534,7 +534,7 @@
     "desc": "cancel entitlement plan if created",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" },
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
       { "name": "reason", "type": "String" }
     ],
     "responseFields": [
@@ -548,7 +548,7 @@
     "desc": "release payout hold if reserved",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" },
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
       { "name": "reason", "type": "String" }
     ],
     "responseFields": [
@@ -562,7 +562,7 @@
     "desc": "mark paid publication failed",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" },
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
       { "name": "failedReason", "type": "String" }
     ],
     "responseFields": []
@@ -574,7 +574,7 @@
     "desc": "reserve creator payout hold client",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "payoutHoldId", "type": "String" }
@@ -587,7 +587,7 @@
     "desc": "release creator payout hold client",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "released", "type": "Boolean" }
@@ -600,7 +600,7 @@
     "desc": "create access entitlement plan client",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "entitlementPlanId", "type": "String" }
@@ -613,7 +613,7 @@
     "desc": "cancel access entitlement plan client",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "cancelled", "type": "Boolean" }
@@ -626,7 +626,7 @@
     "desc": "activate access entitlement plan client",
     "aggregates": ["PaidPublicationTask"],
     "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "java.util.UUID" }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "responseFields": [
       { "name": "activated", "type": "Boolean" }
@@ -644,7 +644,7 @@
       { "name": "mediaSourceKey", "type": "String" }
     ],
     "responseFields": [
-      { "name": "contentId", "type": "java.util.UUID" }
+      { "name": "contentId", "type": "ContentId" }
     ]
   }
 ]
