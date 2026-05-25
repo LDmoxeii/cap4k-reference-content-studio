@@ -1,11 +1,12 @@
 package com.only4.cap4k.reference.contentstudio.application.commands.paid.publication
 
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
 import java.time.LocalDateTime
-import java.util.UUID
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -67,8 +68,8 @@ class ActivateAccessEntitlementPlanCmdTest {
     ): PaidPublicationTask {
         val now = LocalDateTime.of(2026, 5, 17, 9, 0)
         return PaidPublicationTask(
-            id = UUID.randomUUID(),
-            contentId = UUID.randomUUID(),
+            id = PaidPublicationTaskId.new(),
+            contentId = ContentId.new(),
             paidPublicationStatus = paidPublicationStatus,
             publicationSagaId = "saga-123",
             payoutHoldStatus = PayoutHoldStatus.RESERVED,

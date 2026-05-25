@@ -8,7 +8,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.C
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import org.springframework.stereotype.Service
 
 object CreateContentDraftCmd {
@@ -21,7 +21,6 @@ object CreateContentDraftCmd {
             val content =
                 Mediator.factories.create(
                     ContentFactory.Payload(
-                        id = UUID.randomUUID(),
                         title = request.title,
                         body = request.body,
                         mediaSourceKey = request.mediaSourceKey,
@@ -50,7 +49,7 @@ object CreateContentDraftCmd {
     ) : RequestParam<Response>
 
     data class Response(
-        val contentId: UUID
+        val contentId: ContentId
     )
 
 }

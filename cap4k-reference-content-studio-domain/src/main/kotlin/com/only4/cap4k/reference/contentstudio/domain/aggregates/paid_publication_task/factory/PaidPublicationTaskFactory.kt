@@ -3,12 +3,13 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publicati
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
 import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
 import java.time.LocalDateTime
-import java.util.UUID
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,7 +23,7 @@ class PaidPublicationTaskFactory : AggregateFactory<PaidPublicationTaskFactory.P
 
     override fun create(entityPayload: Payload): PaidPublicationTask =
         PaidPublicationTask(
-            id = entityPayload.id,
+            id = PaidPublicationTaskId.new(),
             contentId = entityPayload.contentId,
             paidPublicationStatus = PaidPublicationStatus.PENDING,
             publicationSagaId = null,
@@ -36,7 +37,7 @@ class PaidPublicationTaskFactory : AggregateFactory<PaidPublicationTaskFactory.P
             failedAt = null,
             failedReason = null,
             dbCreatedAt = entityPayload.now,
-            dbUpdatedAt = entityPayload.now,
+            dbUpdatedAt = entityPayload.now
         )
 
     @Aggregate(
@@ -46,12 +47,8 @@ class PaidPublicationTaskFactory : AggregateFactory<PaidPublicationTaskFactory.P
         description = ""
     )
     data class Payload(
-
-        val id: UUID,
-
-        val contentId: UUID,
-
+        val contentId: ContentId,
         val now: LocalDateTime
-
     ) : AggregatePayload<PaidPublicationTask>
+
 }

@@ -9,11 +9,12 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 
 class MediaProcessingResultSnapshotTest {
-    private val taskId = UUID.fromString("00000000-0000-0000-0000-000000000101")
-    private val contentId = UUID.fromString("00000000-0000-0000-0000-000000000202")
+    private val taskId = MediaProcessingTaskId.new()
+    private val contentId = ContentId.new()
     private val completedAt = LocalDateTime.parse("2026-05-11T10:15:30")
 
     @Test
@@ -77,14 +78,14 @@ class MediaProcessingResultSnapshotTest {
 
     @Test
     fun `content id contributes to snapshot identity`() {
-        val first = snapshot(contentId = UUID.fromString("00000000-0000-0000-0000-000000000301"))
-        val second = snapshot(contentId = UUID.fromString("00000000-0000-0000-0000-000000000302"))
+        val first = snapshot(contentId = ContentId.new())
+        val second = snapshot(contentId = ContentId.new())
 
         assertFalse(first.id == second.id)
     }
 
     private fun snapshot(
-        contentId: UUID = this.contentId,
+        contentId: ContentId = this.contentId,
         externalTaskId: String = "external-123",
         assetSha256: String = "a".repeat(64),
         assetLocation: String = "s3://content-studio/assets/external-123.mp4",

@@ -4,8 +4,10 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.C
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
@@ -16,7 +18,7 @@ class ContentFactoryTest {
     @Test
     fun `create builds content aggregate from payload`() {
         val now = LocalDateTime.of(2026, 5, 9, 9, 0)
-        val reviewerId = UUID.randomUUID()
+        val reviewerId = ReviewerId.parse(ContentId.new().toString())
         val mediaReadyAt = now.plusMinutes(30)
         val payload = validPayload(
             reviewerId = reviewerId,
@@ -29,7 +31,7 @@ class ContentFactoryTest {
 
         val content = factory.create(payload)
 
-        assertEquals(payload.id, content.id)
+        assertNotNull(content.id)
         assertEquals(payload.title, content.title)
         assertEquals(payload.body, content.body)
         assertEquals(payload.mediaSourceKey, content.mediaSourceKey)
@@ -105,13 +107,12 @@ class ContentFactoryTest {
     }
 
     private fun validPayload(
-        id: UUID = UUID.randomUUID(),
         title: String = "Draft title",
         body: String = "Draft body",
         mediaSourceKey: String = "media/source-key",
         reviewStatus: ReviewStatus = ReviewStatus.PENDING,
         contentStatus: ContentStatus = ContentStatus.DRAFT,
-        reviewerId: UUID? = null,
+        reviewerId: ReviewerId? = null,
         reviewedAt: LocalDateTime? = null,
         publishedAt: LocalDateTime? = null,
         mediaReadyAt: LocalDateTime? = null,
@@ -119,7 +120,6 @@ class ContentFactoryTest {
         dbUpdatedAt: LocalDateTime = dbCreatedAt.plusMinutes(5),
     ): ContentFactory.Payload =
         ContentFactory.Payload(
-            id = id,
             title = title,
             body = body,
             mediaSourceKey = mediaSourceKey,

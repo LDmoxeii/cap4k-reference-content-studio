@@ -10,7 +10,8 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publicatio
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.recordSagaStarted
 import com.only4.cap4k.reference.contentstudio.domain.services.paid.publication.PaidPublicationEligibilityService
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import org.springframework.stereotype.Service
 
 object TryStartPaidPublicationCmd {
@@ -38,7 +39,6 @@ object TryStartPaidPublicationCmd {
                     val task =
                         existingTask ?: Mediator.factories.create(
                             PaidPublicationTaskFactory.Payload(
-                                id = UUID.randomUUID(),
                                 contentId = request.contentId,
                                 now = now,
                             )
@@ -66,11 +66,11 @@ object TryStartPaidPublicationCmd {
     }
 
     data class Request(
-        val contentId: UUID
+        val contentId: ContentId
     ) : RequestParam<Response>
 
     data class Response(
-        val taskId: UUID?,
+        val taskId: PaidPublicationTaskId?,
         val started: Boolean
     )
 

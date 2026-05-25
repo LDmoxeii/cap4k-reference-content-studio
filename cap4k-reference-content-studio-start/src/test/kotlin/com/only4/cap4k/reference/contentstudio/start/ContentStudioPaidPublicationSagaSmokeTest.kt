@@ -11,7 +11,9 @@ import com.only4.cap4k.reference.contentstudio.application.subscribers.integrati
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.EntitlementPlanStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PaidPublicationStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.enums.PayoutHoldStatus
@@ -146,8 +148,8 @@ class ContentStudioPaidPublicationSagaSmokeTest(
     @Test
     @Order(4)
     fun `reserve creator payout hold no-ops when paid publication task is not saga running`() {
-        val contentId = UUID.randomUUID()
-        val taskId = UUID.randomUUID()
+        val contentId = UUID.fromString(ContentId.new().toString())
+        val taskId = UUID.fromString(PaidPublicationTaskId.new().toString())
         val now = LocalDateTime.now()
         jdbcTemplate.update(
             """
@@ -194,7 +196,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             now,
         )
 
-        val response = Mediator.cmd.send(ReserveCreatorPayoutHoldCmd.Request(taskId))
+        val response = Mediator.cmd.send(ReserveCreatorPayoutHoldCmd.Request(PaidPublicationTaskId.parse(taskId.toString())))
 
         assertThat(response.reserved).isFalse()
         val task = paidPublicationTask(contentId)
@@ -207,8 +209,8 @@ class ContentStudioPaidPublicationSagaSmokeTest(
     @Test
     @Order(5)
     fun `paid publication command rejects task that points at immediate content`() {
-        val contentId = UUID.randomUUID()
-        val taskId = UUID.randomUUID()
+        val contentId = UUID.fromString(ContentId.new().toString())
+        val taskId = UUID.fromString(PaidPublicationTaskId.new().toString())
         val now = LocalDateTime.now()
         jdbcTemplate.update(
             """
@@ -224,7 +226,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             ReviewStatus.APPROVED.ordinal,
             ContentStatus.DRAFT.ordinal,
             ReleasePolicy.IMMEDIATE.ordinal,
-            UUID.fromString("11111111-1111-1111-1111-111111111111"),
+            UUID.fromString(ContentId.new().toString()),
             now,
             null,
             now,
@@ -270,7 +272,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
         )
 
         assertThatThrownBy {
-            Mediator.cmd.send(PublishPaidPublicationContentCmd.Request(taskId))
+            Mediator.cmd.send(PublishPaidPublicationContentCmd.Request(PaidPublicationTaskId.parse(taskId.toString())))
         }
             .hasCauseInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("requires paid content")
@@ -281,7 +283,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
     @Test
     @Order(6)
     fun `generic publish command does not publish paid content directly`() {
-        val contentId = UUID.randomUUID()
+        val contentId = UUID.fromString(ContentId.new().toString())
         val now = LocalDateTime.now()
         jdbcTemplate.update(
             """
@@ -297,7 +299,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             ReviewStatus.APPROVED.ordinal,
             ContentStatus.DRAFT.ordinal,
             ReleasePolicy.PAID.ordinal,
-            UUID.fromString("11111111-1111-1111-1111-111111111111"),
+            UUID.fromString(ContentId.new().toString()),
             now,
             null,
             now,
@@ -318,7 +320,7 @@ class ContentStudioPaidPublicationSagaSmokeTest(
             now,
         )
 
-        val response = Mediator.cmd.send(PublishContentCmd.Request(contentId, now))
+        val response = Mediator.cmd.send(PublishContentCmd.Request(ContentId.parse(contentId.toString()), now))
 
         assertThat(response.published).isFalse()
         assertThat(contentStatus(contentId)).isEqualTo(ContentStatus.DRAFT.ordinal)
@@ -374,13 +376,14 @@ class ContentStudioPaidPublicationSagaSmokeTest(
     }
 
     private fun approveContent(contentId: UUID) {
+        val reviewerId = ContentId.new().toString()
         val approveResponse =
             restTemplate.postForEntity(
                 "/contents/$contentId/approve",
                 jsonRequest(
                     """
                     {
-                      "reviewerId": "11111111-1111-1111-1111-111111111111"
+                      "reviewerId": "$reviewerId"
                     }
                     """.trimIndent()
                 ),

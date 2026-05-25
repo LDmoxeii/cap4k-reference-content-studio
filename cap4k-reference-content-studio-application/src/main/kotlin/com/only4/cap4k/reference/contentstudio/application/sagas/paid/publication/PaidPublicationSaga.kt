@@ -11,7 +11,10 @@ import com.only4.cap4k.reference.contentstudio.application.commands.paid.publica
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.PublishPaidPublicationContentCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.ReleasePayoutHoldIfReservedCmd
 import com.only4.cap4k.reference.contentstudio.application.commands.paid.publication.ReserveCreatorPayoutHoldCmd
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.springframework.stereotype.Service
 
 object PaidPublicationSaga {
@@ -93,7 +96,7 @@ object PaidPublicationSaga {
         expireAfter = 1440,
     )
     data class Request(
-        val paidPublicationTaskId: UUID
+        val paidPublicationTaskId: PaidPublicationTaskId
     ) : SagaParam<Response>
 
     data class Response(

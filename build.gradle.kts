@@ -1,5 +1,6 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import com.only4.cap4k.plugin.pipeline.api.BootstrapMode
 import java.nio.file.Paths
 
 plugins {
@@ -14,6 +15,28 @@ allprojects {
         mavenCentral()
     }
 }
+
+// [cap4k-bootstrap:managed-begin:root-host]
+cap4k {
+    bootstrap {
+        enabled.set(true)
+        preset.set("ddd-multi-module")
+        conflictPolicy.set("SKIP")
+        mode.set(BootstrapMode.IN_PLACE)
+        projectName.set("cap4k-reference-content-studio")
+        basePackage.set("com.only4.cap4k.reference.contentstudio")
+        modules {
+            domainModuleName.set("cap4k-reference-content-studio-domain")
+            applicationModuleName.set("cap4k-reference-content-studio-application")
+            adapterModuleName.set("cap4k-reference-content-studio-adapter")
+            startModuleName.set("cap4k-reference-content-studio-start")
+        }
+        templates {
+            preset.set("ddd-default-bootstrap")
+        }
+    }
+}
+// [cap4k-bootstrap:managed-end:root-host]
 
 val contentStudioSchemaPath =
     layout.projectDirectory.file(

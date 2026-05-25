@@ -1,17 +1,20 @@
 package com.only4.cap4k.reference.contentstudio.adapter.integration
 
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import java.util.concurrent.ConcurrentHashMap
 import org.springframework.stereotype.Service
 
 @Service
 class FakeMediaProcessingCli {
-    private val externalTaskIds = ConcurrentHashMap<UUID, String>()
+    private val externalTaskIds = ConcurrentHashMap<ContentId, String>()
     private val statuses = ConcurrentHashMap<String, String>()
 
     fun start(
-        contentId: UUID,
+        contentId: ContentId,
         mediaSourceKey: String,
     ): com.only4.cap4k.reference.contentstudio.application.distributed.clients.media.processing.TriggerMediaProcessingCli.Response {
         val externalTaskId = externalTaskIds.computeIfAbsent(contentId) {

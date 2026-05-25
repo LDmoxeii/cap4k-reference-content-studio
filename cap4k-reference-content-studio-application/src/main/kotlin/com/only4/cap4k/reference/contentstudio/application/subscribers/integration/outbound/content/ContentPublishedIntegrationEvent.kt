@@ -2,7 +2,10 @@ package com.only4.cap4k.reference.contentstudio.application.subscribers.integrat
 
 import com.only4.cap4k.ddd.core.application.event.annotation.IntegrationEvent
 import java.time.LocalDateTime
-import java.util.UUID
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
+import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 
 /**
  * content published integration event
@@ -12,7 +15,7 @@ import java.util.UUID
     subscriber = IntegrationEvent.NONE_SUBSCRIBER
 )
 data class ContentPublishedIntegrationEvent(
-    val contentId: UUID,
+    val contentId: ContentId,
     val releasePolicy: String,
     val publishedAt: LocalDateTime
 ) {
