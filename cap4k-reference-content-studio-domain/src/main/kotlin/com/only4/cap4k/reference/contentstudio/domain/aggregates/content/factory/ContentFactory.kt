@@ -35,7 +35,7 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
         }
 
         return Content(
-            id = entityPayload.id,
+            id = ContentId.new(),
             title = title,
             body = body,
             mediaSourceKey = mediaSourceKey,
@@ -47,7 +47,7 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
             publishedAt = entityPayload.publishedAt,
             mediaReadyAt = entityPayload.mediaReadyAt,
             dbCreatedAt = entityPayload.dbCreatedAt,
-            dbUpdatedAt = entityPayload.dbUpdatedAt,
+            dbUpdatedAt = entityPayload.dbUpdatedAt
         )
     }
 
@@ -62,35 +62,19 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
         type = Aggregate.TYPE_FACTORY_PAYLOAD,
         description = ""
     )
-
     data class Payload(
-
-        val id: ContentId,
-
         val title: String,
-
         val body: String,
-
         val mediaSourceKey: String,
-
         val reviewStatus: ReviewStatus,
-
         val contentStatus: ContentStatus,
-
         val releasePolicy: ReleasePolicy = ReleasePolicy.IMMEDIATE,
-
         val reviewerId: ReviewerId?,
-
         val reviewedAt: LocalDateTime?,
-
         val publishedAt: LocalDateTime?,
-
         val mediaReadyAt: LocalDateTime? = null,
-
         val dbCreatedAt: LocalDateTime,
-
         val dbUpdatedAt: LocalDateTime
-
     ) : AggregatePayload<Content>
 
 }

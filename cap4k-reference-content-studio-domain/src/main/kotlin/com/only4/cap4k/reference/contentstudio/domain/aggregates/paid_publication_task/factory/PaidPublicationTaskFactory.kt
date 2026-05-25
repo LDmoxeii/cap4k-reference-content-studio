@@ -23,7 +23,7 @@ class PaidPublicationTaskFactory : AggregateFactory<PaidPublicationTaskFactory.P
 
     override fun create(entityPayload: Payload): PaidPublicationTask =
         PaidPublicationTask(
-            id = entityPayload.id,
+            id = PaidPublicationTaskId.new(),
             contentId = entityPayload.contentId,
             paidPublicationStatus = PaidPublicationStatus.PENDING,
             publicationSagaId = null,
@@ -37,7 +37,7 @@ class PaidPublicationTaskFactory : AggregateFactory<PaidPublicationTaskFactory.P
             failedAt = null,
             failedReason = null,
             dbCreatedAt = entityPayload.now,
-            dbUpdatedAt = entityPayload.now,
+            dbUpdatedAt = entityPayload.now
         )
 
     @Aggregate(
@@ -47,12 +47,8 @@ class PaidPublicationTaskFactory : AggregateFactory<PaidPublicationTaskFactory.P
         description = ""
     )
     data class Payload(
-
-        val id: PaidPublicationTaskId,
-
         val contentId: ContentId,
-
         val now: LocalDateTime
-
     ) : AggregatePayload<PaidPublicationTask>
+
 }

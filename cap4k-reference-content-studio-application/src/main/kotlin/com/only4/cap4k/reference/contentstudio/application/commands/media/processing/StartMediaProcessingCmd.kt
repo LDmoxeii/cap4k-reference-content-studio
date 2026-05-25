@@ -10,9 +10,6 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSubmitted
 import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
-import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.springframework.stereotype.Service
 
 object StartMediaProcessingCmd {
@@ -32,10 +29,10 @@ object StartMediaProcessingCmd {
                     persist = true
                 ) ?: Mediator.factories.create(
                     MediaProcessingTaskFactory.Payload(
-                        id = MediaProcessingTaskId.new(),
                         contentId = request.contentId,
                         externalTaskId = null,
                         processingStatus = MediaProcessingStatus.PENDING,
+                        resultSnapshot = null,
                         dbCreatedAt = LocalDateTime.now(),
                         dbUpdatedAt = LocalDateTime.now(),
                     )

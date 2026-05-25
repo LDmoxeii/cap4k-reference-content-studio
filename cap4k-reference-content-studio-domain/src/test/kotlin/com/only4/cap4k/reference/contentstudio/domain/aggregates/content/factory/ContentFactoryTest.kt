@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
@@ -30,7 +31,7 @@ class ContentFactoryTest {
 
         val content = factory.create(payload)
 
-        assertEquals(payload.id, content.id)
+        assertNotNull(content.id)
         assertEquals(payload.title, content.title)
         assertEquals(payload.body, content.body)
         assertEquals(payload.mediaSourceKey, content.mediaSourceKey)
@@ -106,7 +107,6 @@ class ContentFactoryTest {
     }
 
     private fun validPayload(
-        id: ContentId = ContentId.new(),
         title: String = "Draft title",
         body: String = "Draft body",
         mediaSourceKey: String = "media/source-key",
@@ -120,7 +120,6 @@ class ContentFactoryTest {
         dbUpdatedAt: LocalDateTime = dbCreatedAt.plusMinutes(5),
     ): ContentFactory.Payload =
         ContentFactory.Payload(
-            id = id,
             title = title,
             body = body,
             mediaSourceKey = mediaSourceKey,

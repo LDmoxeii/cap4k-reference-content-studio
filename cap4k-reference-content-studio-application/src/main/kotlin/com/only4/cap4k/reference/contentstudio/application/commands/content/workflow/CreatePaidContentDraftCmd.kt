@@ -9,9 +9,6 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.R
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory.ContentFactory
 import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
-import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.springframework.stereotype.Service
 
 object CreatePaidContentDraftCmd {
@@ -24,7 +21,6 @@ object CreatePaidContentDraftCmd {
             val content =
                 Mediator.factories.create(
                     ContentFactory.Payload(
-                        id = ContentId.new(),
                         title = request.title,
                         body = request.body,
                         mediaSourceKey = request.mediaSourceKey,

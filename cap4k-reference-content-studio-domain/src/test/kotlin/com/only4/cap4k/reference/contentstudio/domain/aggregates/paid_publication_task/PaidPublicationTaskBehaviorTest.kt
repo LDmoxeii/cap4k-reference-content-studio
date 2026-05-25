@@ -8,6 +8,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publicatio
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.factory.PaidPublicationTaskFactory
 import java.time.LocalDateTime
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -296,18 +297,16 @@ class PaidPublicationTaskBehaviorTest {
     @Test
     fun `factory creates pending task with empty external state`() {
         val now = LocalDateTime.of(2026, 5, 17, 9, 30)
-        val id = PaidPublicationTaskId.new()
         val contentId = ContentId.new()
 
         val task = PaidPublicationTaskFactory().create(
             PaidPublicationTaskFactory.Payload(
-                id = id,
                 contentId = contentId,
                 now = now,
             )
         )
 
-        assertEquals(id, task.id)
+        assertNotNull(task.id)
         assertEquals(contentId, task.contentId)
         assertEquals(PaidPublicationStatus.PENDING, task.paidPublicationStatus)
         assertEquals(PayoutHoldStatus.NONE, task.payoutHoldStatus)

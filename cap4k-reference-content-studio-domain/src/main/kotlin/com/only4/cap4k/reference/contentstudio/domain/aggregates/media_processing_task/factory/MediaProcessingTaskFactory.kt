@@ -7,6 +7,8 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
+import java.time.LocalDateTime
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,12 +22,13 @@ class MediaProcessingTaskFactory : AggregateFactory<MediaProcessingTaskFactory.P
 
     override fun create(entityPayload: Payload): MediaProcessingTask =
         MediaProcessingTask(
-            id = entityPayload.id,
+            id = MediaProcessingTaskId.new(),
             contentId = entityPayload.contentId,
             externalTaskId = entityPayload.externalTaskId,
             processingStatus = entityPayload.processingStatus,
+            resultSnapshot = entityPayload.resultSnapshot,
             dbCreatedAt = entityPayload.dbCreatedAt,
-            dbUpdatedAt = entityPayload.dbUpdatedAt,
+            dbUpdatedAt = entityPayload.dbUpdatedAt
         )
 
     @Aggregate(
@@ -34,21 +37,13 @@ class MediaProcessingTaskFactory : AggregateFactory<MediaProcessingTaskFactory.P
         type = Aggregate.TYPE_FACTORY_PAYLOAD,
         description = ""
     )
-
     data class Payload(
-
-        val id: MediaProcessingTaskId,
-
         val contentId: ContentId,
-
         val externalTaskId: String?,
-
         val processingStatus: MediaProcessingStatus,
-
-        val dbCreatedAt: java.time.LocalDateTime,
-
-        val dbUpdatedAt: java.time.LocalDateTime
-
+        val resultSnapshot: MediaProcessingResultSnapshot?,
+        val dbCreatedAt: LocalDateTime,
+        val dbUpdatedAt: LocalDateTime
     ) : AggregatePayload<MediaProcessingTask>
 
 }
