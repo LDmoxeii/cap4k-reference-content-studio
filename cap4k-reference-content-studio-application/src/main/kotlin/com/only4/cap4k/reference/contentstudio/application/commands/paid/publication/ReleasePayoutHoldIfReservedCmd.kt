@@ -23,16 +23,13 @@ object ReleasePayoutHoldIfReservedCmd {
 
         override fun exec(request: Request): Response {
             val task = loadTask(request.paidPublicationTaskId)
-            if (task.payoutHoldStatus == PayoutHoldStatus.NONE || task.payoutHoldStatus == PayoutHoldStatus.RELEASED) {
-                return Response(released = false)
+            validateLoadedTaskForRelease(task)?.let {
+                return it
             }
             if (task.payoutHoldStatus == PayoutHoldStatus.CAPTURED) {
-                task.markRequiresOperatorRepair(
-                    "Payout hold is captured and cannot be released automatically.",
-                    LocalDateTime.now(),
-                )
+                val response = applyCapturedHoldRepair(task, LocalDateTime.now())
                 Mediator.uow.save()
-                return Response(released = false)
+                return response
             }
 
             val response =
@@ -47,7 +44,7 @@ object ReleasePayoutHoldIfReservedCmd {
             task.recordPayoutHoldReleased()
             Mediator.uow.save()
 
-            return Response(released = true)
+            return Response(released = true, decision = Decision.Released)
         }
     }
 
@@ -57,8 +54,35 @@ object ReleasePayoutHoldIfReservedCmd {
     ) : RequestParam<Response>
 
     data class Response(
-        val released: Boolean
+        val released: Boolean,
+        val decision: Decision,
     )
+
+    enum class Decision {
+        Released,
+        NoPayoutHold,
+        AlreadyReleased,
+        CapturedRequiresOperatorRepair,
+    }
+
+    internal fun validateLoadedTaskForRelease(task: PaidPublicationTask): Response? =
+        when (task.payoutHoldStatus) {
+            PayoutHoldStatus.NONE -> Response(released = false, decision = Decision.NoPayoutHold)
+            PayoutHoldStatus.RELEASED -> Response(released = false, decision = Decision.AlreadyReleased)
+            PayoutHoldStatus.RESERVED,
+            PayoutHoldStatus.CAPTURED -> null
+        }
+
+    internal fun applyCapturedHoldRepair(
+        task: PaidPublicationTask,
+        failedAt: LocalDateTime,
+    ): Response {
+        task.markRequiresOperatorRepair(
+            "Payout hold is captured and cannot be released automatically.",
+            failedAt,
+        )
+        return Response(released = false, decision = Decision.CapturedRequiresOperatorRepair)
+    }
 
     private fun loadTask(paidPublicationTaskId: PaidPublicationTaskId): PaidPublicationTask =
         checkNotNull(Mediator.repositories.findOne(SPaidPublicationTask.predicateById(paidPublicationTaskId), persist = true)) {

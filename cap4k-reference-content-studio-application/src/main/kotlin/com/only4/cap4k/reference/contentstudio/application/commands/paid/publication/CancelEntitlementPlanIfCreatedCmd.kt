@@ -23,18 +23,15 @@ object CancelEntitlementPlanIfCreatedCmd {
 
         override fun exec(request: Request): Response {
             val task = loadTask(request.paidPublicationTaskId)
-            if (task.entitlementPlanStatus == EntitlementPlanStatus.NONE || task.entitlementPlanStatus == EntitlementPlanStatus.CANCELLED) {
-                return Response(cancelled = false)
+            validateLoadedTaskForCancellation(task)?.let {
+                return it
             }
 
             val now = LocalDateTime.now()
             if (task.entitlementPlanStatus == EntitlementPlanStatus.ACTIVATED) {
-                task.markRequiresOperatorRepair(
-                    "Entitlement plan is activated and cannot be cancelled automatically.",
-                    now,
-                )
+                val response = applyActivatedPlanRepair(task, now)
                 Mediator.uow.save()
-                return Response(cancelled = false)
+                return response
             }
 
             val response =
@@ -49,7 +46,7 @@ object CancelEntitlementPlanIfCreatedCmd {
             task.recordEntitlementPlanCancelled()
             Mediator.uow.save()
 
-            return Response(cancelled = true)
+            return Response(cancelled = true, decision = Decision.Cancelled)
         }
     }
 
@@ -59,8 +56,35 @@ object CancelEntitlementPlanIfCreatedCmd {
     ) : RequestParam<Response>
 
     data class Response(
-        val cancelled: Boolean
+        val cancelled: Boolean,
+        val decision: Decision,
     )
+
+    enum class Decision {
+        Cancelled,
+        NoEntitlementPlan,
+        AlreadyCancelled,
+        ActivatedRequiresOperatorRepair,
+    }
+
+    internal fun validateLoadedTaskForCancellation(task: PaidPublicationTask): Response? =
+        when (task.entitlementPlanStatus) {
+            EntitlementPlanStatus.NONE -> Response(cancelled = false, decision = Decision.NoEntitlementPlan)
+            EntitlementPlanStatus.CANCELLED -> Response(cancelled = false, decision = Decision.AlreadyCancelled)
+            EntitlementPlanStatus.CREATED,
+            EntitlementPlanStatus.ACTIVATED -> null
+        }
+
+    internal fun applyActivatedPlanRepair(
+        task: PaidPublicationTask,
+        failedAt: LocalDateTime,
+    ): Response {
+        task.markRequiresOperatorRepair(
+            "Entitlement plan is activated and cannot be cancelled automatically.",
+            failedAt,
+        )
+        return Response(cancelled = false, decision = Decision.ActivatedRequiresOperatorRepair)
+    }
 
     private fun loadTask(paidPublicationTaskId: PaidPublicationTaskId): PaidPublicationTask =
         checkNotNull(Mediator.repositories.findOne(SPaidPublicationTask.predicateById(paidPublicationTaskId), persist = true)) {

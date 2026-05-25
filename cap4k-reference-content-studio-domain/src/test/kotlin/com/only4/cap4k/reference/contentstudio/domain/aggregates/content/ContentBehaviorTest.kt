@@ -12,6 +12,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.R
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReviewStatus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -163,6 +164,69 @@ class ContentBehaviorTest {
         assertEquals(ContentStatus.PUBLISHED, content.contentStatus)
         assertEquals(originalPublishedAt, content.publishedAt)
         assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `submit for review rejects already published content`() {
+        val content = newContent(
+            reviewStatus = ReviewStatus.APPROVED,
+            contentStatus = ContentStatus.PUBLISHED,
+            mediaReadyAt = LocalDateTime.of(2026, 5, 9, 10, 30),
+        ).apply {
+            publishedAt = LocalDateTime.of(2026, 5, 9, 11, 0)
+        }
+
+        val error = assertThrows(IllegalStateException::class.java) {
+            content.submitForReview()
+        }
+
+        assertEquals("Cannot submit published content for review.", error.message)
+        assertEquals(ReviewStatus.APPROVED, content.reviewStatus)
+        assertEquals(ContentStatus.PUBLISHED, content.contentStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `publish rejects content before review approval`() {
+        val content = newContent(mediaReadyAt = LocalDateTime.of(2026, 5, 9, 10, 30))
+
+        val error = assertThrows(IllegalStateException::class.java) {
+            content.publish(publishedAt = LocalDateTime.of(2026, 5, 9, 11, 0))
+        }
+
+        assertEquals("Cannot publish content before review is approved.", error.message)
+        assertEquals(ContentStatus.DRAFT, content.contentStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `publish rejects content before media readiness`() {
+        val content = newContent(reviewStatus = ReviewStatus.APPROVED)
+
+        val error = assertThrows(IllegalStateException::class.java) {
+            content.publish(publishedAt = LocalDateTime.of(2026, 5, 9, 11, 0))
+        }
+
+        assertEquals("Cannot publish content before media is ready.", error.message)
+        assertEquals(ContentStatus.DRAFT, content.contentStatus)
+        assertEquals(emptyList<Any>(), domainEvents.attachedEvents)
+    }
+
+    @Test
+    fun `record media ready twice keeps first readiness and emits no duplicate event`() {
+        val firstReadyAt = LocalDateTime.of(2026, 5, 9, 10, 30)
+        val content = newContent(reviewStatus = ReviewStatus.APPROVED)
+
+        content.recordMediaReady(firstReadyAt)
+        val firstEvents = domainEvents.attachedEvents.toList()
+
+        content.recordMediaReady(LocalDateTime.of(2026, 5, 9, 10, 45))
+
+        assertEquals(firstReadyAt, content.mediaReadyAt)
+        assertEquals(firstEvents, domainEvents.attachedEvents)
+        assertEquals(2, domainEvents.attachedEvents.size)
+        assertInstanceOf(ContentMediaReadyDomainEvent::class.java, domainEvents.attachedEvents[0])
+        assertInstanceOf(ContentPublicationReadyDomainEvent::class.java, domainEvents.attachedEvents[1])
     }
 
     private fun newContent(

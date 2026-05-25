@@ -5,6 +5,7 @@ import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.media.processing.TriggerMediaProcessingCli
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.factory.MediaProcessingTaskFactory
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSubmitted
@@ -37,11 +38,12 @@ object StartMediaProcessingCmd {
                         dbUpdatedAt = LocalDateTime.now(),
                     )
                 )
-            if (
-                task.processingStatus == MediaProcessingStatus.SUBMITTED ||
-                task.processingStatus == MediaProcessingStatus.SUCCEEDED
-            ) {
-                return Response
+            when (val decision = decideLoadedTask(task)) {
+                Decision.AlreadySubmitted,
+                Decision.AlreadySucceeded -> return responseForDecision(decision)
+
+                Decision.ShouldStart -> Unit
+                Decision.Started -> error("Started is a response decision, not a pre-start task state.")
             }
             val response =
                 Mediator.requests.send(
@@ -59,8 +61,29 @@ object StartMediaProcessingCmd {
             task.markSubmitted(externalTaskId)
             Mediator.uow.save()
 
-            return Response
+            return responseForDecision(Decision.Started)
         }
+    }
+
+    fun decideLoadedTask(task: MediaProcessingTask): Decision =
+        when (task.processingStatus) {
+            MediaProcessingStatus.SUBMITTED -> Decision.AlreadySubmitted
+            MediaProcessingStatus.SUCCEEDED -> Decision.AlreadySucceeded
+            MediaProcessingStatus.PENDING -> Decision.ShouldStart
+        }
+
+    fun responseForDecision(decision: Decision): Response {
+        check(decision != Decision.ShouldStart) {
+            "Pending media processing tasks must call the external processing capability."
+        }
+        return Response(decision = decision)
+    }
+
+    enum class Decision {
+        ShouldStart,
+        Started,
+        AlreadySubmitted,
+        AlreadySucceeded,
     }
 
     data class Request(
@@ -68,6 +91,8 @@ object StartMediaProcessingCmd {
         val mediaSourceKey: String,
     ) : RequestParam<Response>
 
-    data object Response
+    data class Response(
+        val decision: Decision = Decision.Started,
+    )
 
 }

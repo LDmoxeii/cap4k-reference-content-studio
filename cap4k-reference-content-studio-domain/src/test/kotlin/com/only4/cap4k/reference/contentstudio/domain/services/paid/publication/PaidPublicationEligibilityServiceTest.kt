@@ -39,26 +39,58 @@ class PaidPublicationEligibilityServiceTest {
         assertEquals(PaidPublicationEligibilityService.Decision.AlreadyStarted, result)
     }
 
+    @Test
+    fun `paid content is not eligible before publication readiness`() {
+        val result = service.decide(
+            content(
+                releasePolicy = ReleasePolicy.PAID,
+                reviewStatus = ReviewStatus.PENDING,
+                mediaReadyAt = LocalDateTime.of(2026, 5, 17, 10, 0),
+            ),
+            existingTask = null,
+        )
+
+        assertEquals(PaidPublicationEligibilityService.Decision.NotPublicationReady, result)
+    }
+
+    @Test
+    fun `published paid content is not eligible to start again`() {
+        val result = service.decide(
+            content(
+                releasePolicy = ReleasePolicy.PAID,
+                contentStatus = ContentStatus.PUBLISHED,
+            ),
+            existingTask = null,
+        )
+
+        assertEquals(PaidPublicationEligibilityService.Decision.AlreadyPublished, result)
+    }
+
     private fun paidReadyContent(): Content =
         content(releasePolicy = ReleasePolicy.PAID)
 
     private fun immediateReadyContent(): Content =
         content(releasePolicy = ReleasePolicy.IMMEDIATE)
 
-    private fun content(releasePolicy: ReleasePolicy): Content {
+    private fun content(
+        releasePolicy: ReleasePolicy,
+        reviewStatus: ReviewStatus = ReviewStatus.APPROVED,
+        contentStatus: ContentStatus = ContentStatus.DRAFT,
+        mediaReadyAt: LocalDateTime? = LocalDateTime.of(2026, 5, 17, 10, 0),
+    ): Content {
         val now = LocalDateTime.of(2026, 5, 17, 9, 0)
         return Content(
             id = ContentId.new(),
             title = "Publication ready content",
             body = "Approved content with media ready",
             mediaSourceKey = "media/ready-content.mp4",
-            reviewStatus = ReviewStatus.APPROVED,
-            contentStatus = ContentStatus.DRAFT,
+            reviewStatus = reviewStatus,
+            contentStatus = contentStatus,
             releasePolicy = releasePolicy,
             reviewerId = ReviewerId.parse(ContentId.new().toString()),
             reviewedAt = now.plusMinutes(30),
-            publishedAt = null,
-            mediaReadyAt = now.plusHours(1),
+            publishedAt = if (contentStatus == ContentStatus.PUBLISHED) now.plusHours(2) else null,
+            mediaReadyAt = mediaReadyAt,
             dbCreatedAt = now,
             dbUpdatedAt = now,
         )

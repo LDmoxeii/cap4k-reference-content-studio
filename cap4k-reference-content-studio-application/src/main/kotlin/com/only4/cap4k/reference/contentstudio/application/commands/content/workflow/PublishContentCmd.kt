@@ -3,15 +3,13 @@ package com.only4.cap4k.reference.contentstudio.application.commands.content.wor
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ReleasePolicy
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.isReadyForImmediatePublication
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.publish
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
-import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.springframework.stereotype.Service
 
 object PublishContentCmd {
@@ -23,18 +21,31 @@ object PublishContentCmd {
             val content = checkNotNull(Mediator.repositories.findOne(SContent.predicateById(request.contentId), persist = true)) {
                 "Content ${request.contentId} was not found."
             }
-            if (content.releasePolicy != ReleasePolicy.IMMEDIATE) {
-                return Response(published = false)
-            }
-            if (!content.isReadyForImmediatePublication()) {
-                return Response(published = false)
+            when (val decision = decideLoadedContent(content)) {
+                Decision.NotImmediateContent,
+                Decision.NotPublicationReady -> return Response(published = false, decision = decision)
+
+                Decision.Publishable -> Unit
             }
 
             content.publish(request.publishedAt)
             Mediator.uow.save()
 
-            return Response(published = true)
+            return Response(published = true, decision = Decision.Publishable)
         }
+    }
+
+    fun decideLoadedContent(content: Content): Decision =
+        when {
+            content.releasePolicy != ReleasePolicy.IMMEDIATE -> Decision.NotImmediateContent
+            !content.isReadyForImmediatePublication() -> Decision.NotPublicationReady
+            else -> Decision.Publishable
+        }
+
+    enum class Decision {
+        Publishable,
+        NotImmediateContent,
+        NotPublicationReady,
     }
 
     data class Request(
@@ -43,7 +54,8 @@ object PublishContentCmd {
     ) : RequestParam<Response>
 
     data class Response(
-        val published: Boolean
+        val published: Boolean,
+        val decision: Decision,
     )
 
 }

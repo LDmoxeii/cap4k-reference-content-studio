@@ -33,7 +33,8 @@ object TryStartPaidPublicationCmd {
 
             val eligibilityService =
                 Mediator.services.getService(PaidPublicationEligibilityService::class.java)
-            return when (eligibilityService.decide(content, existingTask)) {
+            val decision = eligibilityService.decide(content, existingTask)
+            return when (decision) {
                 PaidPublicationEligibilityService.Decision.Eligible -> {
                     val now = LocalDateTime.now()
                     val task =
@@ -53,16 +54,42 @@ object TryStartPaidPublicationCmd {
                     task.recordSagaStarted(sagaId, now)
                     Mediator.uow.save()
 
-                    Response(taskId = task.id, started = true)
+                    startedResponse(task.id)
                 }
 
                 PaidPublicationEligibilityService.Decision.AlreadyStarted ->
-                    Response(taskId = existingTask?.id, started = false)
+                    responseForDecision(
+                        taskId = existingTask?.id,
+                        decision = PaidPublicationEligibilityService.Decision.AlreadyStarted,
+                    )
 
-                else ->
-                    Response(taskId = existingTask?.id, started = false)
+                else -> responseForDecision(
+                    taskId = existingTask?.id,
+                    decision = decision,
+                )
             }
         }
+    }
+
+    fun startedResponse(taskId: PaidPublicationTaskId): Response =
+        Response(
+            taskId = taskId,
+            started = true,
+            decision = PaidPublicationEligibilityService.Decision.Eligible,
+        )
+
+    fun responseForDecision(
+        taskId: PaidPublicationTaskId?,
+        decision: PaidPublicationEligibilityService.Decision,
+    ): Response {
+        check(decision != PaidPublicationEligibilityService.Decision.Eligible) {
+            "Eligible paid publication decisions must start the saga."
+        }
+        return Response(
+            taskId = taskId,
+            started = false,
+            decision = decision,
+        )
     }
 
     data class Request(
@@ -71,7 +98,8 @@ object TryStartPaidPublicationCmd {
 
     data class Response(
         val taskId: PaidPublicationTaskId?,
-        val started: Boolean
+        val started: Boolean,
+        val decision: PaidPublicationEligibilityService.Decision,
     )
 
 }
