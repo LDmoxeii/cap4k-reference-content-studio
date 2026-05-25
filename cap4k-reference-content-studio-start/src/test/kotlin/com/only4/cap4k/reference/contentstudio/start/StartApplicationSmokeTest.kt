@@ -7,7 +7,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 
 @ContentStudioSpringBootTest
-class ContentStudioApplicationSmokeTest(
+class StartApplicationSmokeTest(
     @param:Autowired private val restTemplate: TestRestTemplate,
 ) {
 
