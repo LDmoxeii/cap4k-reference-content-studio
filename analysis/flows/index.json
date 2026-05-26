@@ -13,7 +13,7 @@
         "integrationevent": 1
     },
     "nodeCount": 205,
-    "edgeCount": 101,
+    "edgeCount": 96,
     "flowCount": 5,
     "flows": [
         {
@@ -35,8 +35,8 @@
         {
             "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
             "entryType": "controllermethod",
-            "nodeCount": 10,
-            "edgeCount": 9,
+            "nodeCount": 9,
+            "edgeCount": 8,
             "json": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_approve.json",
             "mermaid": "com_only4_cap4k_reference_contentstudio_adapter_http_ReviewController_approve.mmd"
         },
