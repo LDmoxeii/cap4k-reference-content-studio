@@ -17,9 +17,9 @@
       "type": "command"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::on",
-      "name": "ContentSubmittedForReviewDomainEventSubscriber::on",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::on",
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::observeReviewSubmission",
+      "name": "ContentSubmittedForReviewDomainEventSubscriber::observeReviewSubmission",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::observeReviewSubmission",
       "type": "domaineventhandler"
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentSubmittedForReviewDomainEvent",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::on",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentSubmittedForReviewDomainEventSubscriber::observeReviewSubmission",
       "type": "DomainEventToHandler"
     }
   ]

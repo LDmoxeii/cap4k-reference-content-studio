@@ -1,0 +1,194 @@
+[
+  {
+    "tag": "domain_event",
+    "package": "content",
+    "name": "ContentDraftCreatedDomainEvent",
+    "desc": "",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "mediaSourceKey",
+        "type": "String",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "domain_event",
+    "package": "content",
+    "name": "ContentMediaReadyDomainEvent",
+    "desc": "",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "mediaReadyAt",
+        "type": "LocalDateTime",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "domain_event",
+    "package": "content",
+    "name": "ContentPublicationReadyDomainEvent",
+    "desc": "",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "domain_event",
+    "package": "content",
+    "name": "ContentPublishedDomainEvent",
+    "desc": "",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "releasePolicy",
+        "type": "String",
+        "nullable": false
+      }, 
+
+      {
+        "name": "publishedAt",
+        "type": "LocalDateTime",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "domain_event",
+    "package": "content",
+    "name": "ContentRequiresMediaProcessingDomainEvent",
+    "desc": "",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "mediaSourceKey",
+        "type": "String",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "domain_event",
+    "package": "content",
+    "name": "ContentReviewApprovedDomainEvent",
+    "desc": "",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "reviewedAt",
+        "type": "LocalDateTime",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "domain_event",
+    "package": "content",
+    "name": "ContentSubmittedForReviewDomainEvent",
+    "desc": "",
+    "aggregates": ["Content"],
+    "persist": true,
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "domain_event",
+    "package": "media_processing_task",
+    "name": "MediaProcessingSucceededDomainEvent",
+    "desc": "",
+    "aggregates": ["MediaProcessingTask"],
+    "persist": true,
+    "requestFields": [
+      {
+        "name": "taskId",
+        "type": "MediaProcessingTaskId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  }
+]

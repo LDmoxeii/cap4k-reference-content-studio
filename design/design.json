@@ -633,6 +633,19 @@
     ]
   },
   {
+    "tag": "saga",
+    "package": "paid.publication",
+    "name": "PaidPublicationSaga",
+    "desc": "paid publication saga",
+    "aggregates": ["PaidPublicationTask"],
+    "requestFields": [
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    ],
+    "responseFields": [
+      { "name": "published", "type": "Boolean", "defaultValue": "true" }
+    ]
+  },
+  {
     "tag": "api_payload",
     "package": "content.workflow",
     "name": "CreatePaidContentDraftPayload",

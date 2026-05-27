@@ -1,8 +1,4 @@
 {
-  "MediaProcessingResultSnapshot": {
-    "fqn": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot",
-    "converter": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshotConverter"
-  },
   "ContentId": {
     "fqn": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId"
   },

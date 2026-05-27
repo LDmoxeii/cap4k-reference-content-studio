@@ -1,7 +1,7 @@
 flowchart TD
   N1[AdvancedPaidPublicationController::createPaid]
   N2[CreatePaidContentDraftCmd.Request]
-  N3[ContentDraftCreatedDomainEventSubscriber::on]
+  N3[ContentDraftCreatedDomainEventSubscriber::observeDraftCreation]
   N4[Content::&lt;get-id&gt;]
   N5[Content::onCreate]
   N6[ContentDraftCreatedDomainEvent]

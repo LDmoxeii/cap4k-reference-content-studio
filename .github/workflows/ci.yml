@@ -30,5 +30,22 @@ jobs:
       - name: Make Gradle wrappers executable
         run: chmod +x gradlew
 
+      - name: Checkout cap4k 1.0.0 candidate
+        if: github.event_name == 'pull_request' && github.head_ref == 'chore/cap4k-1.0.0-verification'
+        uses: actions/checkout@v4
+        with:
+          repository: LDmoxeii/cap4k
+          ref: verify/maven-central-v1.0.0
+          path: .cap4k-candidate
+
+      - name: Build cap4k compiler plugin jars
+        if: github.event_name == 'pull_request' && github.head_ref == 'chore/cap4k-1.0.0-verification'
+        run: ./gradlew --no-daemon -p .cap4k-candidate :cap4k-plugin-code-analysis-compiler:jar :cap4k-plugin-code-analysis-core:jar
+
+      - name: Check reference project with cap4k candidate
+        if: github.event_name == 'pull_request' && github.head_ref == 'chore/cap4k-1.0.0-verification'
+        run: ./gradlew --no-daemon --include-build .cap4k-candidate check
+
       - name: Check reference project
-        run: ./gradlew check
+        if: github.event_name != 'pull_request' || github.head_ref != 'chore/cap4k-1.0.0-verification'
+        run: ./gradlew --no-daemon check

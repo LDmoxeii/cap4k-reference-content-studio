@@ -17,9 +17,9 @@
       "type": "command"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::on",
-      "name": "ContentDraftCreatedDomainEventSubscriber::on",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::on",
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::observeDraftCreation",
+      "name": "ContentDraftCreatedDomainEventSubscriber::observeDraftCreation",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::observeDraftCreation",
       "type": "domaineventhandler"
     },
     {
@@ -64,7 +64,7 @@
     },
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentDraftCreatedDomainEvent",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::on",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentDraftCreatedDomainEventSubscriber::observeDraftCreation",
       "type": "DomainEventToHandler"
     }
   ]

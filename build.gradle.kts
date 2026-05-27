@@ -59,6 +59,12 @@ cap4k {
     }
     types {
         registryFile.set("design/types.json")
+        enumManifest {
+            files.from("design/enums.json")
+        }
+        valueObjectManifest {
+            files.from("design/value-objects.json")
+        }
     }
     sources {
         designJson {
@@ -92,36 +98,6 @@ cap4k {
         }
     }
     generators {
-        designCommand {
-            enabled.set(true)
-        }
-        designApiPayload {
-            enabled.set(true)
-        }
-        designClient {
-            enabled.set(true)
-        }
-        designClientHandler {
-            enabled.set(true)
-        }
-        designDomainEvent {
-            enabled.set(true)
-        }
-        designDomainEventHandler {
-            enabled.set(true)
-        }
-        designIntegrationEvent {
-            enabled.set(true)
-        }
-        designIntegrationEventSubscriber {
-            enabled.set(true)
-        }
-        designQuery {
-            enabled.set(true)
-        }
-        designQueryHandler {
-            enabled.set(true)
-        }
         aggregate {
             enabled.set(true)
             artifacts {
@@ -133,10 +109,16 @@ cap4k {
         flow {
             enabled.set(true)
         }
+        drawingBoard {
+            enabled.set(true)
+        }
     }
     layout {
         flow {
             outputRoot.set("analysis/flows")
+        }
+        drawingBoard {
+            outputRoot.set("analysis/drawing-board")
         }
     }
 }

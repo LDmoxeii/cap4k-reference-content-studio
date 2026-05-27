@@ -1,7 +1,7 @@
 flowchart TD
   N1[RecordContentMediaReadyCmd.Request]
   N2[MarkMediaProcessingSucceededCmd.Request]
-  N3[ContentMediaReadyDomainEventSubscriber::on]
+  N3[ContentMediaReadyDomainEventSubscriber::observeMediaReadiness]
   N4[MediaProcessingSucceededDomainEventSubscriber::recordContentMediaReady]
   N5[MediaProcessingCallbackIntegrationEventSubscriber::markMediaProcessingSucceeded]
   N6[MediaProcessingCallbackIntegrationEvent]

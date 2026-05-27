@@ -144,15 +144,14 @@ its own invariant transitions.
 ## Value Object
 
 `MediaProcessingResultSnapshot` is modeled as a value object under
-`MediaProcessingTask`. It captures the accepted media result, trims stable
-string inputs, validates that the asset SHA-256 is a 64-character hexadecimal
-value, normalizes the hash to lowercase, and derives a deterministic id from the
-business result fields.
+`MediaProcessingTask`. It captures the accepted media result that should be
+persisted with the media processing task.
 
 In this reference project it is persisted through the
-`media_processing_task.result_snapshot` JSON-backed column. Treat it as a
-handwritten value concept used to make the example readable. It should not be
-read as complete generator support for every value object persistence style.
+`media_processing_task.result_snapshot` JSON-backed column. The value object is
+generated from `types.valueObjectManifest`; its JPA converter is nested inside
+the generated value-object class. Input trimming and normalization stay in the
+application command before constructing the value object.
 
 ## Domain Service
 

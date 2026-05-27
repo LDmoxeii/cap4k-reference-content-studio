@@ -1,8 +1,8 @@
 {
   "entryId": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
   "entryType": "controllermethod",
-  "nodeCount": 10,
-  "edgeCount": 9,
+  "nodeCount": 9,
+  "edgeCount": 8,
   "nodes": [
     {
       "id": "com.only4.cap4k.reference.contentstudio.adapter.http.ReviewController::approve",
@@ -23,9 +23,9 @@
       "type": "command"
     },
     {
-      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentRequiresMediaProcessingDomainEventSubscriber::on",
-      "name": "ContentRequiresMediaProcessingDomainEventSubscriber::on",
-      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentRequiresMediaProcessingDomainEventSubscriber::on",
+      "id": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentRequiresMediaProcessingDomainEventSubscriber::startMediaProcessing",
+      "name": "ContentRequiresMediaProcessingDomainEventSubscriber::startMediaProcessing",
+      "fullName": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentRequiresMediaProcessingDomainEventSubscriber::startMediaProcessing",
       "type": "domaineventhandler"
     },
     {
@@ -45,12 +45,6 @@
       "name": "ContentReviewApprovedDomainEvent",
       "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentReviewApprovedDomainEvent",
       "type": "domainevent"
-    },
-    {
-      "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-processingStatus>",
-      "name": "MediaProcessingTask::<get-processingStatus>",
-      "fullName": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-processingStatus>",
-      "type": "entitymethod"
     },
     {
       "id": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSubmitted",
@@ -78,11 +72,6 @@
     },
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
-      "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::<get-processingStatus>",
-      "type": "CommandToEntityMethod"
-    },
-    {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
       "toId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask::markSubmitted",
       "type": "CommandToEntityMethod"
     },
@@ -92,7 +81,7 @@
       "type": "CommandToEntityMethod"
     },
     {
-      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentRequiresMediaProcessingDomainEventSubscriber::on",
+      "fromId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentRequiresMediaProcessingDomainEventSubscriber::startMediaProcessing",
       "toId": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Request",
       "type": "DomainEventHandlerToCommand"
     },
@@ -108,7 +97,7 @@
     },
     {
       "fromId": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentRequiresMediaProcessingDomainEvent",
-      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentRequiresMediaProcessingDomainEventSubscriber::on",
+      "toId": "com.only4.cap4k.reference.contentstudio.application.subscribers.domain.content.ContentRequiresMediaProcessingDomainEventSubscriber::startMediaProcessing",
       "type": "DomainEventToHandler"
     }
   ]

@@ -5,7 +5,7 @@ spring-dependency-management = "1.1.7"
 springdoc = "2.8.13"
 swagger-annotations = "2.2.36"
 junit = "5.13.1"
-cap4k-ddd = "0.10.0"
+cap4k-ddd = "1.0.0"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }

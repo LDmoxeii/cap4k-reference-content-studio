@@ -117,7 +117,7 @@ creator payout hold, creates an access entitlement plan, publishes content, and
 activates the entitlement plan. If a later step fails, idempotent compensation
 commands release or cancel earlier side effects where business rules allow it.
 
-- `MediaProcessingResultSnapshot` is a handwritten JSON-backed value concept persisted through `media_processing_task.result_snapshot`.
+- `MediaProcessingResultSnapshot` is generated from `types.valueObjectManifest`, is persisted as JSON through `media_processing_task.result_snapshot`, and keeps its converter nested inside the value-object class.
 - `Content` owns the local publication facts and emits continuation events when
   approval and media-ready facts become sufficient to continue publication.
 - Paid content uses `PaidPublicationTask` to record cross-step publication state.
@@ -132,9 +132,10 @@ paid content starts paid publication after media processing succeeds, then the S
 drives the paid publication sub-steps and records compensation when a downstream
 paid-publication step fails.
 
-`MediaProcessingResultSnapshot` is still a handwritten result snapshot. Do not
-read it as complete generator support for value objects. First-class
-value-object generation remains cap4k follow-up work.
+`ReleasePolicy` and `MediaProcessingResultStatus` are managed by
+`types.enumManifest`. `ReleasePolicy` still lives in the `Content` aggregate
+enum package; the manifest does not add a separate shared/local flag because the
+package path is the boundary.
 
 ## OpenAPI Location
 

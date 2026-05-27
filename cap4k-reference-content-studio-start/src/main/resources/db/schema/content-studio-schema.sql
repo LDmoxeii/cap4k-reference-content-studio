@@ -5,7 +5,7 @@ create table if not exists content (
     media_source_key varchar(200) not null,
     review_status int not null comment '@T=ReviewStatus;@E=0:PENDING:Pending|1:APPROVED:Approved;',
     content_status int not null comment '@T=ContentStatus;@E=0:DRAFT:Draft|1:PUBLISHED:Published;',
-    release_policy int not null comment '@T=ReleasePolicy;@E=0:IMMEDIATE:Immediate|2:PAID:Paid;',
+    release_policy int not null comment '@T=ReleasePolicy;',
     reviewer_id uuid comment '@RefId=ReviewerId;',
     reviewed_at timestamp,
     published_at timestamp,

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "ReleasePolicy",
+    "package": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums",
+    "items": [
+      { "value": 0, "name": "IMMEDIATE", "desc": "Immediate" },
+      { "value": 2, "name": "PAID", "desc": "Paid" }
+    ]
+  },
+  {
+    "name": "MediaProcessingResultStatus",
+    "package": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums",
+    "items": [
+      { "value": 0, "name": "SUCCEEDED", "desc": "Succeeded" },
+      { "value": 1, "name": "FAILED", "desc": "Failed" }
+    ]
+  }
+]
