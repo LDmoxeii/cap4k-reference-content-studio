@@ -59,6 +59,12 @@ cap4k {
     }
     types {
         registryFile.set("design/types.json")
+        enumManifest {
+            files.from("design/enums.json")
+        }
+        valueObjectManifest {
+            files.from("design/value-objects.json")
+        }
     }
     sources {
         designJson {
@@ -103,10 +109,16 @@ cap4k {
         flow {
             enabled.set(true)
         }
+        drawingBoard {
+            enabled.set(true)
+        }
     }
     layout {
         flow {
             outputRoot.set("analysis/flows")
+        }
+        drawingBoard {
+            outputRoot.set("analysis/drawing-board")
         }
     }
 }

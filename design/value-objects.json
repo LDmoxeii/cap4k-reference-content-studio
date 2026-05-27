@@ -1,0 +1,24 @@
+[
+  {
+    "name": "MediaProcessingResultSnapshot",
+    "scope": "aggregate",
+    "aggregate": "MediaProcessingTask",
+    "package": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values",
+    "storage": "json",
+    "description": "media processing result snapshot",
+    "fields": [
+      { "name": "mediaProcessingTaskId", "type": "MediaProcessingTaskId" },
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "externalTaskId", "type": "String" },
+      {
+        "name": "resultStatus",
+        "type": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingResultStatus"
+      },
+      { "name": "assetSha256", "type": "String" },
+      { "name": "assetLocation", "type": "String" },
+      { "name": "completedAt", "type": "java.time.LocalDateTime" },
+      { "name": "dbCreatedAt", "type": "java.time.LocalDateTime" },
+      { "name": "dbUpdatedAt", "type": "java.time.LocalDateTime" }
+    ]
+  }
+]

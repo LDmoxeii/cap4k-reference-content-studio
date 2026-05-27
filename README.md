@@ -107,7 +107,7 @@ Swagger / OpenAPI 仍然存在，但它们更像契约快照，而不是整条 h
 Saga 会预留创作者收益、创建访问权益计划、发布内容并激活权益计划；如果后续步骤失败，
 会通过幂等补偿命令释放或取消前面已经完成且业务允许撤销的副作用。
 
-- `MediaProcessingResultSnapshot` 是手写 JSON-backed 值概念，通过 `media_processing_task.result_snapshot` 持久化。
+- `MediaProcessingResultSnapshot` 由 `types.valueObjectManifest` 生成，是 JSON-backed 值对象，通过 `media_processing_task.result_snapshot` 持久化，converter 直接内嵌在值对象类中。
 - `Content` 自己持有本地发布事实，并在“审核通过 + 媒体已就绪”这些事实凑齐时
   发出继续发布的领域事件。
 - paid content 使用 `PaidPublicationTask` 记录跨步骤发布状态，并由
@@ -119,8 +119,8 @@ Saga 会预留创作者收益、创建访问权益计划、发布内容并激活
 直接发布；只有显式创建 paid content 时，才会在媒体处理成功后进入 paid publication Saga。
 Saga 会推进 paid publication 子步骤，并在下游 paid-publication 步骤失败时记录补偿。
 
-`MediaProcessingResultSnapshot` 仍然是手写结果快照，不应被理解成完整生成器能力。
-一等 value object 生成能力仍是 cap4k 后续迭代项。
+`ReleasePolicy` 和 `MediaProcessingResultStatus` 由 `types.enumManifest` 管理；
+`ReleasePolicy` 仍在 `Content` 聚合本地枚举包中，manifest 不额外表达 shared / local，包路径就是边界。
 
 ## OpenAPI 位置
 

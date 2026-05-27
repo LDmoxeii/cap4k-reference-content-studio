@@ -3,10 +3,10 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processi
 import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.TestDomainEventSupervisor
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingResultStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.events.MediaProcessingSucceededDomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultStatus
 import com.only4.cap4k.reference.contentstudio.domain.installTestDomainEventSupervisor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
@@ -227,7 +227,7 @@ class MediaProcessingTaskBehaviorTest {
         externalTaskId: String = task.externalTaskId ?: "external-123",
     ): MediaProcessingResultSnapshot {
         val now = LocalDateTime.of(2026, 5, 11, 10, 15, 30)
-        return MediaProcessingResultSnapshot.create(
+        return MediaProcessingResultSnapshot(
             mediaProcessingTaskId = task.id,
             contentId = contentId,
             externalTaskId = externalTaskId,
@@ -235,7 +235,8 @@ class MediaProcessingTaskBehaviorTest {
             assetSha256 = "a".repeat(64),
             assetLocation = "s3://content-studio/assets/$externalTaskId.mp4",
             completedAt = now,
-            now = now,
+            dbCreatedAt = now,
+            dbUpdatedAt = now,
         )
     }
 }

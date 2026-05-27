@@ -1,0 +1,76 @@
+[
+  {
+    "tag": "integration_event",
+    "package": "media.processing",
+    "name": "MediaProcessingCallbackIntegrationEvent",
+    "desc": "",
+    "aggregates": [],
+    "role": "inbound",
+    "eventName": "cap4k.reference.contentstudio.media-processing.completed",
+    "requestFields": [
+      {
+        "name": "externalTaskId",
+        "type": "String",
+        "nullable": false
+      }, 
+
+      {
+        "name": "status",
+        "type": "String",
+        "nullable": false
+      }, 
+
+      {
+        "name": "assetSha256",
+        "type": "String",
+        "nullable": true
+      }, 
+
+      {
+        "name": "assetLocation",
+        "type": "String",
+        "nullable": true
+      }, 
+
+      {
+        "name": "completedAt",
+        "type": "LocalDateTime",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "integration_event",
+    "package": "content",
+    "name": "ContentPublishedIntegrationEvent",
+    "desc": "",
+    "aggregates": [],
+    "role": "outbound",
+    "eventName": "cap4k.reference.contentstudio.content.published",
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "releasePolicy",
+        "type": "String",
+        "nullable": false
+      }, 
+
+      {
+        "name": "publishedAt",
+        "type": "LocalDateTime",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  }
+]

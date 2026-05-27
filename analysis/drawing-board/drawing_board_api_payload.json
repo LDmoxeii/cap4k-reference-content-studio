@@ -1,0 +1,268 @@
+[
+  {
+    "tag": "api_payload",
+    "package": "content.read",
+    "name": "getContentDetailPayload",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+      {
+        "name": "title",
+        "type": "String",
+        "nullable": false
+      }, 
+      {
+        "name": "body",
+        "type": "String",
+        "nullable": false
+      }, 
+      {
+        "name": "mediaSourceKey",
+        "type": "String",
+        "nullable": false
+      }, 
+      {
+        "name": "reviewStatus",
+        "type": "String",
+        "nullable": false
+      }, 
+      {
+        "name": "contentStatus",
+        "type": "String",
+        "nullable": false
+      }, 
+      {
+        "name": "releasePolicy",
+        "type": "String",
+        "nullable": true
+      }, 
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId",
+        "nullable": true
+      }, 
+      {
+        "name": "reviewedAt",
+        "type": "LocalDateTime",
+        "nullable": true
+      }, 
+      {
+        "name": "mediaReadyAt",
+        "type": "LocalDateTime",
+        "nullable": true
+      }, 
+      {
+        "name": "publishedAt",
+        "type": "LocalDateTime",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.read",
+    "name": "getMediaProcessingStatusPayload",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+      {
+        "name": "task",
+        "type": "Task",
+        "nullable": true
+      }, 
+      {
+        "name": "task.taskId",
+        "type": "MediaProcessingTaskId",
+        "nullable": false
+      }, 
+      {
+        "name": "task.externalTaskId",
+        "type": "String",
+        "nullable": true
+      }, 
+      {
+        "name": "task.processingStatus",
+        "type": "String",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.read",
+    "name": "getPaidPublicationStatusPayload",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+      {
+        "name": "taskId",
+        "type": "PaidPublicationTaskId",
+        "nullable": true
+      }, 
+      {
+        "name": "paidPublicationStatus",
+        "type": "String",
+        "nullable": true
+      }, 
+      {
+        "name": "payoutHoldStatus",
+        "type": "String",
+        "nullable": true
+      }, 
+      {
+        "name": "entitlementPlanStatus",
+        "type": "String",
+        "nullable": true
+      }, 
+      {
+        "name": "startedAt",
+        "type": "LocalDateTime",
+        "nullable": true
+      }, 
+      {
+        "name": "publishedAt",
+        "type": "LocalDateTime",
+        "nullable": true
+      }, 
+      {
+        "name": "completedAt",
+        "type": "LocalDateTime",
+        "nullable": true
+      }, 
+      {
+        "name": "failedAt",
+        "type": "LocalDateTime",
+        "nullable": true
+      }, 
+      {
+        "name": "failedReason",
+        "type": "String",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.workflow",
+    "name": "approveContentReviewPayload",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+    ]
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.workflow",
+    "name": "createContentDraftPayload",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "title",
+        "type": "String",
+        "nullable": false
+      }, 
+
+      {
+        "name": "body",
+        "type": "String",
+        "nullable": false
+      }, 
+
+      {
+        "name": "mediaSourceKey",
+        "type": "String",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "tag": "api_payload",
+    "package": "content.workflow",
+    "name": "createPaidContentDraftPayload",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "title",
+        "type": "String",
+        "nullable": false
+      }, 
+
+      {
+        "name": "body",
+        "type": "String",
+        "nullable": false
+      }, 
+
+      {
+        "name": "mediaSourceKey",
+        "type": "String",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }
+    ]
+  }
+]

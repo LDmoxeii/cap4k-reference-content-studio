@@ -1,0 +1,182 @@
+[
+  {
+    "tag": "client",
+    "package": "media.processing",
+    "name": "GetMediaProcessingStatus",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "externalTaskId",
+        "type": "String",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "status",
+        "type": "String",
+        "nullable": false
+      }, 
+      {
+        "name": "assetSha256",
+        "type": "String",
+        "nullable": true
+      }, 
+      {
+        "name": "assetLocation",
+        "type": "String",
+        "nullable": true
+      }, 
+      {
+        "name": "completedAt",
+        "type": "LocalDateTime",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "media.processing",
+    "name": "TriggerMediaProcessing",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId",
+        "nullable": false
+      }, 
+
+      {
+        "name": "mediaSourceKey",
+        "type": "String",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "accepted",
+        "type": "Boolean",
+        "nullable": false
+      }, 
+      {
+        "name": "externalTaskId",
+        "type": "String",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "ActivateAccessEntitlementPlan",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "activated",
+        "type": "Boolean",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "CancelAccessEntitlementPlan",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "cancelled",
+        "type": "Boolean",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "CreateAccessEntitlementPlan",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "entitlementPlanId",
+        "type": "String",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "ReleaseCreatorPayoutHold",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "released",
+        "type": "Boolean",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "tag": "client",
+    "package": "paid.publication",
+    "name": "ReserveCreatorPayoutHold",
+    "desc": "",
+    "aggregates": [],
+    "requestFields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId",
+        "nullable": false
+      }
+
+    ],
+    "responseFields": [
+      {
+        "name": "payoutHoldId",
+        "type": "String",
+        "nullable": false
+      }
+    ]
+  }
+]

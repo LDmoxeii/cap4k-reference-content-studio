@@ -5,9 +5,9 @@ import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.ddd.core.Mediator
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
+import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingResultStatus
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.markSucceeded
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
-import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultStatus
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -38,15 +38,17 @@ object MarkMediaProcessingSucceededCmd {
                 return Response
             }
 
-            val resultSnapshot = MediaProcessingResultSnapshot.create(
+            val now = LocalDateTime.now()
+            val resultSnapshot = MediaProcessingResultSnapshot(
                 mediaProcessingTaskId = task.id,
                 contentId = task.contentId,
-                externalTaskId = request.externalTaskId,
+                externalTaskId = request.externalTaskId.trim(),
                 resultStatus = MediaProcessingResultStatus.SUCCEEDED,
-                assetSha256 = request.assetSha256,
-                assetLocation = request.assetLocation,
+                assetSha256 = request.assetSha256.lowercase(),
+                assetLocation = request.assetLocation.trim(),
                 completedAt = request.completedAt,
-                now = LocalDateTime.now(),
+                dbCreatedAt = now,
+                dbUpdatedAt = now,
             )
             task.markSucceeded(resultSnapshot)
             Mediator.uow.save()
