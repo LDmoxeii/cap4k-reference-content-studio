@@ -23,7 +23,7 @@ class PublishContentCommandContractTest {
                     node.path("name").asText() == "PublishContent"
             }
 
-        val requestFieldNames = publishContentCommand.required("requestFields").map { it.required("name").asText() }
+        val requestFieldNames = publishContentCommand.required("fields").map { it.required("name").asText() }
 
         assertThat(requestFieldNames).doesNotContain("policyGateSatisfied")
     }

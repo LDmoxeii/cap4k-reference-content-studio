@@ -12,6 +12,7 @@ plugins {
 
 allprojects {
     repositories {
+        mavenLocal()
         mavenCentral()
     }
 }
@@ -53,6 +54,7 @@ cap4k {
     templates {
         overrideDirs.from("codegen/templates")
         templateConflictPolicies.put("design/api_payload.kt.peb", "OVERWRITE")
+        templateConflictPolicies.put("drawing-board/document.json.peb", "OVERWRITE")
         templateConflictPolicies.put("flow/entry.json.peb", "OVERWRITE")
         templateConflictPolicies.put("flow/entry.mmd.peb", "OVERWRITE")
         templateConflictPolicies.put("flow/index.json.peb", "OVERWRITE")
@@ -68,7 +70,6 @@ cap4k {
     }
     sources {
         designJson {
-            enabled.set(true)
             files.from("design/design.json")
         }
         db {
@@ -89,7 +90,6 @@ cap4k {
             excludeTables.set(emptyList())
         }
         irAnalysis {
-            enabled.set(true)
             inputDirs.from(
                 "cap4k-reference-content-studio-domain/build/cap4k-code-analysis",
                 "cap4k-reference-content-studio-application/build/cap4k-code-analysis",
@@ -99,7 +99,6 @@ cap4k {
     }
     generators {
         aggregate {
-            enabled.set(true)
             artifacts {
                 factory.set(true)
                 specification.set(false)
@@ -107,10 +106,8 @@ cap4k {
             }
         }
         flow {
-            enabled.set(true)
         }
         drawingBoard {
-            enabled.set(true)
         }
     }
     layout {

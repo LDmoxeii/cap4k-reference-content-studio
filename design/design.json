@@ -3,661 +3,1174 @@
     "tag": "command",
     "package": "content.workflow",
     "name": "CreateContentDraft",
-    "desc": "create content draft",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "title", "type": "String" },
-      { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" }
+    "description": "create content draft",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "fields": [
+      {
+        "name": "title",
+        "type": "String"
+      },
+      {
+        "name": "body",
+        "type": "String"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "content.workflow",
     "name": "SubmitContentForReview",
-    "desc": "submit content draft for review",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "description": "submit content draft for review",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
+    ]
   },
   {
     "tag": "command",
     "package": "content.workflow",
     "name": "ApproveContentReview",
-    "desc": "approve content review",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "reviewerId", "type": "ReviewerId" },
-      { "name": "reviewedAt", "type": "java.time.LocalDateTime" }
+    "description": "approve content review",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId"
+      },
+      {
+        "name": "reviewedAt",
+        "type": "java.time.LocalDateTime"
+      }
+    ]
   },
   {
     "tag": "command",
     "package": "content.workflow",
     "name": "PublishContent",
-    "desc": "publish approved content",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
+    "description": "publish approved content",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": [
-      { "name": "published", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "publishedAt",
+        "type": "java.time.LocalDateTime"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "media.processing",
     "name": "StartMediaProcessing",
-    "desc": "start media processing task",
-    "aggregates": ["MediaProcessingTask"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "mediaSourceKey", "type": "String" }
+    "description": "start media processing task",
+    "aggregates": [
+      "MediaProcessingTask"
     ],
-    "responseFields": []
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      }
+    ]
   },
   {
     "tag": "command",
     "package": "media.processing",
     "name": "MarkMediaProcessingSucceeded",
-    "desc": "mark media processing task as succeeded",
-    "aggregates": ["MediaProcessingTask"],
-    "requestFields": [
-      { "name": "externalTaskId", "type": "String" },
-      { "name": "assetSha256", "type": "String" },
-      { "name": "assetLocation", "type": "String" },
-      { "name": "completedAt", "type": "java.time.LocalDateTime" }
+    "description": "mark media processing task as succeeded",
+    "aggregates": [
+      "MediaProcessingTask"
     ],
-    "responseFields": []
+    "fields": [
+      {
+        "name": "externalTaskId",
+        "type": "String"
+      },
+      {
+        "name": "assetSha256",
+        "type": "String"
+      },
+      {
+        "name": "assetLocation",
+        "type": "String"
+      },
+      {
+        "name": "completedAt",
+        "type": "java.time.LocalDateTime"
+      }
+    ]
   },
   {
     "tag": "command",
     "package": "content.workflow",
     "name": "RecordContentMediaReady",
-    "desc": "record content media readiness",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime" }
+    "description": "record content media readiness",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": [
-      { "name": "recorded", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "mediaReadyAt",
+        "type": "java.time.LocalDateTime"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "media.processing",
     "name": "RefreshMediaProcessingTaskStatus",
-    "desc": "refresh media processing task status from external media service",
-    "aggregates": ["MediaProcessingTask"],
-    "requestFields": [
-      { "name": "externalTaskId", "type": "String" }
+    "description": "refresh media processing task status from external media service",
+    "aggregates": [
+      "MediaProcessingTask"
     ],
-    "responseFields": []
+    "fields": [
+      {
+        "name": "externalTaskId",
+        "type": "String"
+      }
+    ]
   },
   {
     "tag": "query",
     "package": "content.read",
     "name": "GetContentDetail",
-    "desc": "get content detail",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "description": "get content detail",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "title", "type": "String" },
-      { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" },
-      { "name": "reviewStatus", "type": "String" },
-      { "name": "contentStatus", "type": "String" },
-      { "name": "releasePolicy", "type": "String", "nullable": true },
-      { "name": "reviewerId", "type": "ReviewerId", "nullable": true },
-      { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "title",
+        "type": "String"
+      },
+      {
+        "name": "body",
+        "type": "String"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      },
+      {
+        "name": "reviewStatus",
+        "type": "String"
+      },
+      {
+        "name": "contentStatus",
+        "type": "String"
+      },
+      {
+        "name": "releasePolicy",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId",
+        "nullable": true
+      },
+      {
+        "name": "reviewedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "mediaReadyAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "publishedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      }
     ]
   },
   {
     "tag": "query",
     "package": "content.read",
     "name": "GetPaidPublicationStatus",
-    "desc": "get paid publication status",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "description": "get paid publication status",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true },
-      { "name": "paidPublicationStatus", "type": "String", "nullable": true },
-      { "name": "payoutHoldStatus", "type": "String", "nullable": true },
-      { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
-      { "name": "startedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "failedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "failedReason", "type": "String", "nullable": true }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "taskId",
+        "type": "PaidPublicationTaskId",
+        "nullable": true
+      },
+      {
+        "name": "paidPublicationStatus",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "payoutHoldStatus",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "entitlementPlanStatus",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "startedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "publishedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "completedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "failedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "failedReason",
+        "type": "String",
+        "nullable": true
+      }
     ]
   },
   {
     "tag": "query",
     "package": "content.read",
     "name": "GetMediaProcessingStatus",
-    "desc": "get media processing status",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "description": "get media processing status",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "task", "type": "TaskSnapshot", "nullable": true },
-      { "name": "task.taskId", "type": "MediaProcessingTaskId" },
-      { "name": "task.externalTaskId", "type": "String", "nullable": true },
-      { "name": "task.processingStatus", "type": "String" }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "task",
+        "type": "TaskSnapshot",
+        "nullable": true
+      },
+      {
+        "name": "task.taskId",
+        "type": "MediaProcessingTaskId"
+      },
+      {
+        "name": "task.externalTaskId",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "task.processingStatus",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "query",
     "package": "media.processing",
     "name": "ListSubmittedMediaProcessingTasksForPolling",
-    "desc": "list submitted media processing tasks for polling fallback",
-    "aggregates": ["MediaProcessingTask"],
-    "requestFields": [],
-    "responseFields": [
-      { "name": "items", "type": "List<TaskItem>" },
-      { "name": "items[].contentId", "type": "ContentId" },
-      { "name": "items[].externalTaskId", "type": "String" }
+    "description": "list submitted media processing tasks for polling fallback",
+    "aggregates": [
+      "MediaProcessingTask"
+    ],
+    "fields": [],
+    "resultFields": [
+      {
+        "name": "items",
+        "type": "List<TaskItem>"
+      },
+      {
+        "name": "items[].contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "items[].externalTaskId",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "api_payload",
     "package": "content.workflow",
     "name": "CreateContentDraftPayload",
-    "desc": "create content draft http payload",
+    "description": "create content draft http payload",
     "aggregates": [],
-    "requestFields": [
-      { "name": "title", "type": "String" },
-      { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" }
+    "fields": [
+      {
+        "name": "title",
+        "type": "String"
+      },
+      {
+        "name": "body",
+        "type": "String"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      }
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "resultFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
     ]
   },
   {
     "tag": "api_payload",
     "package": "content.workflow",
     "name": "ApproveContentReviewPayload",
-    "desc": "approve content review http payload",
+    "description": "approve content review http payload",
     "aggregates": [],
-    "requestFields": [
-      { "name": "reviewerId", "type": "ReviewerId" }
+    "fields": [
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId"
+      }
     ],
-    "responseFields": []
+    "resultFields": []
   },
   {
     "tag": "api_payload",
     "package": "content.read",
     "name": "GetContentDetailPayload",
-    "desc": "get content detail http payload",
+    "description": "get content detail http payload",
     "aggregates": [],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "title", "type": "String" },
-      { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" },
-      { "name": "reviewStatus", "type": "String" },
-      { "name": "contentStatus", "type": "String" },
-      { "name": "releasePolicy", "type": "String", "nullable": true },
-      { "name": "reviewerId", "type": "ReviewerId", "nullable": true },
-      { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
+    "resultFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "title",
+        "type": "String"
+      },
+      {
+        "name": "body",
+        "type": "String"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      },
+      {
+        "name": "reviewStatus",
+        "type": "String"
+      },
+      {
+        "name": "contentStatus",
+        "type": "String"
+      },
+      {
+        "name": "releasePolicy",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId",
+        "nullable": true
+      },
+      {
+        "name": "reviewedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "mediaReadyAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "publishedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      }
     ]
   },
   {
     "tag": "api_payload",
     "package": "content.read",
     "name": "GetPaidPublicationStatusPayload",
-    "desc": "get paid publication status http payload",
+    "description": "get paid publication status http payload",
     "aggregates": [],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true },
-      { "name": "paidPublicationStatus", "type": "String", "nullable": true },
-      { "name": "payoutHoldStatus", "type": "String", "nullable": true },
-      { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
-      { "name": "startedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "failedAt", "type": "java.time.LocalDateTime", "nullable": true },
-      { "name": "failedReason", "type": "String", "nullable": true }
+    "resultFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "taskId",
+        "type": "PaidPublicationTaskId",
+        "nullable": true
+      },
+      {
+        "name": "paidPublicationStatus",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "payoutHoldStatus",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "entitlementPlanStatus",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "startedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "publishedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "completedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "failedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      },
+      {
+        "name": "failedReason",
+        "type": "String",
+        "nullable": true
+      }
     ]
   },
   {
     "tag": "api_payload",
     "package": "content.read",
     "name": "GetMediaProcessingStatusPayload",
-    "desc": "get media processing status http payload",
+    "description": "get media processing status http payload",
     "aggregates": [],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "task", "type": "Task", "nullable": true },
-      { "name": "task.taskId", "type": "MediaProcessingTaskId" },
-      { "name": "task.externalTaskId", "type": "String", "nullable": true },
-      { "name": "task.processingStatus", "type": "String" }
+    "resultFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "task",
+        "type": "Task",
+        "nullable": true
+      },
+      {
+        "name": "task.taskId",
+        "type": "MediaProcessingTaskId"
+      },
+      {
+        "name": "task.externalTaskId",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "task.processingStatus",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "client",
     "package": "media.processing",
     "name": "TriggerMediaProcessing",
-    "desc": "trigger media processing cli task",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "mediaSourceKey", "type": "String" }
+    "description": "trigger media processing cli task",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": [
-      { "name": "accepted", "type": "Boolean" },
-      { "name": "externalTaskId", "type": "String", "nullable": true }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "accepted",
+        "type": "Boolean"
+      },
+      {
+        "name": "externalTaskId",
+        "type": "String",
+        "nullable": true
+      }
     ]
   },
   {
     "tag": "client",
     "package": "media.processing",
     "name": "GetMediaProcessingStatus",
-    "desc": "get media processing status from fake external cli",
-    "aggregates": ["MediaProcessingTask"],
-    "requestFields": [
-      { "name": "externalTaskId", "type": "String" }
+    "description": "get media processing status from fake external cli",
+    "aggregates": [
+      "MediaProcessingTask"
     ],
-    "responseFields": [
-      { "name": "status", "type": "String" },
-      { "name": "assetSha256", "type": "String", "nullable": true },
-      { "name": "assetLocation", "type": "String", "nullable": true },
-      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true }
+    "fields": [
+      {
+        "name": "externalTaskId",
+        "type": "String"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "status",
+        "type": "String"
+      },
+      {
+        "name": "assetSha256",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "assetLocation",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "completedAt",
+        "type": "java.time.LocalDateTime",
+        "nullable": true
+      }
     ]
   },
   {
     "tag": "domain_event",
     "package": "content",
     "name": "ContentDraftCreated",
-    "desc": "content draft created",
-    "aggregates": ["Content"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "mediaSourceKey", "type": "String" }
+    "description": "content draft created",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "persist": true,
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      }
+    ]
   },
   {
     "tag": "domain_event",
     "package": "content",
     "name": "ContentSubmittedForReview",
-    "desc": "content submitted for review",
-    "aggregates": ["Content"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "description": "content submitted for review",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "persist": true,
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
+    ]
   },
   {
     "tag": "domain_event",
     "package": "content",
     "name": "ContentReviewApproved",
-    "desc": "content review approved",
-    "aggregates": ["Content"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "reviewerId", "type": "ReviewerId" },
-      { "name": "reviewedAt", "type": "java.time.LocalDateTime" }
+    "description": "content review approved",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "persist": true,
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId"
+      },
+      {
+        "name": "reviewedAt",
+        "type": "java.time.LocalDateTime"
+      }
+    ]
   },
   {
     "tag": "domain_event",
     "package": "content",
     "name": "ContentPublished",
-    "desc": "content published",
-    "aggregates": ["Content"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "releasePolicy", "type": "String" },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
+    "description": "content published",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "persist": true,
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "releasePolicy",
+        "type": "String"
+      },
+      {
+        "name": "publishedAt",
+        "type": "java.time.LocalDateTime"
+      }
+    ]
   },
   {
     "tag": "domain_event",
     "package": "content",
     "name": "ContentMediaReady",
-    "desc": "content media ready",
-    "aggregates": ["Content"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime" }
+    "description": "content media ready",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "persist": true,
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "mediaReadyAt",
+        "type": "java.time.LocalDateTime"
+      }
+    ]
   },
   {
     "tag": "domain_event",
     "package": "content",
     "name": "ContentPublicationReady",
-    "desc": "content publication ready",
-    "aggregates": ["Content"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "description": "content publication ready",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "persist": true,
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
+    ]
   },
   {
     "tag": "domain_event",
     "package": "content",
     "name": "ContentRequiresMediaProcessing",
-    "desc": "content requires media processing",
-    "aggregates": ["Content"],
-    "persist": true,
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "mediaSourceKey", "type": "String" }
+    "description": "content requires media processing",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "persist": true,
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      }
+    ]
   },
   {
     "tag": "domain_event",
     "package": "media.processing",
     "name": "MediaProcessingSucceeded",
-    "desc": "media processing succeeded",
-    "aggregates": ["MediaProcessingTask"],
-    "persist": true,
-    "requestFields": [
-      { "name": "taskId", "type": "MediaProcessingTaskId" },
-      { "name": "contentId", "type": "ContentId" }
+    "description": "media processing succeeded",
+    "aggregates": [
+      "MediaProcessingTask"
     ],
-    "responseFields": []
+    "persist": true,
+    "fields": [
+      {
+        "name": "taskId",
+        "type": "MediaProcessingTaskId"
+      },
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
+    ]
   },
   {
     "tag": "integration_event",
     "package": "media.processing",
     "name": "MediaProcessingCallback",
-    "desc": "media processing callback from external media service",
-    "aggregates": ["MediaProcessingTask"],
-    "role": "inbound",
-    "eventName": "cap4k.reference.contentstudio.media-processing.completed",
-    "requestFields": [
-      { "name": "externalTaskId", "type": "String" },
-      { "name": "status", "type": "String" },
-      { "name": "assetSha256", "type": "String", "nullable": true },
-      { "name": "assetLocation", "type": "String", "nullable": true },
-      { "name": "completedAt", "type": "java.time.LocalDateTime" }
+    "description": "media processing callback from external media service",
+    "aggregates": [
+      "MediaProcessingTask"
     ],
-    "responseFields": []
+    "eventName": "cap4k.reference.contentstudio.media-processing.completed",
+    "fields": [
+      {
+        "name": "externalTaskId",
+        "type": "String"
+      },
+      {
+        "name": "status",
+        "type": "String"
+      },
+      {
+        "name": "assetSha256",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "assetLocation",
+        "type": "String",
+        "nullable": true
+      },
+      {
+        "name": "completedAt",
+        "type": "java.time.LocalDateTime"
+      }
+    ],
+    "artifacts": [
+      {
+        "family": "integration-event",
+        "variant": "inbound"
+      }
+    ]
   },
   {
     "tag": "integration_event",
     "package": "content",
     "name": "ContentPublished",
-    "desc": "content published integration event",
-    "aggregates": ["Content"],
-    "role": "outbound",
-    "eventName": "cap4k.reference.contentstudio.content.published",
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" },
-      { "name": "releasePolicy", "type": "String" },
-      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
+    "description": "content published integration event",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": []
+    "eventName": "cap4k.reference.contentstudio.content.published",
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      },
+      {
+        "name": "releasePolicy",
+        "type": "String"
+      },
+      {
+        "name": "publishedAt",
+        "type": "java.time.LocalDateTime"
+      }
+    ],
+    "artifacts": [
+      {
+        "family": "integration-event",
+        "variant": "outbound"
+      }
+    ]
   },
   {
     "tag": "command",
     "package": "content.workflow",
     "name": "CreatePaidContentDraft",
-    "desc": "create paid content draft",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "title", "type": "String" },
-      { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" }
+    "description": "create paid content draft",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "fields": [
+      {
+        "name": "title",
+        "type": "String"
+      },
+      {
+        "name": "body",
+        "type": "String"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "TryStartPaidPublication",
-    "desc": "try starting paid publication",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "description": "try starting paid publication",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true },
-      { "name": "started", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "ReserveCreatorPayoutHold",
-    "desc": "reserve creator payout hold",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "reserve creator payout hold",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "reserved", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "CreateAccessEntitlementPlan",
-    "desc": "create access entitlement plan",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "create access entitlement plan",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "created", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "PublishPaidPublicationContent",
-    "desc": "publish paid publication content",
-    "aggregates": ["Content"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "publish paid publication content",
+    "aggregates": [
+      "Content"
     ],
-    "responseFields": [
-      { "name": "published", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "MarkPaidPublicationContentPublished",
-    "desc": "record paid publication content published",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "record paid publication content published",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "marked", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "ActivateAccessEntitlementPlan",
-    "desc": "activate access entitlement plan",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "activate access entitlement plan",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "activated", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "CancelEntitlementPlanIfCreated",
-    "desc": "cancel entitlement plan if created",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
-      { "name": "reason", "type": "String" }
+    "description": "cancel entitlement plan if created",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "cancelled", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      },
+      {
+        "name": "reason",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "ReleasePayoutHoldIfReserved",
-    "desc": "release payout hold if reserved",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
-      { "name": "reason", "type": "String" }
+    "description": "release payout hold if reserved",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "released", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      },
+      {
+        "name": "reason",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "command",
     "package": "paid.publication",
     "name": "MarkPaidPublicationFailed",
-    "desc": "mark paid publication failed",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
-      { "name": "failedReason", "type": "String" }
+    "description": "mark paid publication failed",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": []
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      },
+      {
+        "name": "failedReason",
+        "type": "String"
+      }
+    ]
   },
   {
     "tag": "client",
     "package": "paid.publication",
     "name": "ReserveCreatorPayoutHold",
-    "desc": "reserve creator payout hold client",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "reserve creator payout hold client",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "payoutHoldId", "type": "String" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "payoutHoldId",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "client",
     "package": "paid.publication",
     "name": "ReleaseCreatorPayoutHold",
-    "desc": "release creator payout hold client",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "release creator payout hold client",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "released", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "released",
+        "type": "Boolean"
+      }
     ]
   },
   {
     "tag": "client",
     "package": "paid.publication",
     "name": "CreateAccessEntitlementPlan",
-    "desc": "create access entitlement plan client",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "create access entitlement plan client",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "entitlementPlanId", "type": "String" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "entitlementPlanId",
+        "type": "String"
+      }
     ]
   },
   {
     "tag": "client",
     "package": "paid.publication",
     "name": "CancelAccessEntitlementPlan",
-    "desc": "cancel access entitlement plan client",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "cancel access entitlement plan client",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "cancelled", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "cancelled",
+        "type": "Boolean"
+      }
     ]
   },
   {
     "tag": "client",
     "package": "paid.publication",
     "name": "ActivateAccessEntitlementPlan",
-    "desc": "activate access entitlement plan client",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "activate access entitlement plan client",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "activated", "type": "Boolean" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
+    ],
+    "resultFields": [
+      {
+        "name": "activated",
+        "type": "Boolean"
+      }
     ]
   },
   {
     "tag": "saga",
     "package": "paid.publication",
     "name": "PaidPublicationSaga",
-    "desc": "paid publication saga",
-    "aggregates": ["PaidPublicationTask"],
-    "requestFields": [
-      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
+    "description": "paid publication saga",
+    "aggregates": [
+      "PaidPublicationTask"
     ],
-    "responseFields": [
-      { "name": "published", "type": "Boolean", "defaultValue": "true" }
+    "fields": [
+      {
+        "name": "paidPublicationTaskId",
+        "type": "PaidPublicationTaskId"
+      }
     ]
   },
   {
     "tag": "api_payload",
     "package": "content.workflow",
     "name": "CreatePaidContentDraftPayload",
-    "desc": "create paid content draft http payload",
+    "description": "create paid content draft http payload",
     "aggregates": [],
-    "requestFields": [
-      { "name": "title", "type": "String" },
-      { "name": "body", "type": "String" },
-      { "name": "mediaSourceKey", "type": "String" }
+    "fields": [
+      {
+        "name": "title",
+        "type": "String"
+      },
+      {
+        "name": "body",
+        "type": "String"
+      },
+      {
+        "name": "mediaSourceKey",
+        "type": "String"
+      }
     ],
-    "responseFields": [
-      { "name": "contentId", "type": "ContentId" }
+    "resultFields": [
+      {
+        "name": "contentId",
+        "type": "ContentId"
+      }
     ]
   }
 ]

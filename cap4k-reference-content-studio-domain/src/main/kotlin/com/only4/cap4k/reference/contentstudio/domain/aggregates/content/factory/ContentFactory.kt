@@ -2,7 +2,7 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factor
 
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
-import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
+import com.only4.cap4k.ddd.core.annotation.AggregateElement
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.ContentStatus
@@ -13,11 +13,13 @@ import java.time.LocalDateTime
 import org.springframework.stereotype.Service
 
 @Service
-@Aggregate(
+@AggregateElement(
     aggregate = "Content",
     name = "ContentFactory",
-    type = Aggregate.TYPE_FACTORY,
-    description = ""
+    packageName = "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory",
+    description = "",
+    type = "factory",
+    root = false
 )
 class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
 
@@ -56,12 +58,6 @@ class ContentFactory : AggregateFactory<ContentFactory.Payload, Content> {
         const val MEDIA_SOURCE_KEY_MAX_LENGTH = 200
     }
 
-    @Aggregate(
-        aggregate = "Content",
-        name = "ContentPayload",
-        type = Aggregate.TYPE_FACTORY_PAYLOAD,
-        description = ""
-    )
     data class Payload(
         val title: String,
         val body: String,

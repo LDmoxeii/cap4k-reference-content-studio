@@ -33,7 +33,7 @@ class ContentStudioDesignContractTest {
     fun `media processing callback inbound event uses completed integration contract`() {
         val event = requireDesignEntry("integration_event", "MediaProcessingCallback")
 
-        assertThat(event.required("role").asText()).isEqualTo("inbound")
+        assertThat(event.integrationEventVariant()).isEqualTo("inbound")
         assertThat(event.required("eventName").asText())
             .isEqualTo("cap4k.reference.contentstudio.media-processing.completed")
         assertThat(event.requestFieldNames())
@@ -63,7 +63,7 @@ class ContentStudioDesignContractTest {
     fun `content published outbound integration event exposes publication fact`() {
         val event = requireDesignEntry("integration_event", "ContentPublished")
 
-        assertThat(event.required("role").asText()).isEqualTo("outbound")
+        assertThat(event.integrationEventVariant()).isEqualTo("outbound")
         assertThat(event.required("eventName").asText())
             .isEqualTo("cap4k.reference.contentstudio.content.published")
         assertThat(event.requestFieldNames()).containsExactly("contentId", "releasePolicy", "publishedAt")
@@ -89,14 +89,24 @@ class ContentStudioDesignContractTest {
     }
 
     private fun JsonNode.requestFieldNames(): List<String> =
-        required("requestFields").map { field -> field.required("name").asText() }
+        required("fields").map { field -> field.required("name").asText() }
 
     private fun JsonNode.requestField(name: String): JsonNode {
-        val field = required("requestFields").firstOrNull { it.path("name").asText() == name }
+        val field = required("fields").firstOrNull { it.path("name").asText() == name }
 
         assertThat(field)
             .describedAs("request field name=%s", name)
             .isNotNull
         return field!!
+    }
+
+    private fun JsonNode.integrationEventVariant(): String {
+        val artifact =
+            required("artifacts").firstOrNull { it.path("family").asText() == "integration-event" }
+
+        assertThat(artifact)
+            .describedAs("integration-event artifact")
+            .isNotNull
+        return artifact!!.required("variant").asText()
     }
 }

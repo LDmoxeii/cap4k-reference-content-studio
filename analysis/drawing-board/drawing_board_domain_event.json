@@ -2,11 +2,14 @@
   {
     "tag": "domain_event",
     "package": "content",
-    "name": "ContentDraftCreatedDomainEvent",
-    "desc": "",
+    "name": "ContentDraftCreated",
+    "description": "content draft created",
     "aggregates": ["Content"],
+    "artifacts": [{
+      "family": "domain-event"
+    }],
     "persist": true,
-    "requestFields": [
+    "fields": [
       {
         "name": "contentId",
         "type": "ContentId",
@@ -20,17 +23,20 @@
       }
 
     ],
-    "responseFields": [
+    "resultFields": [
     ]
   },
   {
     "tag": "domain_event",
     "package": "content",
-    "name": "ContentMediaReadyDomainEvent",
-    "desc": "",
+    "name": "ContentMediaReady",
+    "description": "content media ready",
     "aggregates": ["Content"],
+    "artifacts": [{
+      "family": "domain-event"
+    }],
     "persist": true,
-    "requestFields": [
+    "fields": [
       {
         "name": "contentId",
         "type": "ContentId",
@@ -44,17 +50,20 @@
       }
 
     ],
-    "responseFields": [
+    "resultFields": [
     ]
   },
   {
     "tag": "domain_event",
     "package": "content",
-    "name": "ContentPublicationReadyDomainEvent",
-    "desc": "",
+    "name": "ContentPublicationReady",
+    "description": "content publication ready",
     "aggregates": ["Content"],
+    "artifacts": [{
+      "family": "domain-event"
+    }],
     "persist": true,
-    "requestFields": [
+    "fields": [
       {
         "name": "contentId",
         "type": "ContentId",
@@ -62,26 +71,23 @@
       }
 
     ],
-    "responseFields": [
+    "resultFields": [
     ]
   },
   {
     "tag": "domain_event",
     "package": "content",
-    "name": "ContentPublishedDomainEvent",
-    "desc": "",
+    "name": "ContentPublished",
+    "description": "content published",
     "aggregates": ["Content"],
+    "artifacts": [{
+      "family": "domain-event"
+    }],
     "persist": true,
-    "requestFields": [
+    "fields": [
       {
         "name": "contentId",
         "type": "ContentId",
-        "nullable": false
-      }, 
-
-      {
-        "name": "releasePolicy",
-        "type": "String",
         "nullable": false
       }, 
 
@@ -89,20 +95,29 @@
         "name": "publishedAt",
         "type": "LocalDateTime",
         "nullable": false
+      }, 
+
+      {
+        "name": "releasePolicy",
+        "type": "String",
+        "nullable": false
       }
 
     ],
-    "responseFields": [
+    "resultFields": [
     ]
   },
   {
     "tag": "domain_event",
     "package": "content",
-    "name": "ContentRequiresMediaProcessingDomainEvent",
-    "desc": "",
+    "name": "ContentRequiresMediaProcessing",
+    "description": "content requires media processing",
     "aggregates": ["Content"],
+    "artifacts": [{
+      "family": "domain-event"
+    }],
     "persist": true,
-    "requestFields": [
+    "fields": [
       {
         "name": "contentId",
         "type": "ContentId",
@@ -116,26 +131,23 @@
       }
 
     ],
-    "responseFields": [
+    "resultFields": [
     ]
   },
   {
     "tag": "domain_event",
     "package": "content",
-    "name": "ContentReviewApprovedDomainEvent",
-    "desc": "",
+    "name": "ContentReviewApproved",
+    "description": "content review approved",
     "aggregates": ["Content"],
+    "artifacts": [{
+      "family": "domain-event"
+    }],
     "persist": true,
-    "requestFields": [
+    "fields": [
       {
         "name": "contentId",
         "type": "ContentId",
-        "nullable": false
-      }, 
-
-      {
-        "name": "reviewerId",
-        "type": "ReviewerId",
         "nullable": false
       }, 
 
@@ -143,20 +155,29 @@
         "name": "reviewedAt",
         "type": "LocalDateTime",
         "nullable": false
+      }, 
+
+      {
+        "name": "reviewerId",
+        "type": "ReviewerId",
+        "nullable": false
       }
 
     ],
-    "responseFields": [
+    "resultFields": [
     ]
   },
   {
     "tag": "domain_event",
     "package": "content",
-    "name": "ContentSubmittedForReviewDomainEvent",
-    "desc": "",
+    "name": "ContentSubmittedForReview",
+    "description": "content submitted for review",
     "aggregates": ["Content"],
+    "artifacts": [{
+      "family": "domain-event"
+    }],
     "persist": true,
-    "requestFields": [
+    "fields": [
       {
         "name": "contentId",
         "type": "ContentId",
@@ -164,31 +185,34 @@
       }
 
     ],
-    "responseFields": [
+    "resultFields": [
     ]
   },
   {
     "tag": "domain_event",
-    "package": "media_processing_task",
-    "name": "MediaProcessingSucceededDomainEvent",
-    "desc": "",
+    "package": "media.processing",
+    "name": "MediaProcessingSucceeded",
+    "description": "media processing succeeded",
     "aggregates": ["MediaProcessingTask"],
+    "artifacts": [{
+      "family": "domain-event"
+    }],
     "persist": true,
-    "requestFields": [
-      {
-        "name": "taskId",
-        "type": "MediaProcessingTaskId",
-        "nullable": false
-      }, 
-
+    "fields": [
       {
         "name": "contentId",
         "type": "ContentId",
         "nullable": false
+      }, 
+
+      {
+        "name": "taskId",
+        "type": "MediaProcessingTaskId",
+        "nullable": false
       }
 
     ],
-    "responseFields": [
+    "resultFields": [
     ]
   }
 ]

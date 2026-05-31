@@ -1,6 +1,6 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events
 
-import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
@@ -10,11 +10,15 @@ import java.time.LocalDateTime
  * content media ready
  */
 @DomainEvent(persist = true)
-@Aggregate(
-    aggregate = "Content",
-    name = "ContentMediaReadyDomainEvent",
-    type = Aggregate.TYPE_DOMAIN_EVENT,
-    description = "content media ready"
+@BuildingBlock(
+    tag = "domain_event",
+    name = "ContentMediaReady",
+    packageName = "content",
+    description = "content media ready",
+    aggregates = ["Content"],
+    eventName = "",
+    family = "domain-event",
+    variant = ""
 )
 class ContentMediaReadyDomainEvent(
     val entity: Content,

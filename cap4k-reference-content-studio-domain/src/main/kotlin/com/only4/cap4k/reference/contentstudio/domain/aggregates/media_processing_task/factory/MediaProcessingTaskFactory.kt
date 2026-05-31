@@ -2,7 +2,7 @@ package com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processi
 
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregateFactory
 import com.only4.cap4k.ddd.core.domain.aggregate.AggregatePayload
-import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
+import com.only4.cap4k.ddd.core.annotation.AggregateElement
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
@@ -12,11 +12,13 @@ import java.time.LocalDateTime
 import org.springframework.stereotype.Service
 
 @Service
-@Aggregate(
+@AggregateElement(
     aggregate = "MediaProcessingTask",
     name = "MediaProcessingTaskFactory",
-    type = Aggregate.TYPE_FACTORY,
-    description = ""
+    packageName = "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.factory",
+    description = "",
+    type = "factory",
+    root = false
 )
 class MediaProcessingTaskFactory : AggregateFactory<MediaProcessingTaskFactory.Payload, MediaProcessingTask> {
 
@@ -31,12 +33,6 @@ class MediaProcessingTaskFactory : AggregateFactory<MediaProcessingTaskFactory.P
             dbUpdatedAt = entityPayload.dbUpdatedAt
         )
 
-    @Aggregate(
-        aggregate = "MediaProcessingTask",
-        name = "MediaProcessingTaskPayload",
-        type = Aggregate.TYPE_FACTORY_PAYLOAD,
-        description = ""
-    )
     data class Payload(
         val contentId: ContentId,
         val externalTaskId: String?,

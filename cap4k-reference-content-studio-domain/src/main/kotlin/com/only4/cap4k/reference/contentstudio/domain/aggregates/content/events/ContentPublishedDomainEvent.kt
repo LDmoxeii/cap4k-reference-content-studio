@@ -1,17 +1,21 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events
 
-import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import java.time.LocalDateTime
 
 @DomainEvent(persist = true)
-@Aggregate(
-    aggregate = "Content",
-    name = "ContentPublishedDomainEvent",
-    type = Aggregate.TYPE_DOMAIN_EVENT,
-    description = "",
+@BuildingBlock(
+    tag = "domain_event",
+    name = "ContentPublished",
+    packageName = "content",
+    description = "content published",
+    aggregates = ["Content"],
+    eventName = "",
+    family = "domain-event",
+    variant = ""
 )
 class ContentPublishedDomainEvent(
     val entity: Content,

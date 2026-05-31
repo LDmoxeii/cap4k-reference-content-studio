@@ -1,6 +1,6 @@
 package com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events
 
-import com.only4.cap4k.ddd.core.domain.aggregate.annotation.Aggregate
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 import com.only4.cap4k.ddd.core.domain.event.annotation.DomainEvent
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
@@ -8,11 +8,15 @@ import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import java.time.LocalDateTime
 
 @DomainEvent(persist = true)
-@Aggregate(
-    aggregate = "Content",
-    name = "ContentReviewApprovedDomainEvent",
-    type = Aggregate.TYPE_DOMAIN_EVENT,
-    description = "",
+@BuildingBlock(
+    tag = "domain_event",
+    name = "ContentReviewApproved",
+    packageName = "content",
+    description = "content review approved",
+    aggregates = ["Content"],
+    eventName = "",
+    family = "domain-event",
+    variant = ""
 )
 class ContentReviewApprovedDomainEvent(
     val entity: Content,
