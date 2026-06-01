@@ -13,7 +13,16 @@ import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "TryStartPaidPublication",
+    packageName = "paid.publication",
+    description = "try starting paid publication",
+    aggregates = ["PaidPublicationTask"],
+    family = "command"
+)
 object TryStartPaidPublicationCmd {
 
     @Service

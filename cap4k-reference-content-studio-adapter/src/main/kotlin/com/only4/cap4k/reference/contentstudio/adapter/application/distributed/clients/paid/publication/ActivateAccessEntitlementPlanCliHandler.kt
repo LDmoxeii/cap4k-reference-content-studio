@@ -3,8 +3,17 @@ package com.only4.cap4k.reference.contentstudio.adapter.application.distributed.
 import com.only4.cap4k.ddd.core.application.RequestHandler
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.paid.publication.ActivateAccessEntitlementPlanCli
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 @Service
+@BuildingBlock(
+    tag = "client",
+    name = "ActivateAccessEntitlementPlan",
+    packageName = "paid.publication",
+    description = "activate access entitlement plan client",
+    aggregates = ["PaidPublicationTask"],
+    family = "client-handler"
+)
 class ActivateAccessEntitlementPlanCliHandler(
     private val state: FakePaidPublicationCliState
 ) : RequestHandler<ActivateAccessEntitlementPlanCli.Request, ActivateAccessEntitlementPlanCli.Response> {

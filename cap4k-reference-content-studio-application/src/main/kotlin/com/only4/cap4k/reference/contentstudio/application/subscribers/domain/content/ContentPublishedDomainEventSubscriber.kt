@@ -5,11 +5,20 @@ import com.only4.cap4k.reference.contentstudio.application.subscribers.integrati
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.ContentPublishedDomainEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 /**
  * content published
  */
 @Service
+@BuildingBlock(
+    tag = "domain_event",
+    name = "ContentPublished",
+    packageName = "content",
+    description = "content published",
+    aggregates = ["Content"],
+    family = "domain-subscriber"
+)
 class ContentPublishedDomainEventSubscriber {
 
     @EventListener(ContentPublishedDomainEvent::class)

@@ -2,6 +2,7 @@ package com.only4.cap4k.reference.contentstudio.application.subscribers.integrat
 
 import com.only4.cap4k.ddd.core.application.event.annotation.IntegrationEvent
 import java.time.LocalDateTime
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 /**
  * media processing callback from external media service
@@ -9,6 +10,15 @@ import java.time.LocalDateTime
 @IntegrationEvent(
     value = "cap4k.reference.contentstudio.media-processing.completed",
     subscriber = "\${spring.application.name:}"
+)
+@BuildingBlock(
+    tag = "integration_event",
+    name = "MediaProcessingCallback",
+    packageName = "media.processing",
+    description = "media processing callback from external media service",
+    aggregates = ["MediaProcessingTask"],
+    family = "integration-event",
+    variant = "inbound"
 )
 data class MediaProcessingCallbackIntegrationEvent(
     val externalTaskId: String,

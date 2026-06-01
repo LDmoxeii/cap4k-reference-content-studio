@@ -11,7 +11,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "RecordContentMediaReady",
+    packageName = "content.workflow",
+    description = "record content media readiness",
+    aggregates = ["Content"],
+    family = "command"
+)
 object RecordContentMediaReadyCmd {
 
     @Service

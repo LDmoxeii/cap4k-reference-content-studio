@@ -15,7 +15,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "ActivateAccessEntitlementPlan",
+    packageName = "paid.publication",
+    description = "activate access entitlement plan",
+    aggregates = ["PaidPublicationTask"],
+    family = "command"
+)
 object ActivateAccessEntitlementPlanCmd {
 
     @Service

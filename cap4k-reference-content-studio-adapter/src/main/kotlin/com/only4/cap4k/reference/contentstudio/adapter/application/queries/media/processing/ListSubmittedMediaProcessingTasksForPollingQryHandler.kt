@@ -6,8 +6,17 @@ import com.only4.cap4k.reference.contentstudio.application.queries.media.process
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingStatus
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 @Service
+@BuildingBlock(
+    tag = "query",
+    name = "ListSubmittedMediaProcessingTasksForPolling",
+    packageName = "media.processing",
+    description = "list submitted media processing tasks for polling fallback",
+    aggregates = ["MediaProcessingTask"],
+    family = "query-handler"
+)
 class ListSubmittedMediaProcessingTasksForPollingQryHandler :
     Query<ListSubmittedMediaProcessingTasksForPollingQry.Request, ListSubmittedMediaProcessingTasksForPollingQry.Response> {
 

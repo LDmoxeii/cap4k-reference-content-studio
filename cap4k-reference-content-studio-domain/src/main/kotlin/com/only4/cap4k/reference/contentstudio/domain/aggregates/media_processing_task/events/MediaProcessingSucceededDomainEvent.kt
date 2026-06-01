@@ -13,9 +13,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
     packageName = "media.processing",
     description = "media processing succeeded",
     aggregates = ["MediaProcessingTask"],
-    eventName = "",
-    family = "domain-event",
-    variant = ""
+    family = "domain-event"
 )
 class MediaProcessingSucceededDomainEvent(
     val entity: MediaProcessingTask,

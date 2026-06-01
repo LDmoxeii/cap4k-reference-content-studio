@@ -6,7 +6,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "query",
+    name = "GetMediaProcessingStatus",
+    packageName = "content.read",
+    description = "get media processing status",
+    aggregates = ["Content"],
+    family = "query"
+)
 object GetMediaProcessingStatusQry {
 
     data class Request(

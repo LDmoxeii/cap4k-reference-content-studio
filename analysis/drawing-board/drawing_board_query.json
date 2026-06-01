@@ -1,0 +1,78 @@
+[
+  {
+    "tag": "query",
+    "package": "content.read",
+    "name": "GetContentDetail",
+    "description": "get content detail",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "body", "type": "String", "nullable": false },
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "contentStatus", "type": "String", "nullable": false },
+      { "name": "mediaReadyAt", "type": "LocalDateTime", "nullable": true },
+      { "name": "mediaSourceKey", "type": "String", "nullable": false },
+      { "name": "publishedAt", "type": "LocalDateTime", "nullable": true },
+      { "name": "releasePolicy", "type": "String", "nullable": false },
+      { "name": "reviewStatus", "type": "String", "nullable": false },
+      { "name": "reviewedAt", "type": "LocalDateTime", "nullable": true },
+      { "name": "reviewerId", "type": "ReviewerId", "nullable": true },
+      { "name": "title", "type": "String", "nullable": false }
+    ]
+  },
+  {
+    "tag": "query",
+    "package": "content.read",
+    "name": "GetMediaProcessingStatus",
+    "description": "get media processing status",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "task", "type": "TaskSnapshot", "nullable": true },
+      { "name": "task.externalTaskId", "type": "String", "nullable": true },
+      { "name": "task.processingStatus", "type": "String", "nullable": false },
+      { "name": "task.taskId", "type": "MediaProcessingTaskId", "nullable": false }
+    ]
+  },
+  {
+    "tag": "query",
+    "package": "content.read",
+    "name": "GetPaidPublicationStatus",
+    "description": "get paid publication status",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "completedAt", "type": "LocalDateTime", "nullable": true },
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
+      { "name": "failedAt", "type": "LocalDateTime", "nullable": true },
+      { "name": "failedReason", "type": "String", "nullable": true },
+      { "name": "paidPublicationStatus", "type": "String", "nullable": true },
+      { "name": "payoutHoldStatus", "type": "String", "nullable": true },
+      { "name": "publishedAt", "type": "LocalDateTime", "nullable": true },
+      { "name": "startedAt", "type": "LocalDateTime", "nullable": true },
+      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true }
+    ]
+  },
+  {
+    "tag": "query",
+    "package": "media.processing",
+    "name": "ListSubmittedMediaProcessingTasksForPolling",
+    "description": "list submitted media processing tasks for polling fallback",
+    "aggregates": ["MediaProcessingTask"],
+    "fields": [
+    ],
+    "resultFields": [
+      { "name": "items", "type": "List<TaskItem>", "nullable": false },
+      { "name": "items[].contentId", "type": "ContentId", "nullable": false },
+      { "name": "items[].externalTaskId", "type": "String", "nullable": false }
+    ]
+  }
+]

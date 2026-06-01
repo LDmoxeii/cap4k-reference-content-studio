@@ -1,0 +1,13 @@
+[
+  {
+    "tag": "saga",
+    "package": "paid.publication",
+    "name": "PaidPublicationSaga",
+    "description": "paid publication saga",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+    ],
+    "resultFields": [
+    ]
+  }
+]

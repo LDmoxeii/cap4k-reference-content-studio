@@ -7,7 +7,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.enums.MediaProcessingResultStatus
 import jakarta.persistence.AttributeConverter
 import java.time.LocalDateTime
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "value_object",
+    name = "MediaProcessingResultSnapshot",
+    packageName = "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values",
+    description = "media processing result snapshot",
+    aggregates = ["MediaProcessingTask"],
+    family = "value-object"
+)
 data class MediaProcessingResultSnapshot(
     val mediaProcessingTaskId: MediaProcessingTaskId,
     val contentId: ContentId,

@@ -5,6 +5,7 @@ import com.only4.cap4k.ddd.core.application.query.Query
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetPaidPublicationStatusQry
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.paid_publication_task.SPaidPublicationTask
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 /**
  * get paid publication status
@@ -12,6 +13,14 @@ import org.springframework.stereotype.Service
  * 本文件由 cap4k pipeline 生成
  */
 @Service
+@BuildingBlock(
+    tag = "query",
+    name = "GetPaidPublicationStatus",
+    packageName = "content.read",
+    description = "get paid publication status",
+    aggregates = ["PaidPublicationTask"],
+    family = "query-handler"
+)
 class GetPaidPublicationStatusQryHandler :
     Query<GetPaidPublicationStatusQry.Request, GetPaidPublicationStatusQry.Response> {
 

@@ -7,11 +7,20 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.events.
 import java.time.LocalDateTime
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 /**
  * content publication ready
  */
 @Service
+@BuildingBlock(
+    tag = "domain_event",
+    name = "ContentPublicationReady",
+    packageName = "content",
+    description = "content publication ready",
+    aggregates = ["Content"],
+    family = "domain-subscriber"
+)
 class ContentPublicationReadyDomainEventSubscriber {
 
     @EventListener(ContentPublicationReadyDomainEvent::class)

@@ -14,9 +14,7 @@ import java.time.LocalDateTime
     packageName = "content",
     description = "content review approved",
     aggregates = ["Content"],
-    eventName = "",
-    family = "domain-event",
-    variant = ""
+    family = "domain-event"
 )
 class ContentReviewApprovedDomainEvent(
     val entity: Content,

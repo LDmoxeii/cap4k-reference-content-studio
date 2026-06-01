@@ -5,7 +5,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "client",
+    name = "CreateAccessEntitlementPlan",
+    packageName = "paid.publication",
+    description = "create access entitlement plan client",
+    aggregates = ["PaidPublicationTask"],
+    family = "client"
+)
 object CreateAccessEntitlementPlanCli {
 
     data class Request(

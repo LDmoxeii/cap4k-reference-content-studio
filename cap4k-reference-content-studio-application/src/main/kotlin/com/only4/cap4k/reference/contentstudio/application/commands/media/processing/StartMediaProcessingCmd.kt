@@ -12,7 +12,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "StartMediaProcessing",
+    packageName = "media.processing",
+    description = "start media processing task",
+    aggregates = ["MediaProcessingTask"],
+    family = "command"
+)
 object StartMediaProcessingCmd {
 
     @Service

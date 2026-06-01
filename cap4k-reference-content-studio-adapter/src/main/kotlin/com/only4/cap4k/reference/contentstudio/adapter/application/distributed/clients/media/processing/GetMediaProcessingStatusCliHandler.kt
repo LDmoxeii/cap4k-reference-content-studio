@@ -4,8 +4,17 @@ import com.only4.cap4k.ddd.core.application.RequestHandler
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.media.processing.GetMediaProcessingStatusCli
 import com.only4.cap4k.reference.contentstudio.adapter.integration.FakeMediaProcessingCli
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 @Service
+@BuildingBlock(
+    tag = "client",
+    name = "GetMediaProcessingStatus",
+    packageName = "media.processing",
+    description = "get media processing status from fake external cli",
+    aggregates = ["MediaProcessingTask"],
+    family = "client-handler"
+)
 class GetMediaProcessingStatusCliHandler(
     private val fakeMediaProcessingCli: FakeMediaProcessingCli,
 ) : RequestHandler<GetMediaProcessingStatusCli.Request, GetMediaProcessingStatusCli.Response> {

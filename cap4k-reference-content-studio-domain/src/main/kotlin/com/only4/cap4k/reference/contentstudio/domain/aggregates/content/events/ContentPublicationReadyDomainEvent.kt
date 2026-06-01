@@ -15,9 +15,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
     packageName = "content",
     description = "content publication ready",
     aggregates = ["Content"],
-    eventName = "",
-    family = "domain-event",
-    variant = ""
+    family = "domain-event"
 )
 class ContentPublicationReadyDomainEvent(
     val entity: Content,

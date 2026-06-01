@@ -1,0 +1,251 @@
+[
+  {
+    "tag": "command",
+    "package": "content.workflow",
+    "name": "ApproveContentReview",
+    "description": "approve content review",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "reviewedAt", "type": "LocalDateTime", "nullable": false },
+      { "name": "reviewerId", "type": "ReviewerId", "nullable": false }
+    ],
+    "resultFields": [
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "content.workflow",
+    "name": "CreateContentDraft",
+    "description": "create content draft",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "body", "type": "String", "nullable": false },
+      { "name": "mediaSourceKey", "type": "String", "nullable": false },
+      { "name": "title", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "content.workflow",
+    "name": "CreatePaidContentDraft",
+    "description": "create paid content draft",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "body", "type": "String", "nullable": false },
+      { "name": "mediaSourceKey", "type": "String", "nullable": false },
+      { "name": "title", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "content.workflow",
+    "name": "PublishContent",
+    "description": "publish approved content",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "publishedAt", "type": "LocalDateTime", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "decision", "type": "Decision", "nullable": false },
+      { "name": "published", "type": "Boolean", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "content.workflow",
+    "name": "RecordContentMediaReady",
+    "description": "record content media readiness",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "mediaReadyAt", "type": "LocalDateTime", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "recorded", "type": "Boolean", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "content.workflow",
+    "name": "SubmitContentForReview",
+    "description": "submit content draft for review",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false }
+    ],
+    "resultFields": [
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "media.processing",
+    "name": "MarkMediaProcessingSucceeded",
+    "description": "mark media processing task as succeeded",
+    "aggregates": ["MediaProcessingTask"],
+    "fields": [
+      { "name": "assetLocation", "type": "String", "nullable": false },
+      { "name": "assetSha256", "type": "String", "nullable": false },
+      { "name": "completedAt", "type": "LocalDateTime", "nullable": false },
+      { "name": "externalTaskId", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "media.processing",
+    "name": "RefreshMediaProcessingTaskStatus",
+    "description": "refresh media processing task status from external media service",
+    "aggregates": ["MediaProcessingTask"],
+    "fields": [
+      { "name": "externalTaskId", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "media.processing",
+    "name": "StartMediaProcessing",
+    "description": "start media processing task",
+    "aggregates": ["MediaProcessingTask"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "mediaSourceKey", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "decision", "type": "Decision", "nullable": false, "defaultValue": "com.only4.cap4k.reference.contentstudio.application.commands.media.processing.StartMediaProcessingCmd.Decision.Started" }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "ActivateAccessEntitlementPlan",
+    "description": "activate access entitlement plan",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "activated", "type": "Boolean", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "CancelEntitlementPlanIfCreated",
+    "description": "cancel entitlement plan if created",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId", "nullable": false },
+      { "name": "reason", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "cancelled", "type": "Boolean", "nullable": false },
+      { "name": "decision", "type": "Decision", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "CreateAccessEntitlementPlan",
+    "description": "create access entitlement plan",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "created", "type": "Boolean", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "MarkPaidPublicationContentPublished",
+    "description": "record paid publication content published",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "marked", "type": "Boolean", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "MarkPaidPublicationFailed",
+    "description": "mark paid publication failed",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "failedReason", "type": "String", "nullable": false },
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId", "nullable": false }
+    ],
+    "resultFields": [
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "PublishPaidPublicationContent",
+    "description": "publish paid publication content",
+    "aggregates": ["Content"],
+    "fields": [
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "published", "type": "Boolean", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "ReleasePayoutHoldIfReserved",
+    "description": "release payout hold if reserved",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId", "nullable": false },
+      { "name": "reason", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "decision", "type": "Decision", "nullable": false },
+      { "name": "released", "type": "Boolean", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "ReserveCreatorPayoutHold",
+    "description": "reserve creator payout hold",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "reserved", "type": "Boolean", "nullable": false }
+    ]
+  },
+  {
+    "tag": "command",
+    "package": "paid.publication",
+    "name": "TryStartPaidPublication",
+    "description": "try starting paid publication",
+    "aggregates": ["PaidPublicationTask"],
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false }
+    ],
+    "resultFields": [
+      { "name": "decision", "type": "Decision", "nullable": false },
+      { "name": "started", "type": "Boolean", "nullable": false },
+      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true }
+    ]
+  }
+]

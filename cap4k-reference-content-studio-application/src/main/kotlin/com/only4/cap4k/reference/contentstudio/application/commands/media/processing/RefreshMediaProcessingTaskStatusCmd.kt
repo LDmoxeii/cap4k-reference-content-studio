@@ -5,7 +5,16 @@ import com.only4.cap4k.ddd.core.application.RequestParam
 import com.only4.cap4k.ddd.core.application.command.Command
 import com.only4.cap4k.reference.contentstudio.application.distributed.clients.media.processing.GetMediaProcessingStatusCli
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "RefreshMediaProcessingTaskStatus",
+    packageName = "media.processing",
+    description = "refresh media processing task status from external media service",
+    aggregates = ["MediaProcessingTask"],
+    family = "command"
+)
 object RefreshMediaProcessingTaskStatusCmd {
 
     @Service

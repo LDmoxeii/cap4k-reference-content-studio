@@ -1,0 +1,38 @@
+[
+  {
+    "tag": "integration_event",
+    "package": "media.processing",
+    "name": "MediaProcessingCallback",
+    "description": "media processing callback from external media service",
+    "aggregates": ["MediaProcessingTask"],
+    "artifacts": [{
+      "family": "integration-event",
+      "variant": "inbound"
+    }],
+    "eventName": "cap4k.reference.contentstudio.media-processing.completed",
+    "fields": [
+      { "name": "assetLocation", "type": "String", "nullable": true },
+      { "name": "assetSha256", "type": "String", "nullable": true },
+      { "name": "completedAt", "type": "LocalDateTime", "nullable": false },
+      { "name": "externalTaskId", "type": "String", "nullable": false },
+      { "name": "status", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+    ]
+  },
+  {
+    "tag": "integration_event",
+    "package": "content",
+    "name": "ContentPublished",
+    "description": "content published integration event",
+    "aggregates": ["Content"],
+    "eventName": "cap4k.reference.contentstudio.content.published",
+    "fields": [
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "publishedAt", "type": "LocalDateTime", "nullable": false },
+      { "name": "releasePolicy", "type": "String", "nullable": false }
+    ],
+    "resultFields": [
+    ]
+  }
+]

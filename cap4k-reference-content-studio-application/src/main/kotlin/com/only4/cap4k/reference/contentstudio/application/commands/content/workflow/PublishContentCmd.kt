@@ -11,7 +11,16 @@ import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SConte
 import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "PublishContent",
+    packageName = "content.workflow",
+    description = "publish approved content",
+    aggregates = ["Content"],
+    family = "command"
+)
 object PublishContentCmd {
 
     @Service

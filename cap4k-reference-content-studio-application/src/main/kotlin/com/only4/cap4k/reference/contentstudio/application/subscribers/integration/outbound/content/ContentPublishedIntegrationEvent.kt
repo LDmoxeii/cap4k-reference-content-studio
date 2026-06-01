@@ -6,6 +6,7 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.Content
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 /**
  * content published integration event
@@ -13,6 +14,15 @@ import com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId
 @IntegrationEvent(
     value = "cap4k.reference.contentstudio.content.published",
     subscriber = IntegrationEvent.NONE_SUBSCRIBER
+)
+@BuildingBlock(
+    tag = "integration_event",
+    name = "ContentPublished",
+    packageName = "content",
+    description = "content published integration event",
+    aggregates = ["Content"],
+    family = "integration-event",
+    variant = "outbound"
 )
 data class ContentPublishedIntegrationEvent(
     val contentId: ContentId,

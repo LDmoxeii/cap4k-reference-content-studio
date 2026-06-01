@@ -1,14 +1,1 @@
-{
-  "ContentId": {
-    "fqn": "com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId"
-  },
-  "MediaProcessingTaskId": {
-    "fqn": "com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.MediaProcessingTaskId"
-  },
-  "PaidPublicationTaskId": {
-    "fqn": "com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId"
-  },
-  "ReviewerId": {
-    "fqn": "com.only4.cap4k.reference.contentstudio.domain.shared.ids.ReviewerId"
-  }
-}
+{}

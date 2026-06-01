@@ -5,6 +5,7 @@ import com.only4.cap4k.ddd.core.application.query.Query
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetContentDetailQry
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.content.SContent
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 /**
  * get content detail
@@ -12,6 +13,14 @@ import org.springframework.stereotype.Service
  * 本文件由 cap4k pipeline 生成
  */
 @Service
+@BuildingBlock(
+    tag = "query",
+    name = "GetContentDetail",
+    packageName = "content.read",
+    description = "get content detail",
+    aggregates = ["Content"],
+    family = "query-handler"
+)
 class GetContentDetailQryHandler : Query<GetContentDetailQry.Request, GetContentDetailQry.Response> {
 
     override fun exec(request: GetContentDetailQry.Request): GetContentDetailQry.Response {

@@ -200,8 +200,7 @@
       },
       {
         "name": "releasePolicy",
-        "type": "String",
-        "nullable": true
+        "type": "String"
       },
       {
         "name": "reviewerId",

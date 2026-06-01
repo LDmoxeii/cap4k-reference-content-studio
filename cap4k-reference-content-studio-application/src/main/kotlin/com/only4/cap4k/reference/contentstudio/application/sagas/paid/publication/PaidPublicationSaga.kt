@@ -14,7 +14,16 @@ import com.only4.cap4k.reference.contentstudio.application.commands.paid.publica
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.paid_publication_task.PaidPublicationTaskId
 import org.springframework.stereotype.Service
 import kotlin.intArrayOf
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "saga",
+    name = "PaidPublicationSaga",
+    packageName = "paid.publication",
+    description = "paid publication saga",
+    aggregates = ["PaidPublicationTask"],
+    family = "saga"
+)
 object PaidPublicationSaga {
 
     const val PROCESS_RESERVE_PAYOUT_HOLD = "reserve-payout-hold"

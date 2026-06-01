@@ -5,6 +5,7 @@ import com.only4.cap4k.ddd.core.application.query.Query
 import com.only4.cap4k.reference.contentstudio.application.queries.content.read.GetMediaProcessingStatusQry
 import com.only4.cap4k.reference.contentstudio.domain._share.meta.media_processing_task.SMediaProcessingTask
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 /**
  * get media processing status
@@ -12,6 +13,14 @@ import org.springframework.stereotype.Service
  * 本文件由 cap4k pipeline 生成
  */
 @Service
+@BuildingBlock(
+    tag = "query",
+    name = "GetMediaProcessingStatus",
+    packageName = "content.read",
+    description = "get media processing status",
+    aggregates = ["Content"],
+    family = "query-handler"
+)
 class GetMediaProcessingStatusQryHandler : Query<GetMediaProcessingStatusQry.Request, GetMediaProcessingStatusQry.Response> {
 
     override fun exec(request: GetMediaProcessingStatusQry.Request): GetMediaProcessingStatusQry.Response {

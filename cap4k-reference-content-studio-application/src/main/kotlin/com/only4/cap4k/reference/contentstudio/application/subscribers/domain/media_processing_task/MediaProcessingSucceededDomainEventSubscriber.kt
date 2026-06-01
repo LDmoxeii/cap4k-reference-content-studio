@@ -6,11 +6,20 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
 /**
  * media processing succeeded
  */
 @Service
+@BuildingBlock(
+    tag = "domain_event",
+    name = "MediaProcessingSucceeded",
+    packageName = "media.processing",
+    description = "media processing succeeded",
+    aggregates = ["MediaProcessingTask"],
+    family = "domain-subscriber"
+)
 class MediaProcessingSucceededDomainEventSubscriber {
 
     @EventListener(MediaProcessingSucceededDomainEvent::class)

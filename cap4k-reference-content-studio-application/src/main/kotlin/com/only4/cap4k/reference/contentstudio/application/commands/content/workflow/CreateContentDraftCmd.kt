@@ -10,7 +10,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.enums.R
 import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "CreateContentDraft",
+    packageName = "content.workflow",
+    description = "create content draft",
+    aggregates = ["Content"],
+    family = "command"
+)
 object CreateContentDraftCmd {
 
     @Service

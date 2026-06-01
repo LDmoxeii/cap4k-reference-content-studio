@@ -5,23 +5,10 @@
     "name": "ContentDraftCreated",
     "description": "content draft created",
     "aggregates": ["Content"],
-    "artifacts": [{
-      "family": "domain-event"
-    }],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId",
-        "nullable": false
-      }, 
-
-      {
-        "name": "mediaSourceKey",
-        "type": "String",
-        "nullable": false
-      }
-
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "mediaSourceKey", "type": "String", "nullable": false }
     ],
     "resultFields": [
     ]
@@ -32,23 +19,10 @@
     "name": "ContentMediaReady",
     "description": "content media ready",
     "aggregates": ["Content"],
-    "artifacts": [{
-      "family": "domain-event"
-    }],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId",
-        "nullable": false
-      }, 
-
-      {
-        "name": "mediaReadyAt",
-        "type": "LocalDateTime",
-        "nullable": false
-      }
-
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "mediaReadyAt", "type": "LocalDateTime", "nullable": false }
     ],
     "resultFields": [
     ]
@@ -59,17 +33,9 @@
     "name": "ContentPublicationReady",
     "description": "content publication ready",
     "aggregates": ["Content"],
-    "artifacts": [{
-      "family": "domain-event"
-    }],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId",
-        "nullable": false
-      }
-
+      { "name": "contentId", "type": "ContentId", "nullable": false }
     ],
     "resultFields": [
     ]
@@ -80,29 +46,11 @@
     "name": "ContentPublished",
     "description": "content published",
     "aggregates": ["Content"],
-    "artifacts": [{
-      "family": "domain-event"
-    }],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId",
-        "nullable": false
-      }, 
-
-      {
-        "name": "publishedAt",
-        "type": "LocalDateTime",
-        "nullable": false
-      }, 
-
-      {
-        "name": "releasePolicy",
-        "type": "String",
-        "nullable": false
-      }
-
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "publishedAt", "type": "LocalDateTime", "nullable": false },
+      { "name": "releasePolicy", "type": "String", "nullable": false }
     ],
     "resultFields": [
     ]
@@ -113,23 +61,10 @@
     "name": "ContentRequiresMediaProcessing",
     "description": "content requires media processing",
     "aggregates": ["Content"],
-    "artifacts": [{
-      "family": "domain-event"
-    }],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId",
-        "nullable": false
-      }, 
-
-      {
-        "name": "mediaSourceKey",
-        "type": "String",
-        "nullable": false
-      }
-
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "mediaSourceKey", "type": "String", "nullable": false }
     ],
     "resultFields": [
     ]
@@ -140,29 +75,11 @@
     "name": "ContentReviewApproved",
     "description": "content review approved",
     "aggregates": ["Content"],
-    "artifacts": [{
-      "family": "domain-event"
-    }],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId",
-        "nullable": false
-      }, 
-
-      {
-        "name": "reviewedAt",
-        "type": "LocalDateTime",
-        "nullable": false
-      }, 
-
-      {
-        "name": "reviewerId",
-        "type": "ReviewerId",
-        "nullable": false
-      }
-
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "reviewedAt", "type": "LocalDateTime", "nullable": false },
+      { "name": "reviewerId", "type": "ReviewerId", "nullable": false }
     ],
     "resultFields": [
     ]
@@ -173,17 +90,9 @@
     "name": "ContentSubmittedForReview",
     "description": "content submitted for review",
     "aggregates": ["Content"],
-    "artifacts": [{
-      "family": "domain-event"
-    }],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId",
-        "nullable": false
-      }
-
+      { "name": "contentId", "type": "ContentId", "nullable": false }
     ],
     "resultFields": [
     ]
@@ -194,23 +103,10 @@
     "name": "MediaProcessingSucceeded",
     "description": "media processing succeeded",
     "aggregates": ["MediaProcessingTask"],
-    "artifacts": [{
-      "family": "domain-event"
-    }],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId",
-        "nullable": false
-      }, 
-
-      {
-        "name": "taskId",
-        "type": "MediaProcessingTaskId",
-        "nullable": false
-      }
-
+      { "name": "contentId", "type": "ContentId", "nullable": false },
+      { "name": "taskId", "type": "MediaProcessingTaskId", "nullable": false }
     ],
     "resultFields": [
     ]

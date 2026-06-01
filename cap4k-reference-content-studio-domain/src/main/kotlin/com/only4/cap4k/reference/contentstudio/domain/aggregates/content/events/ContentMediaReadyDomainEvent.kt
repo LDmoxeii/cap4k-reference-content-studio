@@ -16,9 +16,7 @@ import java.time.LocalDateTime
     packageName = "content",
     description = "content media ready",
     aggregates = ["Content"],
-    eventName = "",
-    family = "domain-event",
-    variant = ""
+    family = "domain-event"
 )
 class ContentMediaReadyDomainEvent(
     val entity: Content,

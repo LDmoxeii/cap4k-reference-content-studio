@@ -10,7 +10,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.factory
 import java.time.LocalDateTime
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.content.ContentId
 import org.springframework.stereotype.Service
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "CreatePaidContentDraft",
+    packageName = "content.workflow",
+    description = "create paid content draft",
+    aggregates = ["Content"],
+    family = "command"
+)
 object CreatePaidContentDraftCmd {
 
     @Service

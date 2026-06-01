@@ -10,7 +10,16 @@ import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processin
 import com.only4.cap4k.reference.contentstudio.domain.aggregates.media_processing_task.values.MediaProcessingResultSnapshot
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import com.only4.cap4k.ddd.core.annotation.BuildingBlock
 
+@BuildingBlock(
+    tag = "command",
+    name = "MarkMediaProcessingSucceeded",
+    packageName = "media.processing",
+    description = "mark media processing task as succeeded",
+    aggregates = ["MediaProcessingTask"],
+    family = "command"
+)
 object MarkMediaProcessingSucceededCmd {
 
     @Service
