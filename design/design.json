@@ -8,18 +8,9 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "title",
-        "type": "String"
-      },
-      {
-        "name": "body",
-        "type": "String"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      }
+      { "name": "title", "type": "String" },
+      { "name": "body", "type": "String" },
+      { "name": "mediaSourceKey", "type": "String" }
     ]
   },
   {
@@ -31,10 +22,7 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -46,18 +34,9 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "reviewerId",
-        "type": "ReviewerId"
-      },
-      {
-        "name": "reviewedAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "reviewerId", "type": "ReviewerId" },
+      { "name": "reviewedAt", "type": "java.time.LocalDateTime" }
     ]
   },
   {
@@ -69,14 +48,8 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "publishedAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ]
   },
   {
@@ -88,14 +61,8 @@
       "MediaProcessingTask"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "mediaSourceKey", "type": "String" }
     ]
   },
   {
@@ -107,22 +74,10 @@
       "MediaProcessingTask"
     ],
     "fields": [
-      {
-        "name": "externalTaskId",
-        "type": "String"
-      },
-      {
-        "name": "assetSha256",
-        "type": "String"
-      },
-      {
-        "name": "assetLocation",
-        "type": "String"
-      },
-      {
-        "name": "completedAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "externalTaskId", "type": "String" },
+      { "name": "assetSha256", "type": "String" },
+      { "name": "assetLocation", "type": "String" },
+      { "name": "completedAt", "type": "java.time.LocalDateTime" }
     ]
   },
   {
@@ -134,14 +89,8 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "mediaReadyAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime" }
     ]
   },
   {
@@ -153,10 +102,7 @@
       "MediaProcessingTask"
     ],
     "fields": [
-      {
-        "name": "externalTaskId",
-        "type": "String"
-      }
+      { "name": "externalTaskId", "type": "String" }
     ]
   },
   {
@@ -168,60 +114,20 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "resultFields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "title",
-        "type": "String"
-      },
-      {
-        "name": "body",
-        "type": "String"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      },
-      {
-        "name": "reviewStatus",
-        "type": "String"
-      },
-      {
-        "name": "contentStatus",
-        "type": "String"
-      },
-      {
-        "name": "releasePolicy",
-        "type": "String"
-      },
-      {
-        "name": "reviewerId",
-        "type": "ReviewerId",
-        "nullable": true
-      },
-      {
-        "name": "reviewedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "mediaReadyAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "publishedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "title", "type": "String" },
+      { "name": "body", "type": "String" },
+      { "name": "mediaSourceKey", "type": "String" },
+      { "name": "reviewStatus", "type": "String" },
+      { "name": "contentStatus", "type": "String" },
+      { "name": "releasePolicy", "type": "String" },
+      { "name": "reviewerId", "type": "ReviewerId", "nullable": true },
+      { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
     ]
   },
   {
@@ -233,61 +139,19 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "resultFields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "taskId",
-        "type": "PaidPublicationTaskId",
-        "nullable": true
-      },
-      {
-        "name": "paidPublicationStatus",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "payoutHoldStatus",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "entitlementPlanStatus",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "startedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "publishedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "completedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "failedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "failedReason",
-        "type": "String",
-        "nullable": true
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true },
+      { "name": "paidPublicationStatus", "type": "String", "nullable": true },
+      { "name": "payoutHoldStatus", "type": "String", "nullable": true },
+      { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
+      { "name": "startedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "failedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "failedReason", "type": "String", "nullable": true }
     ]
   },
   {
@@ -299,34 +163,14 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "resultFields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "task",
-        "type": "TaskSnapshot",
-        "nullable": true
-      },
-      {
-        "name": "task.taskId",
-        "type": "MediaProcessingTaskId"
-      },
-      {
-        "name": "task.externalTaskId",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "task.processingStatus",
-        "type": "String"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "task", "type": "TaskSnapshot", "nullable": true },
+      { "name": "task.taskId", "type": "MediaProcessingTaskId" },
+      { "name": "task.externalTaskId", "type": "String", "nullable": true },
+      { "name": "task.processingStatus", "type": "String" }
     ]
   },
   {
@@ -339,18 +183,9 @@
     ],
     "fields": [],
     "resultFields": [
-      {
-        "name": "items",
-        "type": "List<TaskItem>"
-      },
-      {
-        "name": "items[].contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "items[].externalTaskId",
-        "type": "String"
-      }
+      { "name": "items", "type": "List<TaskItem>" },
+      { "name": "items[].contentId", "type": "ContentId" },
+      { "name": "items[].externalTaskId", "type": "String" }
     ]
   },
   {
@@ -360,24 +195,12 @@
     "description": "create content draft http payload",
     "aggregates": [],
     "fields": [
-      {
-        "name": "title",
-        "type": "String"
-      },
-      {
-        "name": "body",
-        "type": "String"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      }
+      { "name": "title", "type": "String" },
+      { "name": "body", "type": "String" },
+      { "name": "mediaSourceKey", "type": "String" }
     ],
     "resultFields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -387,10 +210,7 @@
     "description": "approve content review http payload",
     "aggregates": [],
     "fields": [
-      {
-        "name": "reviewerId",
-        "type": "ReviewerId"
-      }
+      { "name": "reviewerId", "type": "ReviewerId" }
     ],
     "resultFields": []
   },
@@ -401,61 +221,20 @@
     "description": "get content detail http payload",
     "aggregates": [],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "resultFields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "title",
-        "type": "String"
-      },
-      {
-        "name": "body",
-        "type": "String"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      },
-      {
-        "name": "reviewStatus",
-        "type": "String"
-      },
-      {
-        "name": "contentStatus",
-        "type": "String"
-      },
-      {
-        "name": "releasePolicy",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "reviewerId",
-        "type": "ReviewerId",
-        "nullable": true
-      },
-      {
-        "name": "reviewedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "mediaReadyAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "publishedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "title", "type": "String" },
+      { "name": "body", "type": "String" },
+      { "name": "mediaSourceKey", "type": "String" },
+      { "name": "reviewStatus", "type": "String" },
+      { "name": "contentStatus", "type": "String" },
+      { "name": "releasePolicy", "type": "String", "nullable": true },
+      { "name": "reviewerId", "type": "ReviewerId", "nullable": true },
+      { "name": "reviewedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true }
     ]
   },
   {
@@ -465,61 +244,19 @@
     "description": "get paid publication status http payload",
     "aggregates": [],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "resultFields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "taskId",
-        "type": "PaidPublicationTaskId",
-        "nullable": true
-      },
-      {
-        "name": "paidPublicationStatus",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "payoutHoldStatus",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "entitlementPlanStatus",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "startedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "publishedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "completedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "failedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      },
-      {
-        "name": "failedReason",
-        "type": "String",
-        "nullable": true
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "taskId", "type": "PaidPublicationTaskId", "nullable": true },
+      { "name": "paidPublicationStatus", "type": "String", "nullable": true },
+      { "name": "payoutHoldStatus", "type": "String", "nullable": true },
+      { "name": "entitlementPlanStatus", "type": "String", "nullable": true },
+      { "name": "startedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "failedAt", "type": "java.time.LocalDateTime", "nullable": true },
+      { "name": "failedReason", "type": "String", "nullable": true }
     ]
   },
   {
@@ -529,34 +266,14 @@
     "description": "get media processing status http payload",
     "aggregates": [],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ],
     "resultFields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "task",
-        "type": "Task",
-        "nullable": true
-      },
-      {
-        "name": "task.taskId",
-        "type": "MediaProcessingTaskId"
-      },
-      {
-        "name": "task.externalTaskId",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "task.processingStatus",
-        "type": "String"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "task", "type": "Task", "nullable": true },
+      { "name": "task.taskId", "type": "MediaProcessingTaskId" },
+      { "name": "task.externalTaskId", "type": "String", "nullable": true },
+      { "name": "task.processingStatus", "type": "String" }
     ]
   },
   {
@@ -568,25 +285,12 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "mediaSourceKey", "type": "String" }
     ],
     "resultFields": [
-      {
-        "name": "accepted",
-        "type": "Boolean"
-      },
-      {
-        "name": "externalTaskId",
-        "type": "String",
-        "nullable": true
-      }
+      { "name": "accepted", "type": "Boolean" },
+      { "name": "externalTaskId", "type": "String", "nullable": true }
     ]
   },
   {
@@ -598,31 +302,13 @@
       "MediaProcessingTask"
     ],
     "fields": [
-      {
-        "name": "externalTaskId",
-        "type": "String"
-      }
+      { "name": "externalTaskId", "type": "String" }
     ],
     "resultFields": [
-      {
-        "name": "status",
-        "type": "String"
-      },
-      {
-        "name": "assetSha256",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "assetLocation",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "completedAt",
-        "type": "java.time.LocalDateTime",
-        "nullable": true
-      }
+      { "name": "status", "type": "String" },
+      { "name": "assetSha256", "type": "String", "nullable": true },
+      { "name": "assetLocation", "type": "String", "nullable": true },
+      { "name": "completedAt", "type": "java.time.LocalDateTime", "nullable": true }
     ]
   },
   {
@@ -635,14 +321,8 @@
     ],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "mediaSourceKey", "type": "String" }
     ]
   },
   {
@@ -655,10 +335,7 @@
     ],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -671,18 +348,9 @@
     ],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "reviewerId",
-        "type": "ReviewerId"
-      },
-      {
-        "name": "reviewedAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "reviewerId", "type": "ReviewerId" },
+      { "name": "reviewedAt", "type": "java.time.LocalDateTime" }
     ]
   },
   {
@@ -695,18 +363,9 @@
     ],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "releasePolicy",
-        "type": "String"
-      },
-      {
-        "name": "publishedAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "releasePolicy", "type": "String" },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ]
   },
   {
@@ -719,14 +378,8 @@
     ],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "mediaReadyAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "mediaReadyAt", "type": "java.time.LocalDateTime" }
     ]
   },
   {
@@ -739,10 +392,7 @@
     ],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -755,14 +405,8 @@
     ],
     "persist": true,
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "mediaSourceKey", "type": "String" }
     ]
   },
   {
@@ -775,14 +419,8 @@
     ],
     "persist": true,
     "fields": [
-      {
-        "name": "taskId",
-        "type": "MediaProcessingTaskId"
-      },
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "taskId", "type": "MediaProcessingTaskId" },
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -795,28 +433,11 @@
     ],
     "eventName": "cap4k.reference.contentstudio.media-processing.completed",
     "fields": [
-      {
-        "name": "externalTaskId",
-        "type": "String"
-      },
-      {
-        "name": "status",
-        "type": "String"
-      },
-      {
-        "name": "assetSha256",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "assetLocation",
-        "type": "String",
-        "nullable": true
-      },
-      {
-        "name": "completedAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "externalTaskId", "type": "String" },
+      { "name": "status", "type": "String" },
+      { "name": "assetSha256", "type": "String", "nullable": true },
+      { "name": "assetLocation", "type": "String", "nullable": true },
+      { "name": "completedAt", "type": "java.time.LocalDateTime" }
     ],
     "artifacts": [
       {
@@ -835,18 +456,9 @@
     ],
     "eventName": "cap4k.reference.contentstudio.content.published",
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      },
-      {
-        "name": "releasePolicy",
-        "type": "String"
-      },
-      {
-        "name": "publishedAt",
-        "type": "java.time.LocalDateTime"
-      }
+      { "name": "contentId", "type": "ContentId" },
+      { "name": "releasePolicy", "type": "String" },
+      { "name": "publishedAt", "type": "java.time.LocalDateTime" }
     ],
     "artifacts": [
       {
@@ -864,18 +476,9 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "title",
-        "type": "String"
-      },
-      {
-        "name": "body",
-        "type": "String"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      }
+      { "name": "title", "type": "String" },
+      { "name": "body", "type": "String" },
+      { "name": "mediaSourceKey", "type": "String" }
     ]
   },
   {
@@ -887,10 +490,7 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ]
   },
   {
@@ -902,10 +502,7 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ]
   },
   {
@@ -917,10 +514,7 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ]
   },
   {
@@ -932,10 +526,7 @@
       "Content"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ]
   },
   {
@@ -947,10 +538,7 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ]
   },
   {
@@ -962,10 +550,7 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ]
   },
   {
@@ -977,14 +562,8 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      },
-      {
-        "name": "reason",
-        "type": "String"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
+      { "name": "reason", "type": "String" }
     ]
   },
   {
@@ -996,14 +575,8 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      },
-      {
-        "name": "reason",
-        "type": "String"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
+      { "name": "reason", "type": "String" }
     ]
   },
   {
@@ -1015,14 +588,8 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      },
-      {
-        "name": "failedReason",
-        "type": "String"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" },
+      { "name": "failedReason", "type": "String" }
     ]
   },
   {
@@ -1034,16 +601,10 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "resultFields": [
-      {
-        "name": "payoutHoldId",
-        "type": "String"
-      }
+      { "name": "payoutHoldId", "type": "String" }
     ]
   },
   {
@@ -1055,16 +616,10 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "resultFields": [
-      {
-        "name": "released",
-        "type": "Boolean"
-      }
+      { "name": "released", "type": "Boolean" }
     ]
   },
   {
@@ -1076,16 +631,10 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "resultFields": [
-      {
-        "name": "entitlementPlanId",
-        "type": "String"
-      }
+      { "name": "entitlementPlanId", "type": "String" }
     ]
   },
   {
@@ -1097,16 +646,10 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "resultFields": [
-      {
-        "name": "cancelled",
-        "type": "Boolean"
-      }
+      { "name": "cancelled", "type": "Boolean" }
     ]
   },
   {
@@ -1118,16 +661,10 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ],
     "resultFields": [
-      {
-        "name": "activated",
-        "type": "Boolean"
-      }
+      { "name": "activated", "type": "Boolean" }
     ]
   },
   {
@@ -1139,10 +676,7 @@
       "PaidPublicationTask"
     ],
     "fields": [
-      {
-        "name": "paidPublicationTaskId",
-        "type": "PaidPublicationTaskId"
-      }
+      { "name": "paidPublicationTaskId", "type": "PaidPublicationTaskId" }
     ]
   },
   {
@@ -1152,24 +686,12 @@
     "description": "create paid content draft http payload",
     "aggregates": [],
     "fields": [
-      {
-        "name": "title",
-        "type": "String"
-      },
-      {
-        "name": "body",
-        "type": "String"
-      },
-      {
-        "name": "mediaSourceKey",
-        "type": "String"
-      }
+      { "name": "title", "type": "String" },
+      { "name": "body", "type": "String" },
+      { "name": "mediaSourceKey", "type": "String" }
     ],
     "resultFields": [
-      {
-        "name": "contentId",
-        "type": "ContentId"
-      }
+      { "name": "contentId", "type": "ContentId" }
     ]
   }
 ]
